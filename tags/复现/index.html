@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>复现 :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/tags/%E5%A4%8D%E7%8E%B0/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="复现">
+<meta property="og:description" content="" />
+<meta property="og:url" content="https://vuln.top/tags/%E5%A4%8D%E7%8E%B0/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+    <meta property="og:image" content="https://vuln.top/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/%E5%A4%8D%E7%8E%B0/index.xml" rel="alternate" type="application/rss+xml" title="Ca1s1&#39;Blog" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/cve-2022-22954/">CVE-2022-22954</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2023-01-23 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/%E5%A4%8D%E7%8E%B0/">复现</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/cve/">CVE</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            CVE-2022-22954 代码分析 http://file.xipudata.com/?dir=/2_software/Vmware/Horizon8 下载好ova，使用vmware安装搭建，导入时添加下域名。 根据官方提供的临时修复脚本可以知道漏洞存在于 /opt/vmware/horizon/workspace/webapps/catalog-portal/WEB-INF/lib/endusercatalog-ui-1.0-SNAPSHOT-classes.jar 修复脚本中还提到了这个文件 查看该文件后发现存在eval，这是java freemarker的写法，用来把字符串当作ftl代码，所以我们只需要控制errorObj即可实现代码执行 所以我们知道漏洞来源于customError,我们需要找到可以到达customError的路由，并且可以控制errorObj 在UiErrorController.class中可以找到handleGenericError，可以传递errorObj，最后return到customError
+private String handleGenericError(final HttpServletRequest request, final HttpServletResponse response, final Map&lt;String, Object&gt; model, final boolean isAWJade, final boolean garnetAndAbove, final String excpClass, final int errorCode, final String errorMessage) { final String localizedMessageHeader = this.messages.getLocalizedErrorMessage(&#34;errorPage.errorHeading&#34;, request.getLocale(), (Object[])null); final String localizedMessage = this.messages.getLocalizedErrorMessage(this.getLocalizedMessageKey(excpClass), request.getLocale(), (Object[])null); if (errorCode != -1) { response.setStatus(errorCode); } model.put(&#34;errorObj&#34;, errorMessage); model.put(&#34;messageHeader&#34;, localizedMessageHeader); model.put(&#34;genericErrorMsg&#34;, localizedMessage); model.put(&#34;contextPath&#34;, request.getContextPath()); if (isAWJade) { WebUtils.
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/cve-2022-22954/"> →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2024 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

