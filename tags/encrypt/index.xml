@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Encrypt on Ca1s1&#39;Blog</title>
+    <link>https://vuln.top/tags/encrypt/</link>
+    <description>Recent content in Encrypt on Ca1s1&#39;Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 04 Aug 2020 11:24:30 +0800</lastBuildDate><atom:link href="https://vuln.top/tags/encrypt/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>jsEncrypter 加密</title>
+      <link>https://vuln.top/posts/burpjsencrypt/</link>
+      <pubDate>Tue, 04 Aug 2020 11:24:30 +0800</pubDate>
+      
+      <guid>https://vuln.top/posts/burpjsencrypt/</guid>
+      <description>&lt;h1 id=&#34;burp-爆破-js加密&#34;&gt;burp 爆破 JS加密&lt;/h1&gt;
+&lt;p&gt;首先右键登录按钮属性查看html源代码，发现id=&amp;lsquo;rsa&amp;rsquo;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled.png&#34; alt=&#34;/img/burpjs/Untitled.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;ctrl+shift+f 查找rsa描点，发现调用了strEnr&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%201.png&#34; alt=&#34;/img/burpjs/Untitled%201.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;继续查找strEnr，并进入函数&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%202.png&#34; alt=&#34;/img/burpjs/Untitled%202.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;对加密函数添加断点进行判断，发现123123账号密码进入了此处，且3个key分别为1，2，3。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%203.png&#34; alt=&#34;/img/burpjs/Untitled%203.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们直接控制台调用，尝试加密解密&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%204.png&#34; alt=&#34;/img/burpjs/Untitled%204.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;保存des.js到本地&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%205.png&#34; alt=&#34;/img/burpjs/Untitled%205.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;既然找到了加密解密函数现在就是通过burp调用函数使其加解密,修改phantomjs_server.js&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%206.png&#34; alt=&#34;/img/burpjs/Untitled%206.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;载入server.js&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%207.png&#34; alt=&#34;/img/burpjs/Untitled%207.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;burp连接server端口，test，我们现在已经可以成功加密了&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%208.png&#34; alt=&#34;/img/burpjs/Untitled%208.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;配置burp intruder，添加变量&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%209.png&#34; alt=&#34;/img/burpjs/Untitled%209.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;选择Custom ，1为用户&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%2010.png&#34; alt=&#34;/img/burpjs/Untitled%2010.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;2为密码&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%2011.png&#34; alt=&#34;/img/burpjs/Untitled%2011.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;添加payload加密&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%2012.png&#34; alt=&#34;/img/burpjs/Untitled%2012.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;start attack，成功爆破&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%2013.png&#34; alt=&#34;/img/burpjs/Untitled%2013.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;尝试解密下加密字符串，成功&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%2014.png&#34; alt=&#34;/img/burpjs/Untitled%2014.png&#34;&gt;&lt;/p&gt;</description>
+      <content>&lt;h1 id=&#34;burp-爆破-js加密&#34;&gt;burp 爆破 JS加密&lt;/h1&gt;
+&lt;p&gt;首先右键登录按钮属性查看html源代码，发现id=&amp;lsquo;rsa&amp;rsquo;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled.png&#34; alt=&#34;/img/burpjs/Untitled.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;ctrl+shift+f 查找rsa描点，发现调用了strEnr&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%201.png&#34; alt=&#34;/img/burpjs/Untitled%201.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;继续查找strEnr，并进入函数&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%202.png&#34; alt=&#34;/img/burpjs/Untitled%202.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;对加密函数添加断点进行判断，发现123123账号密码进入了此处，且3个key分别为1，2，3。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%203.png&#34; alt=&#34;/img/burpjs/Untitled%203.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们直接控制台调用，尝试加密解密&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%204.png&#34; alt=&#34;/img/burpjs/Untitled%204.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;保存des.js到本地&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%205.png&#34; alt=&#34;/img/burpjs/Untitled%205.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;既然找到了加密解密函数现在就是通过burp调用函数使其加解密,修改phantomjs_server.js&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%206.png&#34; alt=&#34;/img/burpjs/Untitled%206.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;载入server.js&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%207.png&#34; alt=&#34;/img/burpjs/Untitled%207.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;burp连接server端口，test，我们现在已经可以成功加密了&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%208.png&#34; alt=&#34;/img/burpjs/Untitled%208.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;配置burp intruder，添加变量&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%209.png&#34; alt=&#34;/img/burpjs/Untitled%209.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;选择Custom ，1为用户&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%2010.png&#34; alt=&#34;/img/burpjs/Untitled%2010.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;2为密码&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%2011.png&#34; alt=&#34;/img/burpjs/Untitled%2011.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;添加payload加密&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%2012.png&#34; alt=&#34;/img/burpjs/Untitled%2012.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;start attack，成功爆破&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%2013.png&#34; alt=&#34;/img/burpjs/Untitled%2013.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;尝试解密下加密字符串，成功&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%2014.png&#34; alt=&#34;/img/burpjs/Untitled%2014.png&#34;&gt;&lt;/p&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

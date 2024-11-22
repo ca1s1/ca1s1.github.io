@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CTFD on Ca1s1&#39;Blog</title>
+    <link>https://vuln.top/tags/ctfd/</link>
+    <description>Recent content in CTFD on Ca1s1&#39;Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 22 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://vuln.top/tags/ctfd/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CTFD plugin xss</title>
+      <link>https://vuln.top/posts/ctfd-plugin-xss-/</link>
+      <pubDate>Fri, 22 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://vuln.top/posts/ctfd-plugin-xss-/</guid>
+      <description>&lt;h1 id=&#34;ctfd-插件-存储型-xss&#34;&gt;CTFD 插件 存储型 XSS&lt;/h1&gt;
+&lt;p&gt;如下ctfd存在检测作弊的插件&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/25de7e35c31c494f8a5283300bf65d20/Untitled.png&#34; alt=&#34;/img/25de7e35c31c494f8a5283300bf65d20/Untitled.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;创建2个用户，第一个用户 的 username设置为xss的payload，第二个用户随意&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/25de7e35c31c494f8a5283300bf65d20/Untitled%201.png&#34; alt=&#34;/img/25de7e35c31c494f8a5283300bf65d20/Untitled%201.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;登陆用户1，随便做一题拿到flag后，登陆用户2递交用户1的flag，发现被系统检测，访问/notifications，触发xss。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/25de7e35c31c494f8a5283300bf65d20/Untitled%202.png&#34; alt=&#34;/img/25de7e35c31c494f8a5283300bf65d20/Untitled%202.png&#34;&gt;&lt;/p&gt;</description>
+      <content>&lt;h1 id=&#34;ctfd-插件-存储型-xss&#34;&gt;CTFD 插件 存储型 XSS&lt;/h1&gt;
+&lt;p&gt;如下ctfd存在检测作弊的插件&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/25de7e35c31c494f8a5283300bf65d20/Untitled.png&#34; alt=&#34;/img/25de7e35c31c494f8a5283300bf65d20/Untitled.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;创建2个用户，第一个用户 的 username设置为xss的payload，第二个用户随意&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/25de7e35c31c494f8a5283300bf65d20/Untitled%201.png&#34; alt=&#34;/img/25de7e35c31c494f8a5283300bf65d20/Untitled%201.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;登陆用户1，随便做一题拿到flag后，登陆用户2递交用户1的flag，发现被系统检测，访问/notifications，触发xss。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/25de7e35c31c494f8a5283300bf65d20/Untitled%202.png&#34; alt=&#34;/img/25de7e35c31c494f8a5283300bf65d20/Untitled%202.png&#34;&gt;&lt;/p&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

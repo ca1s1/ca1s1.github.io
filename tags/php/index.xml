@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Php on Ca1s1&#39;Blog</title>
+    <link>https://vuln.top/tags/php/</link>
+    <description>Recent content in Php on Ca1s1&#39;Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 23 Aug 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://vuln.top/tags/php/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2019神盾杯</title>
+      <link>https://vuln.top/posts/2019shendun/</link>
+      <pubDate>Sun, 23 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://vuln.top/posts/2019shendun/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;首届“神盾杯”上海市网络安全竞赛&lt;/strong&gt;，去年的比赛。&lt;/p&gt;
+&lt;h1 id=&#34;0x00-babyjs&#34;&gt;0x00 babyJS&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;查看源码 找不到被调用的&lt;code&gt;CheckLogin&lt;/code&gt;函数&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun///image1.png&#34; alt=&#34;/img/19shendun/image1.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;看到&lt;strong&gt;script&lt;/strong&gt;中有用到&lt;code&gt;unespace&lt;/code&gt;和&lt;code&gt;escape&lt;/code&gt;等函数 用于编码字符串&lt;/p&gt;
+&lt;p&gt;将&lt;code&gt;eval&lt;/code&gt;传参改为&lt;code&gt;alert&lt;/code&gt; 显示为弹窗&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image2.png&#34; alt=&#34;/img/19shendun/image2.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现&lt;code&gt;check&lt;/code&gt;函数 并将flag与用户输入做比较 得到flag&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image3.png&#34; alt=&#34;/img/19shendun/image3.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{a5a5f402f6dc62acd3e848900a17513f}&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;0x01-crypto_easy_1&#34;&gt;0x01 crypto_easy_1&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;下载文件&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image4.png&#34; alt=&#34;/img/19shendun/image4.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现3行类似的数据 并且长度一致。&lt;/p&gt;
+&lt;p&gt;:左边的长度为42 右边的长度为56 ，猜测右边被base64编码过 进行解码 比较长度&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image5.png&#34; alt=&#34;/img/19shendun/image5.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;长度一致 为42&lt;/p&gt;
+&lt;p&gt;异或运算一下 可以得到Key随后将key代入 与base64解码后的密文异或比较 得到flag&lt;/p&gt;
+&lt;p&gt;解密脚本如下:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; base64
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;v6&amp;#34;wo5UIP9c4IdCk1o6qZhhB5DKZhVBwBzONl1JRIz:TwB2RyZYBCEVbjBjID17UkUeeDAwPBh1dg86AyAgcSQ4QygYGnAuJQYw&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;y &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;zjS0ubQE2hw29FL2qs61ZNOVyFaf6IAjUZ7X8ijuVg:Q1wHADwPAC13PyRlUB90CwUCeHAwGj9hOg0QP34/cjkvY1AOTigOAhkt&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;z &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;pJryZpVUNpSFi06WlKGkS0Uka6zw1sNCX&amp;#34;h2urQoyg:SXwmSRMdBz0LJwARAGkObhg6CSo5ZCVcIn0LLnkFfRAiGw9kAzM1GDYt&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;a, b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; x&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;c, d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; y&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;e, f &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; z&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(b)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(d)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;f &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(f)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;g &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;X1o1VzIPaVgjbmNvCnQAC0ZHY3BbMUkaeylDYWVOCzZDXwJjR3hTFiw3&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;flag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt;  i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;42&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    t &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ord(a[i]) &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; ord(b[i])
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    flag &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; chr(ord(g[i]) &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; t)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(flag)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;</description>
+      <content>&lt;p&gt;&lt;strong&gt;首届“神盾杯”上海市网络安全竞赛&lt;/strong&gt;，去年的比赛。&lt;/p&gt;
+&lt;h1 id=&#34;0x00-babyjs&#34;&gt;0x00 babyJS&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;查看源码 找不到被调用的&lt;code&gt;CheckLogin&lt;/code&gt;函数&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun///image1.png&#34; alt=&#34;/img/19shendun/image1.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;看到&lt;strong&gt;script&lt;/strong&gt;中有用到&lt;code&gt;unespace&lt;/code&gt;和&lt;code&gt;escape&lt;/code&gt;等函数 用于编码字符串&lt;/p&gt;
+&lt;p&gt;将&lt;code&gt;eval&lt;/code&gt;传参改为&lt;code&gt;alert&lt;/code&gt; 显示为弹窗&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image2.png&#34; alt=&#34;/img/19shendun/image2.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现&lt;code&gt;check&lt;/code&gt;函数 并将flag与用户输入做比较 得到flag&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image3.png&#34; alt=&#34;/img/19shendun/image3.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{a5a5f402f6dc62acd3e848900a17513f}&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;0x01-crypto_easy_1&#34;&gt;0x01 crypto_easy_1&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;下载文件&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image4.png&#34; alt=&#34;/img/19shendun/image4.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现3行类似的数据 并且长度一致。&lt;/p&gt;
+&lt;p&gt;:左边的长度为42 右边的长度为56 ，猜测右边被base64编码过 进行解码 比较长度&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image5.png&#34; alt=&#34;/img/19shendun/image5.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;长度一致 为42&lt;/p&gt;
+&lt;p&gt;异或运算一下 可以得到Key随后将key代入 与base64解码后的密文异或比较 得到flag&lt;/p&gt;
+&lt;p&gt;解密脚本如下:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; base64
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;v6&amp;#34;wo5UIP9c4IdCk1o6qZhhB5DKZhVBwBzONl1JRIz:TwB2RyZYBCEVbjBjID17UkUeeDAwPBh1dg86AyAgcSQ4QygYGnAuJQYw&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;y &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;zjS0ubQE2hw29FL2qs61ZNOVyFaf6IAjUZ7X8ijuVg:Q1wHADwPAC13PyRlUB90CwUCeHAwGj9hOg0QP34/cjkvY1AOTigOAhkt&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;z &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;pJryZpVUNpSFi06WlKGkS0Uka6zw1sNCX&amp;#34;h2urQoyg:SXwmSRMdBz0LJwARAGkObhg6CSo5ZCVcIn0LLnkFfRAiGw9kAzM1GDYt&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;a, b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; x&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;c, d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; y&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;e, f &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; z&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(b)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(d)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;f &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(f)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;g &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;X1o1VzIPaVgjbmNvCnQAC0ZHY3BbMUkaeylDYWVOCzZDXwJjR3hTFiw3&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;flag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt;  i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;42&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    t &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ord(a[i]) &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; ord(b[i])
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    flag &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; chr(ord(g[i]) &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; t)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(flag)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{b80f908c-8226-11e9-8b28-88e9fe5197ac}&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;0x02-ez_gallery_1&#34;&gt;0x02 ez_gallery_1&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;查看源码&lt;/p&gt;
+&lt;p&gt;提示flag位置&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image6.png&#34; alt=&#34;/img/19shendun/image6.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;找到可以利用的url&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image7.png&#34; alt=&#34;/img/19shendun/image7.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;使用?截断1.jpg&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image8.png&#34; alt=&#34;/img/19shendun/image8.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{378346c7ac53d624a8621efc745bbeab}&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;0x03 fast_calc_2&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;随便试了几下{1+1},{set},发现有点奇怪,猜测可能是python逃逸&lt;/p&gt;
+&lt;p&gt;尝试&lt;code&gt;dir(().__class__)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image9.png&#34; alt=&#34;/img/19shendun/image9.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;尝试了一下网上的payload但是没有成功，发现存在过滤，过滤了&lt;code&gt;[]&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;查到builtins是自动引入环境的&lt;code&gt;__builtins__.__dict__&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image10.png&#34; alt=&#34;/img/19shendun/image10.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;查找资料通过pop绕过[]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image11.png&#34; alt=&#34;/img/19shendun/image11.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Payload为：&lt;code&gt;__builtins__.__dict__.pop(&#39;open&#39;)(&#39;/flag&#39;).readline()&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image12.png&#34; alt=&#34;/img/19shendun/image12.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{4582900a19a6a8801399afb6a31d9bc0}&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;0x04-easyadmin&#34;&gt;0x04 Easyadmin&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;爆破下目录发现index.php~存在源码&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image13.png&#34; alt=&#34;/img/19shendun/image13.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现srole==admin才能输出flag&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image14.png&#34; alt=&#34;/img/19shendun/image14.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;登陆的后发现token为base64加密，解一下&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image15.png&#34; alt=&#34;/img/19shendun/image15.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image16.png&#34; alt=&#34;/img/19shendun/image16.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;搜索了一下jwt发现有加密，网上有类似的解法&lt;/p&gt;
+&lt;p&gt;下面网站可以验证&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://jwt.io/&#34;&gt;https://jwt.io/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image17.png&#34; alt=&#34;/img/19shendun/image17.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;有根据源码把guest改为admin&lt;/p&gt;
+&lt;p&gt;再看下源码，里面有一个key我们不知道，猜测需要爆破应该为4位&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image18.png&#34; alt=&#34;/img/19shendun/image18.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;在github上找到一个脚本直接跑出来了&lt;a href=&#34;https://github.com/brendan-rius/c-jwt-cracker&#34;&gt;https://github.com/brendan-rius/c-jwt-cracker&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image19.png&#34; alt=&#34;/img/19shendun/image19.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;保存下‘sjwt’&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image20.png&#34; alt=&#34;/img/19shendun/image20.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;用这个新token替换一下成功获取flag&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image21.png&#34; alt=&#34;/img/19shendun/image21.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{11529a36dd607c45e5b104ed977247ed}&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;0x05-easyupload&#34;&gt;0x05 Easyupload&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;通过尝试发现在图片地址处输入 &lt;a href=&#34;&#34;&gt;file:///etc/passwd&lt;/a&gt;可以读到文件&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image22.png&#34; alt=&#34;/img/19shendun/image22.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image23.png&#34; alt=&#34;/img/19shendun/image23.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;然后在这卡了好久，在摸索后发现可以通过用/proc/self/cwd绕过，cwd是一个符号链接，指向了实际的工作目录&lt;/p&gt;
+&lt;p&gt;下图是一篇文章中的介绍&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image24.png&#34; alt=&#34;/img/19shendun/image24.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image25.png&#34; alt=&#34;/img/19shendun/image25.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;构造如下payload&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image26.png&#34; alt=&#34;/img/19shendun/image26.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;获取到源码&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image27.png&#34; alt=&#34;/img/19shendun/image27.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;找到他的命名规则&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image28.png&#34; alt=&#34;/img/19shendun/image28.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;然后通过上传php webshell获取flag&lt;/p&gt;
+&lt;p&gt;先上传一个phpinfo&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image29.png&#34; alt=&#34;/img/19shendun/image29.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;读到了文件但是没有执行&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image30.png&#34; alt=&#34;/img/19shendun/image30.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;想到通过&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image31.png&#34; alt=&#34;/img/19shendun/image31.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;&amp;lt;script language=&amp;quot;php&amp;quot;&amp;gt;phpinfo();&amp;lt;/script&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image32.png&#34; alt=&#34;/img/19shendun/image32.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;成功执行&lt;/p&gt;
+&lt;p&gt;运行 &lt;code&gt;system(cat /flag)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image33.png&#34; alt=&#34;/img/19shendun/image33.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image34.png&#34; alt=&#34;/img/19shendun/image34.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{2742ab5468a78d70dca332ca48aa7b89}&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;0x06-easysqli&#34;&gt;0x06 Easysqli&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;首先登陆pow直接在cmd5上解密下就行&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image35.png&#34; alt=&#34;/img/19shendun/image35.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;一开始尝试各种绕过都不行&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image36.png&#34; alt=&#34;/img/19shendun/image36.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;后来提示了一波&lt;code&gt;bypass addslashes&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;通过google搜索&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image37.png&#34; alt=&#34;/img/19shendun/image37.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;格式化字符串漏洞&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image38.png&#34; alt=&#34;/img/19shendun/image38.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;找到payload %1$&#39;&lt;/p&gt;
+&lt;p&gt;1．两张 &lt;code&gt;admin%1$&#39;%20union%20select%201,2%23&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image39.png&#34; alt=&#34;/img/19shendun/image39.png&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;查找表&lt;code&gt;admin%1$&#39;%20union%20select%20table_name,2%20from%20information_schema.tables%20where%20table_schema=database()%23&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;表名user&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image40.png&#34; alt=&#34;/img/19shendun/image40.png&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;&lt;code&gt;admin%1$&#39;%20union%20select%20column_name,2%20from%20information_schema.columns%20where%20table_schema=database()%23&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;找到字段名&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image41.png&#34; alt=&#34;/img/19shendun/image41.png&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;&lt;code&gt;admin%1$&#39;%20union%20select%20username,password%20from%20user%23&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;在password中找到&lt;strong&gt;flag&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image42.png&#34; alt=&#34;/img/19shendun/image42.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{299386fb699cff0cb99b1f57dee500a0}&lt;/strong&gt;&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>豌豆杯入学CTF</title>
+      <link>https://vuln.top/posts/wandouctf/</link>
+      <pubDate>Wed, 16 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://vuln.top/posts/wandouctf/</guid>
+      <description>&lt;!-- raw HTML omitted --&gt;
+&lt;hr&gt;
+&lt;p&gt;1.题目:小可爱
+第一步肯定是绕过本地回环地址
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110162152/4285938054.png&#34; alt=&#34;CC25B038-F2D2-4F85-93F7-F51924B8DAB8.png&#34;&gt;
+一开始想到的是&lt;code&gt;x-forward-for&lt;/code&gt;等告诉服务器我的地址但发现没有绕过 看题目题目是说来源地址想到了&lt;code&gt;referer&lt;/code&gt;成功绕过
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110162315/1177985903.png&#34; alt=&#34;BC410D27-3BE1-40E5-ABF5-777F7144F502.png&#34;&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/366387116.png&#34; alt=&#34;AEA1A04B-27BA-4393-953B-75D948C95027.png&#34;&gt;
+这里没啥思路只能爆破
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2499653827.png&#34; alt=&#34;B9E617B3-EF26-477B-B78C-534C490FB3C4.png&#34;&gt;
+密码为orange 访问到另外一个页面 然后登录。 发现是一张迪丽热巴的图片 这个主管很喜欢迪丽热巴啊！！
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/1630037561.png&#34; alt=&#34;122FC809-D249-4228-9EB5-1E7F101BB7C1.png&#34;&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/296032636.png&#34; alt=&#34;ADBC80E5-9B6D-4483-B1D4-286FE4B9E3F2.png&#34;&gt;
+将图片下载下来，用&lt;code&gt;binwalk&lt;/code&gt;查看下发现有压缩包!&lt;code&gt;foremost&lt;/code&gt;下得到压缩包发现有密码
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/RujlNg.png&#34; alt=&#34;70BBCD6F-2D2E-4D93-8F11-80D576A5CB54.png&#34;&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2411784842.png&#34; alt=&#34;DABA844F-3716-4889-96CA-04A7E6137C96.png&#34;&gt;
+这个地方解了很久发现使用Dilraba的md5。。。。
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2601915022.png&#34; alt=&#34;F0312D7E-FC35-4DE9-86AF-D5A0F5796C97.png&#34;&gt;
+得到一张图片再一次foremost得到一个压缩包成功拿到flag
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2175607698.png&#34; alt=&#34;C065BA1C-B8B1-4157-9E8A-D6BD23ED6440.png&#34;&gt;
+2.题目:单身二十年
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/1468141901.png&#34; alt=&#34;EA018BA0-F2BB-4204-9784-8E3585F3511B.png&#34;&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;&amp;lt;?php 
+
+header(&amp;#34;Content-type:text/html;charset=utf-8&amp;#34;); 
+show_source(__FILE__); 
+if($_COOKIE[&amp;#39;token&amp;#39;]==&amp;#39;5D41402ABC4B2A76B9719D911017C592&amp;#39;){ 
+    $file    =    &amp;#39;dump/&amp;#39;.md5(base64_encode(mt_rand(1,100))).&amp;#39;.txt&amp;#39;; 
+    file_put_contents($file,file_get_contents(&amp;#39;327A6C4304AD5938EAF0EFB6CC3E53DC.php&amp;#39;)); 
+    sleep(10); 
+    unlink($file); 
+}else{ 
+    header(&amp;#39;Location: index.php&amp;#39;); 
+} 
+
+setcookie(&amp;#34;token&amp;#34;); 
+
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;看懂源码发现访问页面会睡眠十秒他会把flag写入到一个1到100随机数字经过base64,md5的txt文件里。
+一种是用burp直接get到这里我就不演示了,我是直接写的python,访问下页面执行脚本就行了。
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3316060136.png&#34; alt=&#34;9BB9177B-2227-4784-A0BB-B029ED948AF3.png&#34;&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;import base64
+import hashlib
+import requests
+for i in range(1,101):
+	headers = {&amp;#39;Content-type&amp;#39;:&amp;#39;text/html;charset=utf-8&amp;#39;}
+	encodestr = base64.b64encode(str(i).encode(&amp;#39;utf-8&amp;#39;))
+	cookies = {&amp;#39;token&amp;#39;:&amp;#39;5D41402ABC4B2A76B9719D911017C592&amp;#39;}
+	#print(encodestr)
+	m = hashlib.md5()
+	m.update(encodestr)
+	#print(m.hexdigest())
+	a = m.hexdigest()
+	url = &amp;#39;http://106.14.145.133:8081/web10/dump/&amp;#39;+a+&amp;#39;.txt&amp;#39;
+	#print(url)
+	url_get = requests.get(url,headers=headers,cookies=cookies,timeout=2)
+	#print(url_get.headers)
+	#print(url_get.cookies)
+	if url_get.status_code == 200:
+		print(url_get.text)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;3.题目:初心不改
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2370270929.png&#34; alt=&#34;1975DE5B-D07B-4569-B8D0-E7171F2A034C.png&#34;&gt;
+访问页面发现是一个thinkphp5.0 一猜就是sql注入
+一开始以为是构造一个注入然后load_file到flag后来发现想多了，直接通过payload拿到mysql账号密码
+&lt;code&gt;/index.php?ids[0,updatexml(0,concat(0xa,user()),0)]=1&lt;/code&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2511860583.png&#34; alt=&#34;BA7D4195-9527-4B06-A1D8-28ABF453FE46.png&#34;&gt;
+主页查看源码发现有一个phpmyadmin，登陆后成功拿到flag
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3803853201.png&#34; alt=&#34;73F165EC-C956-40AD-9106-ADE323691340.png&#34;&gt;&lt;/p&gt;</description>
+      <content>&lt;!-- raw HTML omitted --&gt;
+&lt;hr&gt;
+&lt;p&gt;1.题目:小可爱
+第一步肯定是绕过本地回环地址
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110162152/4285938054.png&#34; alt=&#34;CC25B038-F2D2-4F85-93F7-F51924B8DAB8.png&#34;&gt;
+一开始想到的是&lt;code&gt;x-forward-for&lt;/code&gt;等告诉服务器我的地址但发现没有绕过 看题目题目是说来源地址想到了&lt;code&gt;referer&lt;/code&gt;成功绕过
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110162315/1177985903.png&#34; alt=&#34;BC410D27-3BE1-40E5-ABF5-777F7144F502.png&#34;&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/366387116.png&#34; alt=&#34;AEA1A04B-27BA-4393-953B-75D948C95027.png&#34;&gt;
+这里没啥思路只能爆破
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2499653827.png&#34; alt=&#34;B9E617B3-EF26-477B-B78C-534C490FB3C4.png&#34;&gt;
+密码为orange 访问到另外一个页面 然后登录。 发现是一张迪丽热巴的图片 这个主管很喜欢迪丽热巴啊！！
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/1630037561.png&#34; alt=&#34;122FC809-D249-4228-9EB5-1E7F101BB7C1.png&#34;&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/296032636.png&#34; alt=&#34;ADBC80E5-9B6D-4483-B1D4-286FE4B9E3F2.png&#34;&gt;
+将图片下载下来，用&lt;code&gt;binwalk&lt;/code&gt;查看下发现有压缩包!&lt;code&gt;foremost&lt;/code&gt;下得到压缩包发现有密码
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/RujlNg.png&#34; alt=&#34;70BBCD6F-2D2E-4D93-8F11-80D576A5CB54.png&#34;&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2411784842.png&#34; alt=&#34;DABA844F-3716-4889-96CA-04A7E6137C96.png&#34;&gt;
+这个地方解了很久发现使用Dilraba的md5。。。。
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2601915022.png&#34; alt=&#34;F0312D7E-FC35-4DE9-86AF-D5A0F5796C97.png&#34;&gt;
+得到一张图片再一次foremost得到一个压缩包成功拿到flag
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2175607698.png&#34; alt=&#34;C065BA1C-B8B1-4157-9E8A-D6BD23ED6440.png&#34;&gt;
+2.题目:单身二十年
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/1468141901.png&#34; alt=&#34;EA018BA0-F2BB-4204-9784-8E3585F3511B.png&#34;&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;&amp;lt;?php 
+
+header(&amp;#34;Content-type:text/html;charset=utf-8&amp;#34;); 
+show_source(__FILE__); 
+if($_COOKIE[&amp;#39;token&amp;#39;]==&amp;#39;5D41402ABC4B2A76B9719D911017C592&amp;#39;){ 
+    $file    =    &amp;#39;dump/&amp;#39;.md5(base64_encode(mt_rand(1,100))).&amp;#39;.txt&amp;#39;; 
+    file_put_contents($file,file_get_contents(&amp;#39;327A6C4304AD5938EAF0EFB6CC3E53DC.php&amp;#39;)); 
+    sleep(10); 
+    unlink($file); 
+}else{ 
+    header(&amp;#39;Location: index.php&amp;#39;); 
+} 
+
+setcookie(&amp;#34;token&amp;#34;); 
+
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;看懂源码发现访问页面会睡眠十秒他会把flag写入到一个1到100随机数字经过base64,md5的txt文件里。
+一种是用burp直接get到这里我就不演示了,我是直接写的python,访问下页面执行脚本就行了。
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3316060136.png&#34; alt=&#34;9BB9177B-2227-4784-A0BB-B029ED948AF3.png&#34;&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;import base64
+import hashlib
+import requests
+for i in range(1,101):
+	headers = {&amp;#39;Content-type&amp;#39;:&amp;#39;text/html;charset=utf-8&amp;#39;}
+	encodestr = base64.b64encode(str(i).encode(&amp;#39;utf-8&amp;#39;))
+	cookies = {&amp;#39;token&amp;#39;:&amp;#39;5D41402ABC4B2A76B9719D911017C592&amp;#39;}
+	#print(encodestr)
+	m = hashlib.md5()
+	m.update(encodestr)
+	#print(m.hexdigest())
+	a = m.hexdigest()
+	url = &amp;#39;http://106.14.145.133:8081/web10/dump/&amp;#39;+a+&amp;#39;.txt&amp;#39;
+	#print(url)
+	url_get = requests.get(url,headers=headers,cookies=cookies,timeout=2)
+	#print(url_get.headers)
+	#print(url_get.cookies)
+	if url_get.status_code == 200:
+		print(url_get.text)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;3.题目:初心不改
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2370270929.png&#34; alt=&#34;1975DE5B-D07B-4569-B8D0-E7171F2A034C.png&#34;&gt;
+访问页面发现是一个thinkphp5.0 一猜就是sql注入
+一开始以为是构造一个注入然后load_file到flag后来发现想多了，直接通过payload拿到mysql账号密码
+&lt;code&gt;/index.php?ids[0,updatexml(0,concat(0xa,user()),0)]=1&lt;/code&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2511860583.png&#34; alt=&#34;BA7D4195-9527-4B06-A1D8-28ABF453FE46.png&#34;&gt;
+主页查看源码发现有一个phpmyadmin，登陆后成功拿到flag
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3803853201.png&#34; alt=&#34;73F165EC-C956-40AD-9106-ADE323691340.png&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;crypto题&#34;&gt;web题我是全部AK掉了有些题目是通过exp直接拿到flag太简单了就不讲了。
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3180203719.png&#34; alt=&#34;ADE2EF99-DEF7-46F4-AA7D-066EC4402E12.png&#34;&gt;
+Crypto题&lt;/h2&gt;
+&lt;p&gt;1.题目:震惊，凯撒竟被4人关在一密室&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;凯撒被4个人关在一个密室里！
+aCU3QjkxMjkxMTA3bjVnMTZoNjNjJTdEY2cwNDBoM2g4aTRlMDc3ZmYz
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;先是base64
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/4195125983.png&#34; alt=&#34;9B275494-53D5-4527-8A72-F5844E6A5CD8.png&#34;&gt;
+然后url编码
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/1834402293.png&#34; alt=&#34;647F179F-6624-426A-924B-3538D10E806A.png&#34;&gt;
+栅栏编码四组
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3756062370.png&#34; alt=&#34;9D959343-EA85-4A6D-85A4-7D017E27DDE7.png&#34;&gt;
+凯撒拿到flag
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2613812638.png&#34; alt=&#34;9192AE6D-3539-4AC4-83FD-97E3D50A533A.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;2.题目:粗心大意的主管
+已知密文为:925♥♥♥A2D74♥♥DDE4♥EBC0♥♥♥1D0E♥♥7
+原文为:8E5♥♥C14DCD♥CDE8♥♥55F3738♥11DE7A。
+写个python就行了&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# -*- coding: utf-8 -*-
+import string
+import hashlib
+payloads = &amp;#39;0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;#39;
+
+for a in payloads:
+    for b in payloads:
+        for c in payloads:
+        	for d in payloads:
+        		for e in payloads:
+        			for f in payloads:
+			            s = &amp;#34;8E5&amp;#34;+a+d+&amp;#34;C14DCD&amp;#34;+b+&amp;#34;CDE8&amp;#34;+e+c+&amp;#34;55F3738&amp;#34;+f+&amp;#34;11DE7A&amp;#34;
+			            tmp = hashlib.md5(s).hexdigest().upper()
+			            if &amp;#39;925&amp;#39; in tmp and &amp;#39;A2D74&amp;#39; in tmp and &amp;#39;DDE4&amp;#39; in tmp and &amp;#39;EBC0&amp;#39; in tmp:
+			                print(s)
+		               		print(tmp)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;3.题目:畸形的凯撒
+密文：afZ_rCI[kA55#;ASc9*%$c&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;char=&amp;#34;afZ_rCI[kA55#;ASc9*%$c&amp;#34;
+i = 0
+flag = &amp;#34;&amp;#34;
+while i &amp;lt; len(char):
+	num = ord(char[i])+(i+5)
+	flag+=chr(num)
+	i+=1
+print(flag)
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;reverse&#34;&gt;REVERSE&lt;/h2&gt;
+&lt;p&gt;1.题目:机密文件
+用NET.Reflector Pro工具打开文件
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2721756916.png&#34; alt=&#34;6B517F8B-57C6-43CC-AD32-AF739244D967.png&#34;&gt;
+看到源代码
+发现是aes加密使用openssl解密或者用c#再写一个解密的
+password也在里面
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3386985755.png&#34; alt=&#34;27E2F10D-6444-4F29-A275-9BBA743B8386.png&#34;&gt;
+&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/618023056.png&#34; alt=&#34;593D7C75-0E7F-4421-A4C7-A572F8ED6572.png&#34;&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;openssl aes-128-cbc -nosalt -d -in secret.636748579460890458.bin -iv 6b6a704853325367344c716637754e65 -K 6b6a704853325367344c716637754e65 -p
+&lt;/code&gt;&lt;/pre&gt;</content>
+    </item>
+    
+  </channel>
+</rss>
