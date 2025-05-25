@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>OSWE考试总结 :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="时间记录 开始时间17日早上6点，那天正好我的代理过期了，考试网络弄了2个小时。。算是8点才开始做。
+目标 时间 第一台auth bypass 17日13:28 第一台system 17日18:32 睡觉 18日3:00-8:00 第二台auth bypass 18日9:29 第二台system 没看太累了直接结束。。 自我介绍 以前参加过几次CTF比赛，主要方向就是Web，自己审计过几套php的cms，所以不算纯小白，我把除了课件上的3道课后题做了一遍感觉难度中等，就准备预约考试了。
+考试 考试有5台机器，2台用于调试，2台目标机器，1台kali，我有oscp考试的经验，所以上去先将所有机器进行了重置（oscp没有重置遇到坑了。。），但是那天我代理正好过期了，有点倒霉，早上刚开始就浪费2个小时，但是网速情况还可以，gui远程调试基本没问题。
+难度肯定是比OSCP难的，但是相较于国内CTF还是相对简单，不需要像CTF一样考脑洞，一般情况是多个基础漏洞组合起来获得权限。主要困难是在这么多代码中找到存在漏洞的点（会有兔子洞），基本需要通读所有代码，还是比较累的。
+考试前建议认真看一遍考试规则，和考试报告的模版，这样不至于忘记截图。
+提前准备好需要用的脚本，比如sql注入脚本等等，考试的时候直接改就行。
+考试时间一定要提前预约本来我一个月前就想考了，但是已经没有周六周日的考试时间了，我只能预约下个月的，还是早上六点考试，我人迷迷糊糊的有一段时间基本都在梦游。。
+考试至少需要85分（满分100），拿到Auth Bypass 35分，获得系统权限15分，一共2台机器相当于至少要完成一个完整靶机和一个Auth Bypass。
+考试完第二天就发证书了，速度还是挺快的QAQ
+为什么要考 OSWE 这几年工作下来感觉对技术的渴望下降了不少，惰性占据上风，需要一个目标来鞭策自己，不让自己犯懒。我觉得Offensive Security 认证体系很不错，我挺喜欢的，不喜欢国内某些给钱就能过的考试，所以我定的目标是拿到OSCE3，希望能够成功。
+Try Harder
+" />
+<meta name="keywords" content="考试, oswe, 认证" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/posts/oswe/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="OSWE考试总结">
+<meta property="og:description" content="时间记录 开始时间17日早上6点，那天正好我的代理过期了，考试网络弄了2个小时。。算是8点才开始做。
+目标 时间 第一台auth bypass 17日13:28 第一台system 17日18:32 睡觉 18日3:00-8:00 第二台auth bypass 18日9:29 第二台system 没看太累了直接结束。。 自我介绍 以前参加过几次CTF比赛，主要方向就是Web，自己审计过几套php的cms，所以不算纯小白，我把除了课件上的3道课后题做了一遍感觉难度中等，就准备预约考试了。
+考试 考试有5台机器，2台用于调试，2台目标机器，1台kali，我有oscp考试的经验，所以上去先将所有机器进行了重置（oscp没有重置遇到坑了。。），但是那天我代理正好过期了，有点倒霉，早上刚开始就浪费2个小时，但是网速情况还可以，gui远程调试基本没问题。
+难度肯定是比OSCP难的，但是相较于国内CTF还是相对简单，不需要像CTF一样考脑洞，一般情况是多个基础漏洞组合起来获得权限。主要困难是在这么多代码中找到存在漏洞的点（会有兔子洞），基本需要通读所有代码，还是比较累的。
+考试前建议认真看一遍考试规则，和考试报告的模版，这样不至于忘记截图。
+提前准备好需要用的脚本，比如sql注入脚本等等，考试的时候直接改就行。
+考试时间一定要提前预约本来我一个月前就想考了，但是已经没有周六周日的考试时间了，我只能预约下个月的，还是早上六点考试，我人迷迷糊糊的有一段时间基本都在梦游。。
+考试至少需要85分（满分100），拿到Auth Bypass 35分，获得系统权限15分，一共2台机器相当于至少要完成一个完整靶机和一个Auth Bypass。
+考试完第二天就发证书了，速度还是挺快的QAQ
+为什么要考 OSWE 这几年工作下来感觉对技术的渴望下降了不少，惰性占据上风，需要一个目标来鞭策自己，不让自己犯懒。我觉得Offensive Security 认证体系很不错，我挺喜欢的，不喜欢国内某些给钱就能过的考试，所以我定的目标是拿到OSCE3，希望能够成功。
+Try Harder
+" />
+<meta property="og:url" content="https://vuln.top/posts/oswe/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+  
+  <meta property="og:image" content="https://vuln.top/">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2023-06-19 18:00:38 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top/">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="https://vuln.top/posts/oswe/">OSWE考试总结</a>
+  </h1>
+  <div class="post-meta">
+    
+      <time class="post-date">
+        2023-06-19 ::
+        
+      </time>
+    
+    
+      <span class="post-author">ca1s1</span>
+    
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="https://vuln.top/tags/%E8%80%83%E8%AF%95/">考试</a>&nbsp;
+      
+      #<a href="https://vuln.top/tags/oswe/">oswe</a>&nbsp;
+      
+      #<a href="https://vuln.top/tags/%E8%AE%A4%E8%AF%81/">认证</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <h2 id="时间记录">时间记录<a href="#时间记录" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>开始时间17日早上6点，那天正好我的代理过期了，考试网络弄了2个小时。。算是8点才开始做。</p>
+<table>
+  <thead>
+      <tr>
+          <th>目标</th>
+          <th>时间</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>第一台auth bypass</td>
+          <td>17日13:28</td>
+      </tr>
+      <tr>
+          <td>第一台system</td>
+          <td>17日18:32</td>
+      </tr>
+      <tr>
+          <td>睡觉</td>
+          <td>18日3:00-8:00</td>
+      </tr>
+      <tr>
+          <td>第二台auth bypass</td>
+          <td>18日9:29</td>
+      </tr>
+      <tr>
+          <td>第二台system</td>
+          <td>没看太累了直接结束。。</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="自我介绍">自我介绍<a href="#自我介绍" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>以前参加过几次CTF比赛，主要方向就是Web，自己审计过几套php的cms，所以不算纯小白，我把除了课件上的3道课后题做了一遍感觉难度中等，就准备预约考试了。</p>
+<h2 id="考试">考试<a href="#考试" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>考试有5台机器，2台用于调试，2台目标机器，1台kali，我有oscp考试的经验，所以上去先将所有机器进行了重置（oscp没有重置遇到坑了。。），但是那天我代理正好过期了，有点倒霉，早上刚开始就浪费2个小时，但是网速情况还可以，gui远程调试基本没问题。</p>
+<p>难度肯定是比OSCP难的，但是相较于国内CTF还是相对简单，不需要像CTF一样考脑洞，一般情况是多个基础漏洞组合起来获得权限。主要困难是在这么多代码中找到存在漏洞的点（会有兔子洞），基本需要通读所有代码，还是比较累的。</p>
+<p>考试前建议认真看一遍考试规则，和考试报告的模版，这样不至于忘记截图。</p>
+<p>提前准备好需要用的脚本，比如sql注入脚本等等，考试的时候直接改就行。</p>
+<p>考试时间一定要提前预约本来我一个月前就想考了，但是已经没有周六周日的考试时间了，我只能预约下个月的，还是早上六点考试，我人迷迷糊糊的有一段时间基本都在梦游。。</p>
+<p>考试至少需要85分（满分100），拿到Auth Bypass 35分，获得系统权限15分，一共2台机器相当于至少要完成一个完整靶机和一个Auth Bypass。</p>
+<p>考试完第二天就发证书了，速度还是挺快的QAQ</p>
+<h2 id="为什么要考-oswe">为什么要考 OSWE<a href="#为什么要考-oswe" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>这几年工作下来感觉对技术的渴望下降了不少，惰性占据上风，需要一个目标来鞭策自己，不让自己犯懒。我觉得Offensive Security 认证体系很不错，我挺喜欢的，不喜欢国内某些给钱就能过的考试，所以我定的目标是拿到OSCE3，希望能够成功。</p>
+<p><strong>Try Harder</strong></p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h"></span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="https://vuln.top/posts/truenas-ut650egc-ups/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Truenas 安装 UT650EGC UPS</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="https://vuln.top/posts/my-first-post/">
+                <span class="button__text">MAC下微信浏览器可能可行的利用方式</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

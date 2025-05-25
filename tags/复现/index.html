@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>复现 :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/tags/%E5%A4%8D%E7%8E%B0/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="复现">
+<meta property="og:description" content="" />
+<meta property="og:url" content="https://vuln.top/tags/%E5%A4%8D%E7%8E%B0/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+    <meta property="og:image" content="https://vuln.top/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/%E5%A4%8D%E7%8E%B0/index.xml" rel="alternate" type="application/rss+xml" title="Ca1s1&#39;Blog" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top/">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/cve-2022-22954/">CVE-2022-22954</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2023-01-23 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/%E5%A4%8D%E7%8E%B0/">复现</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/cve/">CVE</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <h1 id="cve-2022-22954">CVE-2022-22954</h1>
+<h2 id="代码分析">代码分析</h2>
+<p><a href="http://file.xipudata.com/?dir=/2_software/Vmware/Horizon8">http://file.xipudata.com/?dir=/2_software/Vmware/Horizon8</a>
+下载好ova，使用vmware安装搭建，导入时添加下域名。
+<img src="/img/16534685569681/16534686232696.jpg" alt="">
+根据官方提供的临时修复脚本可以知道漏洞存在于
+<code>/opt/vmware/horizon/workspace/webapps/catalog-portal/WEB-INF/lib/endusercatalog-ui-1.0-SNAPSHOT-classes.jar</code>
+<img src="/img/16534685569681/16534687156233.jpg" alt="">
+修复脚本中还提到了这个文件
+<img src="/img/16534685569681/16534692518129.jpg" alt="">
+查看该文件后发现存在eval，这是java freemarker的写法，用来把字符串当作ftl代码，所以我们只需要控制errorObj即可实现代码执行
+<img src="/img/16534685569681/16534695194137.jpg" alt="">
+所以我们知道漏洞来源于customError,我们需要找到可以到达customError的路由，并且可以控制errorObj
+在UiErrorController.class中可以找到handleGenericError，可以传递errorObj，最后return到customError</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String <span style="color:#a6e22e">handleGenericError</span>(<span style="color:#66d9ef">final</span> HttpServletRequest request, <span style="color:#66d9ef">final</span> HttpServletResponse response, <span style="color:#66d9ef">final</span> Map<span style="color:#f92672">&lt;</span>String, Object<span style="color:#f92672">&gt;</span> model, <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">boolean</span> isAWJade, <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">boolean</span> garnetAndAbove, <span style="color:#66d9ef">final</span> String excpClass, <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> errorCode, <span style="color:#66d9ef">final</span> String errorMessage) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">final</span> String localizedMessageHeader <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">messages</span>.<span style="color:#a6e22e">getLocalizedErrorMessage</span>(<span style="color:#e6db74">&#34;errorPage.errorHeading&#34;</span>, request.<span style="color:#a6e22e">getLocale</span>(), (Object<span style="color:#f92672">[]</span>)<span style="color:#66d9ef">null</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">final</span> String localizedMessage <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">messages</span>.<span style="color:#a6e22e">getLocalizedErrorMessage</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">getLocalizedMessageKey</span>(excpClass), request.<span style="color:#a6e22e">getLocale</span>(), (Object<span style="color:#f92672">[]</span>)<span style="color:#66d9ef">null</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (errorCode <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span>1) {
+</span></span><span style="display:flex;"><span>            response.<span style="color:#a6e22e">setStatus</span>(errorCode);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        model.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;errorObj&#34;</span>, errorMessage);
+</span></span><span style="display:flex;"><span>        model.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;messageHeader&#34;</span>, localizedMessageHeader);
+</span></span><span style="display:flex;"><span>        model.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;genericErrorMsg&#34;</span>, localizedMessage);
+</span></span><span style="display:flex;"><span>        model.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;contextPath&#34;</span>, request.<span style="color:#a6e22e">getContextPath</span>());
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (isAWJade) {
+</span></span><span style="display:flex;"><span>            WebUtils.<span style="color:#a6e22e">markCookiesForDeletion</span>(request, response, <span style="color:#66d9ef">new</span> String<span style="color:#f92672">[]</span> { <span style="color:#e6db74">&#34;USER_CATALOG_CONTEXT&#34;</span> });
+</span></span><span style="display:flex;"><span>            WebUtils.<span style="color:#a6e22e">markCookiesForDeletionWithPath</span>(request, response, <span style="color:#e6db74">&#34;/catalog-portal&#34;</span>, <span style="color:#66d9ef">new</span> String<span style="color:#f92672">[]</span> { <span style="color:#e6db74">&#34;EUC_XSRF_TOKEN&#34;</span> });
+</span></span><span style="display:flex;"><span>            model.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;logoutPath&#34;</span>, retrieveServerInitiatedLogoutPath(garnetAndAbove).<span style="color:#a6e22e">getName</span>());
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">final</span> StringBuilder logoutUrl <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder(request.<span style="color:#a6e22e">getContextPath</span>()).<span style="color:#a6e22e">append</span>(<span style="color:#e6db74">&#34;/ui&#34;</span>).<span style="color:#a6e22e">append</span>(<span style="color:#e6db74">&#34;/logout&#34;</span>);
+</span></span><span style="display:flex;"><span>            String queryStr <span style="color:#f92672">=</span> request.<span style="color:#a6e22e">getQueryString</span>();
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (StringUtils.<span style="color:#a6e22e">isNotBlank</span>((CharSequence)queryStr)) {
+</span></span><span style="display:flex;"><span>                queryStr <span style="color:#f92672">=</span> UrlUtils.<span style="color:#a6e22e">encodeQuery</span>(UrlUtils.<span style="color:#a6e22e">decode</span>(queryStr));
+</span></span><span style="display:flex;"><span>                logoutUrl.<span style="color:#a6e22e">append</span>(<span style="color:#e6db74">&#39;?&#39;</span>).<span style="color:#a6e22e">append</span>(queryStr);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            model.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;logoutPath&#34;</span>, logoutUrl.<span style="color:#a6e22e">toString</span>());
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;customError&#34;</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><p>所以我们继续往上找到<code>getErrorPage</code>和<code>handleUnauthorizedError</code>，调用了<code>handleGenericError</code></p>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/cve-2022-22954/"> →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

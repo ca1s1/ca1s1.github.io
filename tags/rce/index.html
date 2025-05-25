@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Rce :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/tags/rce/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Rce">
+<meta property="og:description" content="" />
+<meta property="og:url" content="https://vuln.top/tags/rce/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+    <meta property="og:image" content="https://vuln.top/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/rce/index.xml" rel="alternate" type="application/rss+xml" title="Ca1s1&#39;Blog" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top/">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/my-first-post/">MAC下微信浏览器可能可行的利用方式</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2023-04-24 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/rce/">rce</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/%E7%A0%94%E7%A9%B6/">研究</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <p>在MAC下的微信浏览器，与其他浏览器不同，通过在笔记中添加协议，在用户点击后会自动执行url scheme协议，用户无需确认即可执行。</p>
+<p>下面列出几种可行的攻击方案，但是还没有找到一种比较完美的：</p>
+<p>1、通过file协议可直接执行app文件，但是前提是需要文件落地，所以需要预先将文件传输，但是如果通过http等方式下载文件运行app是会触发到mac的Gatekeep机制导致无法直接运行、而在MAC OS10.15版本后通过smb等方式传输的文件会存在LSOpenURLsWithRole() failed with error -10810错误导致无法运行，即使你全部都绕过，攻击者仍然需要在知道文件路径的情况下，再让其点击链接，所以这种攻击难度较高。</p>
+<p>2、通过MAC OS本身一些软件存在的URL Schemes，如果这些软件的URL Schemes存在漏洞或者可以bypass即可实现攻击，如通过<a href="https://blog.chichou.me/2020/07/01/x-site-escape-part-iii-cve-2020-9860-a-copycat/">c</a>ve-2020-9860，具体可以看<a href="https://blog.chichou.me/2020/07/01/x-site-escape-part-iii-cve-2020-9860-a-copycat/">https://blog.chichou.me/2020/07/01/x-site-escape-part-iii-cve-2020-9860-a-copycat/</a>，但这</p>
+<p>种攻击方式成本较高，需要配合MACOS上的漏洞或其他常用软件打组合拳才能RCE。我通过将本地所有的URL Schemes进行遍历。</p>
+<p>找到ms-powerpoint:///etc/hosts，通过微软的PPT URL Schemes可以读取到本地的文件，</p>
+<p>具体代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-jsx" data-lang="jsx"><span style="display:flex;"><span>&lt;<span style="color:#f92672">html</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">p</span>&gt;<span style="color:#a6e22e">Loading</span>...&lt;/<span style="color:#f92672">p</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">setInterval</span>(() =&gt; {<span style="color:#a6e22e">location</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;ms-powerpoint:///etc/hosts&#39;</span>}, <span style="color:#ae81ff">2000</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">html</span>&gt;
+</span></span></code></pre></div><p>在这种情况下其实只需要找到一种，将文件重定向到外网服务器的方法即可读取到任意文件，虽然通过测试发现smb可以不用输入账户密码即可连接vps，但是由于我基本功太菜暂时没有找到如何传输。</p>
+<p>3、利用自定义到URL Scheme远程突破MAC</p>
+<p>WINDSHIFT APT组织曾经通过该方法远程感染MACOS目标主机，在MACOS中应用程序可以“声明”自己能够支持（或者“处理”）各种文档类型以及/或者自定义的URL Scheme，且自定义的方式非常简单只需要在APP文件中的Info.plist文件加入URL Type数组即可实现，而且只需要APP文件落地到目标机器，MACOS会自动查找APP文件中Info.plist文件是否存在URL Types如果存在自动注册。</p>
+<p>通过MACOS默认的Safari浏览器下载压缩包，后会自动解压文件，从而文件落地自定义URL Scheme在通过点击链接触发自定义的URL Scheme。但是这种方式需要绕过Gatekeeper和文件隔离，Gatekeeper可以通过给APP文件签名绕过，文件隔离需要通过给文件名添加诱惑性文字，让其点击有点类似社工方式才能实现。虽然需要用户交互，然而这种功能已经在实际攻击活动中被成功利用。具体操作可以看<a href="https://www.anquanke.com/post/id/158679">https://www.anquanke.com/post/id/158679</a>。</p>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/my-first-post/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/redhat2021/">RedHat2021 CTF</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2019-10-15 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/rce/">rce</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/%E7%A0%94%E7%A9%B6/">研究</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/sql/">sql</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            漏洞复现
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/redhat2021/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/tongdaoarce/">通达OA文件上传&amp;文件包含导致RCE复现</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2019-10-15 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/rce/">rce</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/%E7%A0%94%E7%A9%B6/">研究</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">漏洞复现</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            漏洞复现
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/tongdaoarce/"> →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

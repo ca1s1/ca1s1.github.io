@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Extensions on Ca1s1&#39;Blog</title>
+    <link>https://vuln.top/tags/extensions/</link>
+    <description>Recent content in Extensions on Ca1s1&#39;Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 25 May 2025 16:10:30 +0800</lastBuildDate><atom:link href="https://vuln.top/tags/extensions/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Turbo Intruder条件竞争代码</title>
+      <link>https://vuln.top/posts/burpsuiteturbointruder/</link>
+      <pubDate>Sun, 25 May 2025 16:10:30 +0800</pubDate>
+      
+      <guid>https://vuln.top/posts/burpsuiteturbointruder/</guid>
+      <description>&lt;h1 id=&#34;turbo-intruder&#34;&gt;Turbo Intruder&lt;/h1&gt;
+&lt;h2 id=&#34;条件竞争&#34;&gt;条件竞争&lt;/h2&gt;
+&lt;p&gt;不知道哪个版本Turbo Intruder少了这个默认的模版记录下。&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;def queueRequests(target, wordlists):
+    engine = RequestEngine(endpoint=target.endpoint,
+                           concurrentConnections=30,
+                           requestsPerConnection=100,
+                           pipeline=False
+                           )
+
+    # the &amp;#39;gate&amp;#39; argument blocks the final byte of each request until openGate is invoked
+    for i in range(30):
+        engine.queue(target.req, target.baseInput, gate=&amp;#39;race1&amp;#39;)
+
+    # wait until every &amp;#39;race1&amp;#39; tagged request is ready
+    # then send the final byte of each request
+    # (this method is non-blocking, just like queue)
+    engine.openGate(&amp;#39;race1&amp;#39;)
+
+    engine.complete(timeout=60)
+
+
+def handleResponse(req, interesting):
+    table.add(req)
+&lt;/code&gt;&lt;/pre&gt;</description>
+      <content>&lt;h1 id=&#34;turbo-intruder&#34;&gt;Turbo Intruder&lt;/h1&gt;
+&lt;h2 id=&#34;条件竞争&#34;&gt;条件竞争&lt;/h2&gt;
+&lt;p&gt;不知道哪个版本Turbo Intruder少了这个默认的模版记录下。&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;def queueRequests(target, wordlists):
+    engine = RequestEngine(endpoint=target.endpoint,
+                           concurrentConnections=30,
+                           requestsPerConnection=100,
+                           pipeline=False
+                           )
+
+    # the &amp;#39;gate&amp;#39; argument blocks the final byte of each request until openGate is invoked
+    for i in range(30):
+        engine.queue(target.req, target.baseInput, gate=&amp;#39;race1&amp;#39;)
+
+    # wait until every &amp;#39;race1&amp;#39; tagged request is ready
+    # then send the final byte of each request
+    # (this method is non-blocking, just like queue)
+    engine.openGate(&amp;#39;race1&amp;#39;)
+
+    engine.complete(timeout=60)
+
+
+def handleResponse(req, interesting):
+    table.add(req)
+&lt;/code&gt;&lt;/pre&gt;</content>
+    </item>
+    
+  </channel>
+</rss>

