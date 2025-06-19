@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Tips :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/tags/tips/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Tips">
+<meta property="og:description" content="" />
+<meta property="og:url" content="https://vuln.top/tags/tips/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+    <meta property="og:image" content="https://vuln.top/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/tips/index.xml" rel="alternate" type="application/rss+xml" title="Ca1s1&#39;Blog" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top/">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/%E8%AE%A9%E7%BB%88%E7%AB%AF%E8%B5%B0%E4%BB%A3%E7%90%86%E7%9A%84%E6%96%B9%E6%B3%95/">让终端走代理的方法</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2019-02-21 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/tips/">tips</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <p>把代理服务器地址写入shell配置文件.bashrc或者.zshrc</p>
+<p>直接在.bashrc或者.zshrc添加下面内容</p>
+<pre tabindex="0"><code>1.export http_proxy=&#34;http://localhost:port&#34;
+2.export https_proxy=&#34;http://localhost:port&#34;
+</code></pre><p>以使用shadowsocks代理为例，ss的代理端口为1080,那么应该设置为</p>
+<pre tabindex="0"><code>1.export http_proxy=&#34;socks5://127.0.0.1:1080&#34;
+2.export https_proxy=&#34;socks5://127.0.0.1:1080&#34;
+</code></pre><p>或者直接设置ALL_PROXY</p>
+<pre tabindex="0"><code>1.export ALL_PROXY=socks5://127.0.0.1:1080
+</code></pre><p>localhost就是一个域名，域名默认指向 127.0.0.1，两者是一样的。</p>
+<p>然后ESC后:wq保存文件，接着在终端中执行</p>
+<pre tabindex="0"><code>source ~/.bashrc
+</code></pre><p>或者退出当前终端再起一个终端。 这个办法的好处是把代理服务器永久保存了，下次就可以直接用了。</p>
+<p>或者通过设置alias简写来简化操作，每次要用的时候输入setproxy，不用了就unsetproxy。</p>
+<pre tabindex="0"><code>1.alias setproxy=&#34;export ALL_PROXY=socks5://127.0.0.1:1080&#34;
+2.alias unsetproxy=&#34;unset ALL_PROXY&#34;
+3.alias ip=&#34;curl -i http://ip.cn&#34;
+</code></pre>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/%E8%AE%A9%E7%BB%88%E7%AB%AF%E8%B5%B0%E4%BB%A3%E7%90%86%E7%9A%84%E6%96%B9%E6%B3%95/"> →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

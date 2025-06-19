@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Js on Ca1s1&#39;Blog</title>
+    <link>https://vuln.top/tags/js/</link>
+    <description>Recent content in Js on Ca1s1&#39;Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 23 Aug 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://vuln.top/tags/js/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2019神盾杯</title>
+      <link>https://vuln.top/posts/2019shendun/</link>
+      <pubDate>Sun, 23 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://vuln.top/posts/2019shendun/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;首届“神盾杯”上海市网络安全竞赛&lt;/strong&gt;，去年的比赛。&lt;/p&gt;
+&lt;h1 id=&#34;0x00-babyjs&#34;&gt;0x00 babyJS&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;查看源码 找不到被调用的&lt;code&gt;CheckLogin&lt;/code&gt;函数&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun///image1.png&#34; alt=&#34;/img/19shendun/image1.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;看到&lt;strong&gt;script&lt;/strong&gt;中有用到&lt;code&gt;unespace&lt;/code&gt;和&lt;code&gt;escape&lt;/code&gt;等函数 用于编码字符串&lt;/p&gt;
+&lt;p&gt;将&lt;code&gt;eval&lt;/code&gt;传参改为&lt;code&gt;alert&lt;/code&gt; 显示为弹窗&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image2.png&#34; alt=&#34;/img/19shendun/image2.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现&lt;code&gt;check&lt;/code&gt;函数 并将flag与用户输入做比较 得到flag&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image3.png&#34; alt=&#34;/img/19shendun/image3.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{a5a5f402f6dc62acd3e848900a17513f}&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;0x01-crypto_easy_1&#34;&gt;0x01 crypto_easy_1&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;下载文件&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image4.png&#34; alt=&#34;/img/19shendun/image4.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现3行类似的数据 并且长度一致。&lt;/p&gt;
+&lt;p&gt;:左边的长度为42 右边的长度为56 ，猜测右边被base64编码过 进行解码 比较长度&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image5.png&#34; alt=&#34;/img/19shendun/image5.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;长度一致 为42&lt;/p&gt;
+&lt;p&gt;异或运算一下 可以得到Key随后将key代入 与base64解码后的密文异或比较 得到flag&lt;/p&gt;
+&lt;p&gt;解密脚本如下:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; base64
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;v6&amp;#34;wo5UIP9c4IdCk1o6qZhhB5DKZhVBwBzONl1JRIz:TwB2RyZYBCEVbjBjID17UkUeeDAwPBh1dg86AyAgcSQ4QygYGnAuJQYw&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;y &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;zjS0ubQE2hw29FL2qs61ZNOVyFaf6IAjUZ7X8ijuVg:Q1wHADwPAC13PyRlUB90CwUCeHAwGj9hOg0QP34/cjkvY1AOTigOAhkt&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;z &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;pJryZpVUNpSFi06WlKGkS0Uka6zw1sNCX&amp;#34;h2urQoyg:SXwmSRMdBz0LJwARAGkObhg6CSo5ZCVcIn0LLnkFfRAiGw9kAzM1GDYt&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;a, b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; x&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;c, d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; y&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;e, f &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; z&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(b)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(d)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;f &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(f)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;g &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;X1o1VzIPaVgjbmNvCnQAC0ZHY3BbMUkaeylDYWVOCzZDXwJjR3hTFiw3&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;flag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt;  i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;42&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    t &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ord(a[i]) &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; ord(b[i])
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    flag &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; chr(ord(g[i]) &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; t)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(flag)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;</description>
+      <content>&lt;p&gt;&lt;strong&gt;首届“神盾杯”上海市网络安全竞赛&lt;/strong&gt;，去年的比赛。&lt;/p&gt;
+&lt;h1 id=&#34;0x00-babyjs&#34;&gt;0x00 babyJS&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;查看源码 找不到被调用的&lt;code&gt;CheckLogin&lt;/code&gt;函数&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun///image1.png&#34; alt=&#34;/img/19shendun/image1.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;看到&lt;strong&gt;script&lt;/strong&gt;中有用到&lt;code&gt;unespace&lt;/code&gt;和&lt;code&gt;escape&lt;/code&gt;等函数 用于编码字符串&lt;/p&gt;
+&lt;p&gt;将&lt;code&gt;eval&lt;/code&gt;传参改为&lt;code&gt;alert&lt;/code&gt; 显示为弹窗&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image2.png&#34; alt=&#34;/img/19shendun/image2.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现&lt;code&gt;check&lt;/code&gt;函数 并将flag与用户输入做比较 得到flag&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image3.png&#34; alt=&#34;/img/19shendun/image3.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{a5a5f402f6dc62acd3e848900a17513f}&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;0x01-crypto_easy_1&#34;&gt;0x01 crypto_easy_1&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;下载文件&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image4.png&#34; alt=&#34;/img/19shendun/image4.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现3行类似的数据 并且长度一致。&lt;/p&gt;
+&lt;p&gt;:左边的长度为42 右边的长度为56 ，猜测右边被base64编码过 进行解码 比较长度&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image5.png&#34; alt=&#34;/img/19shendun/image5.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;长度一致 为42&lt;/p&gt;
+&lt;p&gt;异或运算一下 可以得到Key随后将key代入 与base64解码后的密文异或比较 得到flag&lt;/p&gt;
+&lt;p&gt;解密脚本如下:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; base64
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;v6&amp;#34;wo5UIP9c4IdCk1o6qZhhB5DKZhVBwBzONl1JRIz:TwB2RyZYBCEVbjBjID17UkUeeDAwPBh1dg86AyAgcSQ4QygYGnAuJQYw&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;y &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;zjS0ubQE2hw29FL2qs61ZNOVyFaf6IAjUZ7X8ijuVg:Q1wHADwPAC13PyRlUB90CwUCeHAwGj9hOg0QP34/cjkvY1AOTigOAhkt&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;z &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;pJryZpVUNpSFi06WlKGkS0Uka6zw1sNCX&amp;#34;h2urQoyg:SXwmSRMdBz0LJwARAGkObhg6CSo5ZCVcIn0LLnkFfRAiGw9kAzM1GDYt&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;a, b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; x&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;c, d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; y&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;e, f &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; z&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(b)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(d)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;f &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(f)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;g &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; base64&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;b64decode(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;X1o1VzIPaVgjbmNvCnQAC0ZHY3BbMUkaeylDYWVOCzZDXwJjR3hTFiw3&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;flag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt;  i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;42&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    t &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ord(a[i]) &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; ord(b[i])
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    flag &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; chr(ord(g[i]) &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; t)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(flag)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{b80f908c-8226-11e9-8b28-88e9fe5197ac}&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;0x02-ez_gallery_1&#34;&gt;0x02 ez_gallery_1&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;查看源码&lt;/p&gt;
+&lt;p&gt;提示flag位置&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image6.png&#34; alt=&#34;/img/19shendun/image6.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;找到可以利用的url&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image7.png&#34; alt=&#34;/img/19shendun/image7.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;使用?截断1.jpg&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image8.png&#34; alt=&#34;/img/19shendun/image8.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{378346c7ac53d624a8621efc745bbeab}&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;0x03 fast_calc_2&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;随便试了几下{1+1},{set},发现有点奇怪,猜测可能是python逃逸&lt;/p&gt;
+&lt;p&gt;尝试&lt;code&gt;dir(().__class__)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image9.png&#34; alt=&#34;/img/19shendun/image9.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;尝试了一下网上的payload但是没有成功，发现存在过滤，过滤了&lt;code&gt;[]&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;查到builtins是自动引入环境的&lt;code&gt;__builtins__.__dict__&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image10.png&#34; alt=&#34;/img/19shendun/image10.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;查找资料通过pop绕过[]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image11.png&#34; alt=&#34;/img/19shendun/image11.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Payload为：&lt;code&gt;__builtins__.__dict__.pop(&#39;open&#39;)(&#39;/flag&#39;).readline()&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image12.png&#34; alt=&#34;/img/19shendun/image12.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{4582900a19a6a8801399afb6a31d9bc0}&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;0x04-easyadmin&#34;&gt;0x04 Easyadmin&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;爆破下目录发现index.php~存在源码&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image13.png&#34; alt=&#34;/img/19shendun/image13.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现srole==admin才能输出flag&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image14.png&#34; alt=&#34;/img/19shendun/image14.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;登陆的后发现token为base64加密，解一下&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image15.png&#34; alt=&#34;/img/19shendun/image15.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image16.png&#34; alt=&#34;/img/19shendun/image16.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;搜索了一下jwt发现有加密，网上有类似的解法&lt;/p&gt;
+&lt;p&gt;下面网站可以验证&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://jwt.io/&#34;&gt;https://jwt.io/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image17.png&#34; alt=&#34;/img/19shendun/image17.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;有根据源码把guest改为admin&lt;/p&gt;
+&lt;p&gt;再看下源码，里面有一个key我们不知道，猜测需要爆破应该为4位&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image18.png&#34; alt=&#34;/img/19shendun/image18.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;在github上找到一个脚本直接跑出来了&lt;a href=&#34;https://github.com/brendan-rius/c-jwt-cracker&#34;&gt;https://github.com/brendan-rius/c-jwt-cracker&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image19.png&#34; alt=&#34;/img/19shendun/image19.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;保存下‘sjwt’&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image20.png&#34; alt=&#34;/img/19shendun/image20.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;用这个新token替换一下成功获取flag&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image21.png&#34; alt=&#34;/img/19shendun/image21.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{11529a36dd607c45e5b104ed977247ed}&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;0x05-easyupload&#34;&gt;0x05 Easyupload&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;通过尝试发现在图片地址处输入 &lt;a href=&#34;&#34;&gt;file:///etc/passwd&lt;/a&gt;可以读到文件&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image22.png&#34; alt=&#34;/img/19shendun/image22.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image23.png&#34; alt=&#34;/img/19shendun/image23.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;然后在这卡了好久，在摸索后发现可以通过用/proc/self/cwd绕过，cwd是一个符号链接，指向了实际的工作目录&lt;/p&gt;
+&lt;p&gt;下图是一篇文章中的介绍&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image24.png&#34; alt=&#34;/img/19shendun/image24.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image25.png&#34; alt=&#34;/img/19shendun/image25.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;构造如下payload&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image26.png&#34; alt=&#34;/img/19shendun/image26.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;获取到源码&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image27.png&#34; alt=&#34;/img/19shendun/image27.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;找到他的命名规则&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image28.png&#34; alt=&#34;/img/19shendun/image28.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;然后通过上传php webshell获取flag&lt;/p&gt;
+&lt;p&gt;先上传一个phpinfo&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image29.png&#34; alt=&#34;/img/19shendun/image29.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;读到了文件但是没有执行&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image30.png&#34; alt=&#34;/img/19shendun/image30.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;想到通过&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image31.png&#34; alt=&#34;/img/19shendun/image31.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;&amp;lt;script language=&amp;quot;php&amp;quot;&amp;gt;phpinfo();&amp;lt;/script&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image32.png&#34; alt=&#34;/img/19shendun/image32.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;成功执行&lt;/p&gt;
+&lt;p&gt;运行 &lt;code&gt;system(cat /flag)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image33.png&#34; alt=&#34;/img/19shendun/image33.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image34.png&#34; alt=&#34;/img/19shendun/image34.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{2742ab5468a78d70dca332ca48aa7b89}&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;0x06-easysqli&#34;&gt;0x06 Easysqli&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;操作内容：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;首先登陆pow直接在cmd5上解密下就行&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image35.png&#34; alt=&#34;/img/19shendun/image35.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;一开始尝试各种绕过都不行&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image36.png&#34; alt=&#34;/img/19shendun/image36.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;后来提示了一波&lt;code&gt;bypass addslashes&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;通过google搜索&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image37.png&#34; alt=&#34;/img/19shendun/image37.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;格式化字符串漏洞&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image38.png&#34; alt=&#34;/img/19shendun/image38.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;找到payload %1$&#39;&lt;/p&gt;
+&lt;p&gt;1．两张 &lt;code&gt;admin%1$&#39;%20union%20select%201,2%23&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image39.png&#34; alt=&#34;/img/19shendun/image39.png&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;查找表&lt;code&gt;admin%1$&#39;%20union%20select%20table_name,2%20from%20information_schema.tables%20where%20table_schema=database()%23&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;表名user&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image40.png&#34; alt=&#34;/img/19shendun/image40.png&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;&lt;code&gt;admin%1$&#39;%20union%20select%20column_name,2%20from%20information_schema.columns%20where%20table_schema=database()%23&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;找到字段名&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image41.png&#34; alt=&#34;/img/19shendun/image41.png&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;&lt;code&gt;admin%1$&#39;%20union%20select%20username,password%20from%20user%23&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;在password中找到&lt;strong&gt;flag&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/19shendun/image42.png&#34; alt=&#34;/img/19shendun/image42.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FLAG值：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;flag{299386fb699cff0cb99b1f57dee500a0}&lt;/strong&gt;&lt;/p&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Debug on Ca1s1&#39;Blog</title>
+    <link>https://vuln.top/tags/debug/</link>
+    <description>Recent content in Debug on Ca1s1&#39;Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 09 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://vuln.top/tags/debug/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>JEB_Debug_Encrypt</title>
+      <link>https://vuln.top/posts/jeb_debug_encrypt/</link>
+      <pubDate>Sun, 09 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://vuln.top/posts/jeb_debug_encrypt/</guid>
+      <description>&lt;h1 id=&#34;jeb-动态调试-加密&#34;&gt;JEB 动态调试 加密&lt;/h1&gt;
+&lt;h2 id=&#34;工具&#34;&gt;工具&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;JEB3&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;BurpSuite&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Genymotion&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;操作&#34;&gt;操作&lt;/h2&gt;
+&lt;p&gt;先准备一个模拟器或安卓手机，配置好&lt;code&gt;BurpSuite&lt;/code&gt;代理，可以抓取到如下数据包，Request和Response都已加密。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;用Jeb3打开Apk，进入Bytecode菜单，点击下方的字符串，搜索&lt;code&gt;dataStr&lt;/code&gt;双击进入。（为啥要搜索它? 因为它在提交数据中是个协议头, 添加这些参数的时候想必都会在一个代码块, 所以加密函数也可能在附近。）&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%201.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%201.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;进入后我们可以看到&lt;code&gt;smali&lt;/code&gt;代码，在可疑的地方通过Ctrl+b可以下断点进行调试。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%202.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%202.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;模拟器内需要先打开APP，然后点击上方虫子按钮，可以看到如下图所示，点击附上。&lt;/p&gt;
+&lt;p&gt;注意: 如果附加和调试对话框中没有模拟器的话, 你需要将模拟器目录下的adb.exe路径添加进系统环境变量path中, 如果已经添加却无法搜索到, 打开任务管理器结束adb.exe进程, 重启模拟器应该就可以了&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%203.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%203.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;在模拟器内点击登陆后，JEB模拟器右上方VM/局部变量会增加几个值，但是我们无法直接看懂。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%204.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%204.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们需要修改Type类型，从int改为&lt;code&gt;string&lt;/code&gt;，修改后我们可以看到变量当前处在内存中的值，F6可以进行单步调试，局部变量的值也会随之改变。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%205.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%205.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们已经了解了如何进行断点调试，通过分析java代码看下整个的加密过程&lt;/p&gt;
+&lt;p&gt;dataStr是我们的加密字符串，先是调用了getEncodeJsonStr，双击进入看一下&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%206.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%206.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;arg6是我们传入的值，我们设置断点看一下&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%207.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%207.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;如下图可以看到v6是我们传入的数据进行了json转换，那么我们只要跟着v6走就能找到加密过程。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%208.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%208.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们继续往下，v6传入了encodeMesJsonByPassword中，传入了4个值分别为Token，requestAesKey，v6，TERMINAL_TYPE&lt;/p&gt;
+&lt;p&gt;如下图Token是#@!1234567890!@#，requestAesKey是1234567890123456，v6是json格式的明文&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%209.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%209.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;TERMINAL_TYPE还不知道我们双击进去，是afAndriod&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2010.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2010.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;几个变量都知道了那我们双击进入encodeMesJsonByPassword函数，可以看到v2是一个随机的AesSecretKey，将等于过滤为空，先不管他。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2011.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2011.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;如下图signature=md5(terminalType+token+timestamp)，terminalType=afAndriod、token=#@!1234567890!@#、timestamp为一个随机值，暂时无法构造。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2012.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2012.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;继续往下看arg6，将&amp;amp;timestamp=xxx+&amp;amp;signature=xxx进行了一次base64，和上面的arg6一起进入encryptPinfo函数。上面的arg6为requestAesKey=1234567890123456&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2013.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2013.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;接着进入encryptPinfo函数，arg3=base64(&amp;amp;timestamp=xxx+&amp;amp;signature=xxx),arg4=1234567890123456,看下加密发现是AES/CBC/PKCS5Padding加密。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2014.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2014.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;有了KEY，我们需要找到IV，点击进入IsIvParameter_Pinfo，如下图Iv值为0123456789abcdef&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2015.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2015.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;有了IV和KEY，还有加密算法我们需要对加密字符串进行解密，通过在线AES解密即可得到。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2016.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2016.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;在进行一次base64，获得明文&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2017.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2017.png&#34;&gt;&lt;/p&gt;</description>
+      <content>&lt;h1 id=&#34;jeb-动态调试-加密&#34;&gt;JEB 动态调试 加密&lt;/h1&gt;
+&lt;h2 id=&#34;工具&#34;&gt;工具&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;JEB3&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;BurpSuite&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Genymotion&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;操作&#34;&gt;操作&lt;/h2&gt;
+&lt;p&gt;先准备一个模拟器或安卓手机，配置好&lt;code&gt;BurpSuite&lt;/code&gt;代理，可以抓取到如下数据包，Request和Response都已加密。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;用Jeb3打开Apk，进入Bytecode菜单，点击下方的字符串，搜索&lt;code&gt;dataStr&lt;/code&gt;双击进入。（为啥要搜索它? 因为它在提交数据中是个协议头, 添加这些参数的时候想必都会在一个代码块, 所以加密函数也可能在附近。）&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%201.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%201.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;进入后我们可以看到&lt;code&gt;smali&lt;/code&gt;代码，在可疑的地方通过Ctrl+b可以下断点进行调试。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%202.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%202.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;模拟器内需要先打开APP，然后点击上方虫子按钮，可以看到如下图所示，点击附上。&lt;/p&gt;
+&lt;p&gt;注意: 如果附加和调试对话框中没有模拟器的话, 你需要将模拟器目录下的adb.exe路径添加进系统环境变量path中, 如果已经添加却无法搜索到, 打开任务管理器结束adb.exe进程, 重启模拟器应该就可以了&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%203.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%203.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;在模拟器内点击登陆后，JEB模拟器右上方VM/局部变量会增加几个值，但是我们无法直接看懂。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%204.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%204.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们需要修改Type类型，从int改为&lt;code&gt;string&lt;/code&gt;，修改后我们可以看到变量当前处在内存中的值，F6可以进行单步调试，局部变量的值也会随之改变。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%205.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%205.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们已经了解了如何进行断点调试，通过分析java代码看下整个的加密过程&lt;/p&gt;
+&lt;p&gt;dataStr是我们的加密字符串，先是调用了getEncodeJsonStr，双击进入看一下&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%206.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%206.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;arg6是我们传入的值，我们设置断点看一下&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%207.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%207.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;如下图可以看到v6是我们传入的数据进行了json转换，那么我们只要跟着v6走就能找到加密过程。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%208.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%208.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们继续往下，v6传入了encodeMesJsonByPassword中，传入了4个值分别为Token，requestAesKey，v6，TERMINAL_TYPE&lt;/p&gt;
+&lt;p&gt;如下图Token是#@!1234567890!@#，requestAesKey是1234567890123456，v6是json格式的明文&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%209.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%209.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;TERMINAL_TYPE还不知道我们双击进去，是afAndriod&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2010.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2010.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;几个变量都知道了那我们双击进入encodeMesJsonByPassword函数，可以看到v2是一个随机的AesSecretKey，将等于过滤为空，先不管他。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2011.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2011.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;如下图signature=md5(terminalType+token+timestamp)，terminalType=afAndriod、token=#@!1234567890!@#、timestamp为一个随机值，暂时无法构造。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2012.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2012.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;继续往下看arg6，将&amp;amp;timestamp=xxx+&amp;amp;signature=xxx进行了一次base64，和上面的arg6一起进入encryptPinfo函数。上面的arg6为requestAesKey=1234567890123456&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2013.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2013.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;接着进入encryptPinfo函数，arg3=base64(&amp;amp;timestamp=xxx+&amp;amp;signature=xxx),arg4=1234567890123456,看下加密发现是AES/CBC/PKCS5Padding加密。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2014.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2014.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;有了KEY，我们需要找到IV，点击进入IsIvParameter_Pinfo，如下图Iv值为0123456789abcdef&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2015.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2015.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;有了IV和KEY，还有加密算法我们需要对加密字符串进行解密，通过在线AES解密即可得到。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2016.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2016.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;在进行一次base64，获得明文&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2017.png&#34; alt=&#34;https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2017.png&#34;&gt;&lt;/p&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

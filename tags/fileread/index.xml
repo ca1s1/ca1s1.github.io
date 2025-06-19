@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Fileread on Ca1s1&#39;Blog</title>
+    <link>https://vuln.top/tags/fileread/</link>
+    <description>Recent content in Fileread on Ca1s1&#39;Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 19 Jun 2025 11:24:30 +0800</lastBuildDate><atom:link href="https://vuln.top/tags/fileread/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MoviePilotv2 Arbitrary file read</title>
+      <link>https://vuln.top/posts/moviepilotv2-fileread/</link>
+      <pubDate>Thu, 19 Jun 2025 11:24:30 +0800</pubDate>
+      
+      <guid>https://vuln.top/posts/moviepilotv2-fileread/</guid>
+      <description>&lt;h2 id=&#34;describe&#34;&gt;describe&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;The system uses an &lt;em&gt;SQLite&lt;/em&gt; database, so arbitrary file reading could access local &lt;em&gt;SQLite&lt;/em&gt; files. This issue has been reported to the author, and a new version has been released with a fix.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;The vulnerability arises because the &lt;em&gt;plugin_id&lt;/em&gt; parameter is not validated.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/moviepilotv2/17503467122137.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;http://127.0.0.1:3000/api/v1/plugin/file/..//config/app.env&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/moviepilotv2/17496644265781.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;repair&#34;&gt;repair&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;https://github.com/jxxghp/MoviePilot/pull/4438/commits/2ba5d9484d86ef7ec8c80d69e3ebc8bb0d532de2&lt;/code&gt;&lt;/p&gt;</description>
+      <content>&lt;h2 id=&#34;describe&#34;&gt;describe&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;The system uses an &lt;em&gt;SQLite&lt;/em&gt; database, so arbitrary file reading could access local &lt;em&gt;SQLite&lt;/em&gt; files. This issue has been reported to the author, and a new version has been released with a fix.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;The vulnerability arises because the &lt;em&gt;plugin_id&lt;/em&gt; parameter is not validated.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/moviepilotv2/17503467122137.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;http://127.0.0.1:3000/api/v1/plugin/file/..//config/app.env&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/moviepilotv2/17496644265781.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;repair&#34;&gt;repair&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;https://github.com/jxxghp/MoviePilot/pull/4438/commits/2ba5d9484d86ef7ec8c80d69e3ebc8bb0d532de2&lt;/code&gt;&lt;/p&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

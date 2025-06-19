@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>UPS on Ca1s1&#39;Blog</title>
+    <link>https://vuln.top/tags/ups/</link>
+    <description>Recent content in UPS on Ca1s1&#39;Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 20 Mar 2024 10:29:30 +0800</lastBuildDate><atom:link href="https://vuln.top/tags/ups/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Truenas 安装 UT650EGC UPS</title>
+      <link>https://vuln.top/posts/truenas-ut650egc-ups/</link>
+      <pubDate>Wed, 20 Mar 2024 10:29:30 +0800</pubDate>
+      
+      <guid>https://vuln.top/posts/truenas-ut650egc-ups/</guid>
+      <description>&lt;h1 id=&#34;truenas-安装-ut650egc-ups&#34;&gt;Truenas 安装 UT650EGC UPS&lt;/h1&gt;
+&lt;p&gt;默认情况下通过web启动ups服务功能，Truenas会报服务出错&lt;code&gt;/run/nut/upsmon.pid: No space left on device&lt;/code&gt;
+选了好几个驱动也不行，问客服和售后也不懂，只能自己解决。&lt;/p&gt;
+&lt;p&gt;通过这篇文章手动调通了NUT
+&lt;a href=&#34;https://www.wangchucheng.com/zh/posts/setting-up-ups-with-nut-on-linux/&#34;&gt;https://www.wangchucheng.com/zh/posts/setting-up-ups-with-nut-on-linux/&lt;/a&gt;
+写一个bash脚本每次开启自启就行了。&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;#!/bin/bash
+
+
+config=&amp;#34;maxretry = 3
+[myupsname][JEB_Debug_Encrypt](assets/JEB_Debug_Encrypt.md)
+  driver = usbhid-ups
+  port = auto
+  desc = \&amp;#34;My UPS\&amp;#34;
+&amp;#34;
+
+
+echo &amp;#34;$config&amp;#34; &amp;gt; /etc/nut/ups.conf
+
+
+/sbin/upsdrvctl start
+
+
+config1=&amp;#34;[monuser]
+  password = mypass
+  upsmon master&amp;#34;
+
+
+echo &amp;#34;$config1&amp;#34; &amp;gt; /etc/nut/upsd.users
+
+chown root:nut /etc/nut/upsd.conf /etc/nut/upsd.users
+chmod 0640 /etc/nut/upsd.conf /etc/nut/upsd.users
+
+/sbin/upsd -c reload
+
+echo &amp;#34;MODE=standalone&amp;#34; &amp;gt; /etc/nut/nut.conf
+
+/bin/upsc myupsname@localhost
+
+config3=&amp;#34;POWERDOWNFLAG /etc/killpower
+MONITOR myupsname@localhost 1 monuser mypass master
+SHUTDOWNCMD \&amp;#34;/sbin/shutdown -P now\&amp;#34;&amp;#34;
+
+echo &amp;#34;$config3&amp;#34; &amp;gt; /etc/nut/upsmon.conf
+chown root:nut /etc/nut/upsmon.conf
+chmod 0640 /etc/nut/upsmon.conf
+
+/sbin/upsmon -c reload
+&lt;/code&gt;&lt;/pre&gt;</description>
+      <content>&lt;h1 id=&#34;truenas-安装-ut650egc-ups&#34;&gt;Truenas 安装 UT650EGC UPS&lt;/h1&gt;
+&lt;p&gt;默认情况下通过web启动ups服务功能，Truenas会报服务出错&lt;code&gt;/run/nut/upsmon.pid: No space left on device&lt;/code&gt;
+选了好几个驱动也不行，问客服和售后也不懂，只能自己解决。&lt;/p&gt;
+&lt;p&gt;通过这篇文章手动调通了NUT
+&lt;a href=&#34;https://www.wangchucheng.com/zh/posts/setting-up-ups-with-nut-on-linux/&#34;&gt;https://www.wangchucheng.com/zh/posts/setting-up-ups-with-nut-on-linux/&lt;/a&gt;
+写一个bash脚本每次开启自启就行了。&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;#!/bin/bash
+
+
+config=&amp;#34;maxretry = 3
+[myupsname][JEB_Debug_Encrypt](assets/JEB_Debug_Encrypt.md)
+  driver = usbhid-ups
+  port = auto
+  desc = \&amp;#34;My UPS\&amp;#34;
+&amp;#34;
+
+
+echo &amp;#34;$config&amp;#34; &amp;gt; /etc/nut/ups.conf
+
+
+/sbin/upsdrvctl start
+
+
+config1=&amp;#34;[monuser]
+  password = mypass
+  upsmon master&amp;#34;
+
+
+echo &amp;#34;$config1&amp;#34; &amp;gt; /etc/nut/upsd.users
+
+chown root:nut /etc/nut/upsd.conf /etc/nut/upsd.users
+chmod 0640 /etc/nut/upsd.conf /etc/nut/upsd.users
+
+/sbin/upsd -c reload
+
+echo &amp;#34;MODE=standalone&amp;#34; &amp;gt; /etc/nut/nut.conf
+
+/bin/upsc myupsname@localhost
+
+config3=&amp;#34;POWERDOWNFLAG /etc/killpower
+MONITOR myupsname@localhost 1 monuser mypass master
+SHUTDOWNCMD \&amp;#34;/sbin/shutdown -P now\&amp;#34;&amp;#34;
+
+echo &amp;#34;$config3&amp;#34; &amp;gt; /etc/nut/upsmon.conf
+chown root:nut /etc/nut/upsmon.conf
+chmod 0640 /etc/nut/upsmon.conf
+
+/sbin/upsmon -c reload
+&lt;/code&gt;&lt;/pre&gt;</content>
+    </item>
+    
+  </channel>
+</rss>

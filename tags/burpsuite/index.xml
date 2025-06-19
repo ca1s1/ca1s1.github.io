@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Burpsuite on Ca1s1&#39;Blog</title>
+    <link>https://vuln.top/tags/burpsuite/</link>
+    <description>Recent content in Burpsuite on Ca1s1&#39;Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 25 May 2025 16:10:30 +0800</lastBuildDate><atom:link href="https://vuln.top/tags/burpsuite/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Turbo Intruder条件竞争代码</title>
+      <link>https://vuln.top/posts/burpsuiteturbointruder/</link>
+      <pubDate>Sun, 25 May 2025 16:10:30 +0800</pubDate>
+      
+      <guid>https://vuln.top/posts/burpsuiteturbointruder/</guid>
+      <description>&lt;h1 id=&#34;turbo-intruder&#34;&gt;Turbo Intruder&lt;/h1&gt;
+&lt;h2 id=&#34;条件竞争&#34;&gt;条件竞争&lt;/h2&gt;
+&lt;p&gt;不知道哪个版本Turbo Intruder少了这个默认的模版记录下。&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;def queueRequests(target, wordlists):
+    engine = RequestEngine(endpoint=target.endpoint,
+                           concurrentConnections=30,
+                           requestsPerConnection=100,
+                           pipeline=False
+                           )
+
+    # the &amp;#39;gate&amp;#39; argument blocks the final byte of each request until openGate is invoked
+    for i in range(30):
+        engine.queue(target.req, target.baseInput, gate=&amp;#39;race1&amp;#39;)
+
+    # wait until every &amp;#39;race1&amp;#39; tagged request is ready
+    # then send the final byte of each request
+    # (this method is non-blocking, just like queue)
+    engine.openGate(&amp;#39;race1&amp;#39;)
+
+    engine.complete(timeout=60)
+
+
+def handleResponse(req, interesting):
+    table.add(req)
+&lt;/code&gt;&lt;/pre&gt;</description>
+      <content>&lt;h1 id=&#34;turbo-intruder&#34;&gt;Turbo Intruder&lt;/h1&gt;
+&lt;h2 id=&#34;条件竞争&#34;&gt;条件竞争&lt;/h2&gt;
+&lt;p&gt;不知道哪个版本Turbo Intruder少了这个默认的模版记录下。&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;def queueRequests(target, wordlists):
+    engine = RequestEngine(endpoint=target.endpoint,
+                           concurrentConnections=30,
+                           requestsPerConnection=100,
+                           pipeline=False
+                           )
+
+    # the &amp;#39;gate&amp;#39; argument blocks the final byte of each request until openGate is invoked
+    for i in range(30):
+        engine.queue(target.req, target.baseInput, gate=&amp;#39;race1&amp;#39;)
+
+    # wait until every &amp;#39;race1&amp;#39; tagged request is ready
+    # then send the final byte of each request
+    # (this method is non-blocking, just like queue)
+    engine.openGate(&amp;#39;race1&amp;#39;)
+
+    engine.complete(timeout=60)
+
+
+def handleResponse(req, interesting):
+    table.add(req)
+&lt;/code&gt;&lt;/pre&gt;</content>
+    </item>
+    
+    <item>
+      <title>jsEncrypter 加密</title>
+      <link>https://vuln.top/posts/burpjsencrypt/</link>
+      <pubDate>Tue, 04 Aug 2020 11:24:30 +0800</pubDate>
+      
+      <guid>https://vuln.top/posts/burpjsencrypt/</guid>
+      <description>&lt;h1 id=&#34;burp-爆破-js加密&#34;&gt;burp 爆破 JS加密&lt;/h1&gt;
+&lt;p&gt;首先右键登录按钮属性查看html源代码，发现id=&amp;lsquo;rsa&amp;rsquo;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled.png&#34; alt=&#34;/img/burpjs/Untitled.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;ctrl+shift+f 查找rsa描点，发现调用了strEnr&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%201.png&#34; alt=&#34;/img/burpjs/Untitled%201.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;继续查找strEnr，并进入函数&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%202.png&#34; alt=&#34;/img/burpjs/Untitled%202.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;对加密函数添加断点进行判断，发现123123账号密码进入了此处，且3个key分别为1，2，3。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%203.png&#34; alt=&#34;/img/burpjs/Untitled%203.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们直接控制台调用，尝试加密解密&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%204.png&#34; alt=&#34;/img/burpjs/Untitled%204.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;保存des.js到本地&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%205.png&#34; alt=&#34;/img/burpjs/Untitled%205.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;既然找到了加密解密函数现在就是通过burp调用函数使其加解密,修改phantomjs_server.js&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%206.png&#34; alt=&#34;/img/burpjs/Untitled%206.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;载入server.js&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%207.png&#34; alt=&#34;/img/burpjs/Untitled%207.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;burp连接server端口，test，我们现在已经可以成功加密了&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%208.png&#34; alt=&#34;/img/burpjs/Untitled%208.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;配置burp intruder，添加变量&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%209.png&#34; alt=&#34;/img/burpjs/Untitled%209.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;选择Custom ，1为用户&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%2010.png&#34; alt=&#34;/img/burpjs/Untitled%2010.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;2为密码&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%2011.png&#34; alt=&#34;/img/burpjs/Untitled%2011.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;添加payload加密&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%2012.png&#34; alt=&#34;/img/burpjs/Untitled%2012.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;start attack，成功爆破&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%2013.png&#34; alt=&#34;/img/burpjs/Untitled%2013.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;尝试解密下加密字符串，成功&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%2014.png&#34; alt=&#34;/img/burpjs/Untitled%2014.png&#34;&gt;&lt;/p&gt;</description>
+      <content>&lt;h1 id=&#34;burp-爆破-js加密&#34;&gt;burp 爆破 JS加密&lt;/h1&gt;
+&lt;p&gt;首先右键登录按钮属性查看html源代码，发现id=&amp;lsquo;rsa&amp;rsquo;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled.png&#34; alt=&#34;/img/burpjs/Untitled.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;ctrl+shift+f 查找rsa描点，发现调用了strEnr&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%201.png&#34; alt=&#34;/img/burpjs/Untitled%201.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;继续查找strEnr，并进入函数&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%202.png&#34; alt=&#34;/img/burpjs/Untitled%202.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;对加密函数添加断点进行判断，发现123123账号密码进入了此处，且3个key分别为1，2，3。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%203.png&#34; alt=&#34;/img/burpjs/Untitled%203.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们直接控制台调用，尝试加密解密&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%204.png&#34; alt=&#34;/img/burpjs/Untitled%204.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;保存des.js到本地&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%205.png&#34; alt=&#34;/img/burpjs/Untitled%205.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;既然找到了加密解密函数现在就是通过burp调用函数使其加解密,修改phantomjs_server.js&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%206.png&#34; alt=&#34;/img/burpjs/Untitled%206.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;载入server.js&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%207.png&#34; alt=&#34;/img/burpjs/Untitled%207.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;burp连接server端口，test，我们现在已经可以成功加密了&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%208.png&#34; alt=&#34;/img/burpjs/Untitled%208.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;配置burp intruder，添加变量&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%209.png&#34; alt=&#34;/img/burpjs/Untitled%209.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;选择Custom ，1为用户&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%2010.png&#34; alt=&#34;/img/burpjs/Untitled%2010.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;2为密码&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%2011.png&#34; alt=&#34;/img/burpjs/Untitled%2011.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;添加payload加密&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%2012.png&#34; alt=&#34;/img/burpjs/Untitled%2012.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;start attack，成功爆破&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%2013.png&#34; alt=&#34;/img/burpjs/Untitled%2013.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;尝试解密下加密字符串，成功&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://vuln.top/img/burpjs/Untitled%2014.png&#34; alt=&#34;/img/burpjs/Untitled%2014.png&#34;&gt;&lt;/p&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

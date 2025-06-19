@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Debug :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/tags/debug/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Debug">
+<meta property="og:description" content="" />
+<meta property="og:url" content="https://vuln.top/tags/debug/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+    <meta property="og:image" content="https://vuln.top/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/debug/index.xml" rel="alternate" type="application/rss+xml" title="Ca1s1&#39;Blog" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top/">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/jeb_debug_encrypt/">JEB_Debug_Encrypt</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2021-05-09 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/debug/">debug</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <h1 id="jeb-动态调试-加密">JEB 动态调试 加密</h1>
+<h2 id="工具">工具</h2>
+<p><em><strong>JEB3</strong></em></p>
+<p><em><strong>BurpSuite</strong></em></p>
+<p><em><strong>Genymotion</strong></em></p>
+<h2 id="操作">操作</h2>
+<p>先准备一个模拟器或安卓手机，配置好<code>BurpSuite</code>代理，可以抓取到如下数据包，Request和Response都已加密。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled.png" alt="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled.png"></p>
+<p>用Jeb3打开Apk，进入Bytecode菜单，点击下方的字符串，搜索<code>dataStr</code>双击进入。（为啥要搜索它? 因为它在提交数据中是个协议头, 添加这些参数的时候想必都会在一个代码块, 所以加密函数也可能在附近。）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%201.png" alt="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%201.png"></p>
+<p>进入后我们可以看到<code>smali</code>代码，在可疑的地方通过Ctrl+b可以下断点进行调试。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%202.png" alt="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%202.png"></p>
+<p>模拟器内需要先打开APP，然后点击上方虫子按钮，可以看到如下图所示，点击附上。</p>
+<p>注意: 如果附加和调试对话框中没有模拟器的话, 你需要将模拟器目录下的adb.exe路径添加进系统环境变量path中, 如果已经添加却无法搜索到, 打开任务管理器结束adb.exe进程, 重启模拟器应该就可以了</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%203.png" alt="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%203.png"></p>
+<p>在模拟器内点击登陆后，JEB模拟器右上方VM/局部变量会增加几个值，但是我们无法直接看懂。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%204.png" alt="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%204.png"></p>
+<p>我们需要修改Type类型，从int改为<code>string</code>，修改后我们可以看到变量当前处在内存中的值，F6可以进行单步调试，局部变量的值也会随之改变。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%205.png" alt="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%205.png"></p>
+<p>我们已经了解了如何进行断点调试，通过分析java代码看下整个的加密过程</p>
+<p>dataStr是我们的加密字符串，先是调用了getEncodeJsonStr，双击进入看一下</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%206.png" alt="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%206.png"></p>
+<p>arg6是我们传入的值，我们设置断点看一下</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%207.png" alt="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%207.png"></p>
+<p>如下图可以看到v6是我们传入的数据进行了json转换，那么我们只要跟着v6走就能找到加密过程。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%208.png" alt="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%208.png"></p>
+<p>我们继续往下，v6传入了encodeMesJsonByPassword中，传入了4个值分别为Token，requestAesKey，v6，TERMINAL_TYPE</p>
+<p>如下图Token是#@!1234567890!@#，requestAesKey是1234567890123456，v6是json格式的明文</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%209.png" alt="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%209.png"></p>
+<p>TERMINAL_TYPE还不知道我们双击进去，是afAndriod</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2010.png" alt="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2010.png"></p>
+<p>几个变量都知道了那我们双击进入encodeMesJsonByPassword函数，可以看到v2是一个随机的AesSecretKey，将等于过滤为空，先不管他。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2011.png" alt="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2011.png"></p>
+<p>如下图signature=md5(terminalType+token+timestamp)，terminalType=afAndriod、token=#@!1234567890!@#、timestamp为一个随机值，暂时无法构造。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2012.png" alt="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2012.png"></p>
+<p>继续往下看arg6，将&amp;timestamp=xxx+&amp;signature=xxx进行了一次base64，和上面的arg6一起进入encryptPinfo函数。上面的arg6为requestAesKey=1234567890123456</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2013.png" alt="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2013.png"></p>
+<p>接着进入encryptPinfo函数，arg3=base64(&amp;timestamp=xxx+&amp;signature=xxx),arg4=1234567890123456,看下加密发现是AES/CBC/PKCS5Padding加密。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2014.png" alt="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2014.png"></p>
+<p>有了KEY，我们需要找到IV，点击进入IsIvParameter_Pinfo，如下图Iv值为0123456789abcdef</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2015.png" alt="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2015.png"></p>
+<p>有了IV和KEY，还有加密算法我们需要对加密字符串进行解密，通过在线AES解密即可得到。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2016.png" alt="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2016.png"></p>
+<p>在进行一次base64，获得明文</p>
+<p><img src="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2017.png" alt="https://cdn.jsdelivr.net/gh/H1dery/h1dery/uPic/Untitled%2017.png"></p>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/jeb_debug_encrypt/"> →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

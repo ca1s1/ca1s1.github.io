@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tips on Ca1s1&#39;Blog</title>
+    <link>https://vuln.top/tags/tips/</link>
+    <description>Recent content in Tips on Ca1s1&#39;Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 21 Feb 2019 11:24:30 +0800</lastBuildDate><atom:link href="https://vuln.top/tags/tips/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>让终端走代理的方法</title>
+      <link>https://vuln.top/posts/%E8%AE%A9%E7%BB%88%E7%AB%AF%E8%B5%B0%E4%BB%A3%E7%90%86%E7%9A%84%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Thu, 21 Feb 2019 11:24:30 +0800</pubDate>
+      
+      <guid>https://vuln.top/posts/%E8%AE%A9%E7%BB%88%E7%AB%AF%E8%B5%B0%E4%BB%A3%E7%90%86%E7%9A%84%E6%96%B9%E6%B3%95/</guid>
+      <description>&lt;p&gt;把代理服务器地址写入shell配置文件.bashrc或者.zshrc&lt;/p&gt;
+&lt;p&gt;直接在.bashrc或者.zshrc添加下面内容&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1.export http_proxy=&amp;#34;http://localhost:port&amp;#34;
+2.export https_proxy=&amp;#34;http://localhost:port&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;以使用shadowsocks代理为例，ss的代理端口为1080,那么应该设置为&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1.export http_proxy=&amp;#34;socks5://127.0.0.1:1080&amp;#34;
+2.export https_proxy=&amp;#34;socks5://127.0.0.1:1080&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;或者直接设置ALL_PROXY&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1.export ALL_PROXY=socks5://127.0.0.1:1080
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;localhost就是一个域名，域名默认指向 127.0.0.1，两者是一样的。&lt;/p&gt;
+&lt;p&gt;然后ESC后:wq保存文件，接着在终端中执行&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;source ~/.bashrc
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;或者退出当前终端再起一个终端。 这个办法的好处是把代理服务器永久保存了，下次就可以直接用了。&lt;/p&gt;
+&lt;p&gt;或者通过设置alias简写来简化操作，每次要用的时候输入setproxy，不用了就unsetproxy。&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1.alias setproxy=&amp;#34;export ALL_PROXY=socks5://127.0.0.1:1080&amp;#34;
+2.alias unsetproxy=&amp;#34;unset ALL_PROXY&amp;#34;
+3.alias ip=&amp;#34;curl -i http://ip.cn&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;</description>
+      <content>&lt;p&gt;把代理服务器地址写入shell配置文件.bashrc或者.zshrc&lt;/p&gt;
+&lt;p&gt;直接在.bashrc或者.zshrc添加下面内容&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1.export http_proxy=&amp;#34;http://localhost:port&amp;#34;
+2.export https_proxy=&amp;#34;http://localhost:port&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;以使用shadowsocks代理为例，ss的代理端口为1080,那么应该设置为&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1.export http_proxy=&amp;#34;socks5://127.0.0.1:1080&amp;#34;
+2.export https_proxy=&amp;#34;socks5://127.0.0.1:1080&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;或者直接设置ALL_PROXY&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1.export ALL_PROXY=socks5://127.0.0.1:1080
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;localhost就是一个域名，域名默认指向 127.0.0.1，两者是一样的。&lt;/p&gt;
+&lt;p&gt;然后ESC后:wq保存文件，接着在终端中执行&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;source ~/.bashrc
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;或者退出当前终端再起一个终端。 这个办法的好处是把代理服务器永久保存了，下次就可以直接用了。&lt;/p&gt;
+&lt;p&gt;或者通过设置alias简写来简化操作，每次要用的时候输入setproxy，不用了就unsetproxy。&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1.alias setproxy=&amp;#34;export ALL_PROXY=socks5://127.0.0.1:1080&amp;#34;
+2.alias unsetproxy=&amp;#34;unset ALL_PROXY&amp;#34;
+3.alias ip=&amp;#34;curl -i http://ip.cn&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;</content>
+    </item>
+    
+  </channel>
+</rss>

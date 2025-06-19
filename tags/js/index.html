@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Js :: Ca1s1&#39;Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://vuln.top/tags/js/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://vuln.top/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://vuln.top/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="https://vuln.top/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Js">
+<meta property="og:description" content="" />
+<meta property="og:url" content="https://vuln.top/tags/js/" />
+<meta property="og:site_name" content="Ca1s1&#39;Blog" />
+
+  
+    <meta property="og:image" content="https://vuln.top/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/js/index.xml" rel="alternate" type="application/rss+xml" title="Ca1s1&#39;Blog" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://vuln.top/">
+  <div class="logo">
+    Ca1s1'Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about/">about</a></li>
+        
+      
+        
+          <li><a href="/link/">link</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about/" >about</a></li>
+        
+      
+        
+          <li><a href="/link/" >link</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="https://vuln.top/posts/2019shendun/">2019神盾杯</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2020-08-23 ::
+            </time>
+          
+          
+            <span class="post-author">Ca1s1</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="https://vuln.top/tags/ctf/">ctf</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/writeup/">writeup</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/php/">php</a>&nbsp;
+            
+            #<a href="https://vuln.top/tags/js/">js</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            <p><strong>首届“神盾杯”上海市网络安全竞赛</strong>，去年的比赛。</p>
+<h1 id="0x00-babyjs">0x00 babyJS</h1>
+<p><strong>操作内容：</strong></p>
+<p>查看源码 找不到被调用的<code>CheckLogin</code>函数</p>
+<p><img src="/img/19shendun///image1.png" alt="/img/19shendun/image1.png"></p>
+<p>看到<strong>script</strong>中有用到<code>unespace</code>和<code>escape</code>等函数 用于编码字符串</p>
+<p>将<code>eval</code>传参改为<code>alert</code> 显示为弹窗</p>
+<p><img src="/img/19shendun/image2.png" alt="/img/19shendun/image2.png"></p>
+<p>发现<code>check</code>函数 并将flag与用户输入做比较 得到flag</p>
+<p><img src="/img/19shendun/image3.png" alt="/img/19shendun/image3.png"></p>
+<p><strong>FLAG值：</strong></p>
+<p><strong>flag{a5a5f402f6dc62acd3e848900a17513f}</strong></p>
+<h1 id="0x01-crypto_easy_1">0x01 crypto_easy_1</h1>
+<p><strong>操作内容：</strong></p>
+<p>下载文件</p>
+<p><img src="/img/19shendun/image4.png" alt="/img/19shendun/image4.png"></p>
+<p>发现3行类似的数据 并且长度一致。</p>
+<p>:左边的长度为42 右边的长度为56 ，猜测右边被base64编码过 进行解码 比较长度</p>
+<p><img src="/img/19shendun/image5.png" alt="/img/19shendun/image5.png"></p>
+<p>长度一致 为42</p>
+<p>异或运算一下 可以得到Key随后将key代入 与base64解码后的密文异或比较 得到flag</p>
+<p>解密脚本如下:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> base64
+</span></span><span style="display:flex;"><span>x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;v6&#34;wo5UIP9c4IdCk1o6qZhhB5DKZhVBwBzONl1JRIz:TwB2RyZYBCEVbjBjID17UkUeeDAwPBh1dg86AyAgcSQ4QygYGnAuJQYw&#39;</span>
+</span></span><span style="display:flex;"><span>y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;zjS0ubQE2hw29FL2qs61ZNOVyFaf6IAjUZ7X8ijuVg:Q1wHADwPAC13PyRlUB90CwUCeHAwGj9hOg0QP34/cjkvY1AOTigOAhkt&#39;</span>
+</span></span><span style="display:flex;"><span>z <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;pJryZpVUNpSFi06WlKGkS0Uka6zw1sNCX&#34;h2urQoyg:SXwmSRMdBz0LJwARAGkObhg6CSo5ZCVcIn0LLnkFfRAiGw9kAzM1GDYt&#39;</span>
+</span></span><span style="display:flex;"><span>a, b <span style="color:#f92672">=</span> x<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>c, d <span style="color:#f92672">=</span> y<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>e, f <span style="color:#f92672">=</span> z<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(b)
+</span></span><span style="display:flex;"><span>d <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(d)
+</span></span><span style="display:flex;"><span>f <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(f)
+</span></span><span style="display:flex;"><span>g <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(<span style="color:#e6db74">&#39;X1o1VzIPaVgjbmNvCnQAC0ZHY3BbMUkaeylDYWVOCzZDXwJjR3hTFiw3&#39;</span>)
+</span></span><span style="display:flex;"><span>flag <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span>  i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">42</span>):
+</span></span><span style="display:flex;"><span>    t <span style="color:#f92672">=</span> ord(a[i]) <span style="color:#f92672">^</span> ord(b[i])
+</span></span><span style="display:flex;"><span>    flag <span style="color:#f92672">+=</span> chr(ord(g[i]) <span style="color:#f92672">^</span> t)
+</span></span><span style="display:flex;"><span>print(flag)
+</span></span></code></pre></div><p><strong>FLAG值：</strong></p>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/2019shendun/"> →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
